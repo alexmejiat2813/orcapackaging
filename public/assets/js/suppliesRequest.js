@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
     initializePopupWindow();
     initializeGrids();
     setupEventHandlers();
@@ -38,12 +38,12 @@ function initializePopupWindow() {
 // Initialize Data Grids
 // ----------------------------------
 function initializeGrids() {
-    loadActivePurchasesGrid();
+    //loadActivePurchasesGrid();
     reloadJotformGrid();
 }
 
 // Purchase Orders Grid
-function loadActivePurchasesGrid() {
+/*function loadActivePurchasesGrid() {
     const purchases = window.activePurchases || [];
 
     const source = {
@@ -83,10 +83,10 @@ function loadActivePurchasesGrid() {
         ]
     });
 }
-
+*/
 // JotForm Grid
 function reloadJotformGrid() {
-    fetch('/jotform/jotformSupplies/list')
+    fetch(jotformListUrl)
         .then(res => res.json())
         .then(data => {
             const source = {
@@ -111,15 +111,7 @@ function reloadJotformGrid() {
                     { text: 'Description', datafield: 'description', width: 200 },
                     { text: 'Urgency', datafield: 'urgency', width: 150 },
                     { text: 'Qty in Stock', datafield: 'stock_quantity', width: 100, cellsalign: 'center' },
-                    { text: 'Notes', datafield: 'notes', width: 300 },
-                    {
-                        text: 'Managed',
-                        datafield: 'managed',
-                        width: 80,
-                        cellsalign: 'center',
-                        columntype: 'checkbox',
-                        editable: true
-                    }
+                    { text: 'Notes', datafield: 'notes', width: 300 }
                 ]
             });
         });
