@@ -17,7 +17,7 @@ class TimeInputController extends Controller
         return view('hr.timeinput.clock');
     }
 
-    public function processClock(Request $request)
+public function processClock(Request $request)
 {
     $request->validate([
         'barcode' => 'required|string|max:50',
@@ -30,57 +30,57 @@ class TimeInputController extends Controller
         return back()->with('error', 'Empleado no encontrado con ese código.');
     }
 
-    // Buscar el periodo contable activo según la fecha actual
     $currentDate = now();
-    $period = \App\Models\HR\PeriodWeek::where('Period_Week_StartDate', '<=', $currentDate)
+    $period = PeriodWeek::where('Period_Week_StartDate', '<=', $currentDate)
         ->where('Period_Week_EndDate', '>=', $currentDate)
         ->first();
 
     if (!$period) {
-        return back()->with('error', 'No existe un período contable activo para la fecha actual.');
+        return back()->with('error', 'No hay un período contable activo para hoy.');
     }
 
-
-    // Buscar el último registro sin hora de salida
-    $lastEntry = TimeInput::where('Users_ID', $user->Users_ID)
-        ->where('Activity_ID', 7)
-        ->where('TimeInput_IsStart', 1)
+    // 🔁 1. Cerrar TODAS las sesiones abiertas sin salida
+    $openEntries = TimeInput::where('Users_ID', $user->Users_ID)
         ->whereNull('TimeInput_EndTime')
-        ->orderByDesc('TimeInput_StartTime')
-        ->first();
+        ->where('TimeInput_IsStart', 1)
+        ->get();
 
-    if ($lastEntry) {
-        // Clock Out
+    foreach ($openEntries as $entry) {
+        $start = Carbon::parse($entry->TimeInput_StartTime);
         $now = Carbon::now();
-        $start = Carbon::parse($lastEntry->TimeInput_StartTime);
-        $minutes = $start->diffInMinutes($now);
+        $minutes = (int) $start->diffInMinutes($now);
 
-        $lastEntry->update([
-            'TimeInput_EndTime' => $now,
-            'TimeInput_Time' => (int) $minutes, // 👈 asegúrate de castear como entero
-            'TimeInput_TimeInHour' => round($minutes / 60, 2), // esto sí puede ser float
-            'TimeInput_Comment' => $request->note,
-            'Period_Week_Id' => $period->Period_Week_Id,
-            'is_Punch_Clock' => 1,
+        $entry->update([
+            'TimeInput_EndTime' => now(),
+            'TimeInput_Comment' => ($entry->TimeInput_Comment ?? '') . ' | Cerrado automáticamente antes de nueva entrada',
+            'TimeInput_Time' => $minutes,
+            'TimeInput_TimeInHour' => round($minutes / 60, 2),
             'TimeInput_IsStart' => 0,
         ]);
-
-        return back()->with('success', 'Salida registrada para ' . $user->Users_Name);
-    } else {
-        // Clock In
-        TimeInput::create([
-            'Users_ID' => $user->Users_ID,
-            'Activity_ID' => 7,
-            'TimeInput_IsStart' => 1,
-            'TimeInput_StartTime' => now(),
-            'TimeInput_Comment' => $request->note,
-            'Period_Week_Id' => $period->Period_Week_Id,
-            'is_Punch_Clock' => 1,
-        ]);
-
-        return back()->with('success', 'Entrada registrada para ' . $user->Users_Name);
     }
+
+    // 🔁 2. Si hubo entradas abiertas, se cerraron → el usuario debe volver a marcar
+    if ($openEntries->count() > 0) {
+        return back()->with('error', 'Tenías sesiones abiertas. Fueron cerradas automáticamente. Por favor vuelve a escanear para registrar tu entrada.');
+    }
+
+    // 🆕 3. Registrar nueva entrada si no hay entradas abiertas
+    TimeInput::create([
+        'Users_ID' => $user->Users_ID,
+        'Activity_ID' => 7,
+        'TimeInput_IsStart' => 1,
+        'TimeInput_StartTime' => now(),
+        'TimeInput_Comment' => $request->note,
+        'Period_Week_Id' => $period->Period_Week_Id,
+        'is_Punch_Clock' => 1,
+    ]);
+
+    return back()->with('success', 'Entrada registrada para ' . $user->Users_Name);
 }
+
+
+
+
 
 public function getClockData()
 {
