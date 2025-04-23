@@ -52,4 +52,9 @@ class TimeInput extends Model
     {
         return $this->belongsTo(Users::class, 'Users_ID', 'Users_ID');
     }
+
+    public function period()
+{
+    return $this->belongsTo(PeriodWeek::class, 'Period_Week_Id');
+}
 }

@@ -31,7 +31,7 @@
 
                     <div class="mb-3">
                         <label for="barcode" class="form-label">Scan Your Badge</label>
-                        <input type="text" name="barcode" id="barcode" class="form-control" autofocus required>
+                        <input type="password" name="barcode" id="barcode" class="form-control" autofocus required>
                     </div>
 
                     <div class="mb-3">
@@ -70,6 +70,7 @@
                 { name: 'time_minutes', type: 'int' },
                 { name: 'time_hours', type: 'float' },
                 { name: 'approved', type: 'string' },
+                { name: 'weekly_hours', type: 'string' },
             ],
             url: "{{ route('hr.timeinput.data') }}"
         };
@@ -85,14 +86,15 @@
             filterable: true,
             columnsresize: true,
             columns: [
-                { text: 'ID', datafield: 'id', width: 70 },
+                //{ text: 'ID', datafield: 'id', width: 70 },
                 { text: 'User', datafield: 'user', width: 150 },
                 { text: 'Start Time', datafield: 'start_time', width: 180, cellsformat: 'yyyy-MM-dd HH:mm' },
-                { text: 'End Time', datafield: 'end_time', width: 180, cellsformat: 'yyyy-MM-dd HH:mm' },
-                { text: 'Comment', datafield: 'comment', width: 200 },
-                { text: 'Minutes', datafield: 'time_minutes', width: 100 },
-                { text: 'Hours', datafield: 'time_hours', width: 100 },
-                { text: 'Approved', datafield: 'approved', width: 90 }
+                { text: 'Weekly Hours', datafield: 'weekly_hours', width: 120 },
+                //{ text: 'End Time', datafield: 'end_time', width: 180, cellsformat: 'yyyy-MM-dd HH:mm' },
+                //{ text: 'Comment', datafield: 'comment', width: 200 },
+                //{ text: 'Minutes', datafield: 'time_minutes', width: 100 },
+                //{ text: 'Hours', datafield: 'time_hours', width: 100 },
+                //{ text: 'Approved', datafield: 'approved', width: 90 }
             ]
         });
     });

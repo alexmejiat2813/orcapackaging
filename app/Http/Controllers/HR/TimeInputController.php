@@ -82,7 +82,7 @@ public function processClock(Request $request)
 
 
 
-public function getClockData()
+public function getClockData_old()
 {
     $entries = TimeInput::with('user')
         ->whereNull('TimeInput_EndTime') // ✅ Solo los que no han salido
@@ -104,6 +104,43 @@ public function getClockData()
         });
 
     return response()->json($entries);
+}
+
+public function getClockData()
+{
+    $week = PeriodWeek::where('Period_Week_StartDate', '<=', now())
+    ->where('Period_Week_EndDate', '>=', now())
+    ->first();
+
+$entries = TimeInput::with('user')
+    ->where('TimeInput_IsStart', 1)
+    ->whereNull('TimeInput_EndTime')
+    ->where('Period_Week_Id', $week->Period_Week_Id)
+    ->orderByDesc('TimeInput_StartTime')
+    ->get()
+    ->map(function ($entry) use ($week) {
+        $weeklyTotal = TimeInput::where('Users_ID', $entry->Users_ID)
+            ->where('Period_Week_Id', $week->Period_Week_Id)
+            ->sum('TimeInput_TimeInHour');
+
+        $hours = floor($weeklyTotal);
+        $minutes = round(($weeklyTotal - $hours) * 60);
+
+        return [
+            'id' => $entry->TimeInput_ID,
+            'user' => $entry->user->Users_Name ?? 'N/A',
+            'start_time' => $entry->TimeInput_StartTime,
+            'end_time' => $entry->TimeInput_EndTime,
+            'comment' => $entry->TimeInput_Comment,
+            'time_minutes' => $entry->TimeInput_Time,
+            'time_hours' => $entry->TimeInput_TimeInHour,
+            'approved' => $entry->TimeInput_Approved ? 'Yes' : 'No',
+            'weekly_hours' => sprintf('%02d:%02d', $hours, $minutes),
+        ];
+    });
+
+return response()->json($entries);
+
 }
 
 
