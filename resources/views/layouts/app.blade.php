@@ -72,5 +72,24 @@
         <script src="/assets/vendor/php-email-form/validate.js"></script>
         <script src="/assets/js/main.js"></script>
 
+        {{-- Otros scripts --}}
+    <script>
+    // Evita volver a páginas protegidas después del logout usando el botón atrás
+    if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            window.history.pushState(null, null, location.href);
+        };
+    }
+
+    // Fuerza a recargar la página si viene desde caché
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            location.reload();
+        }
+    });
+</script>
+
+
     </body>
 </html>

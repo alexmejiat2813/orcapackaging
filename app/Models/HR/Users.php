@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Models\hr;
+namespace App\Models\HR;
 
+use App\Models\HR\Fonction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Users extends Model
+class Users extends Authenticatable
 {
     protected $table = 'Users'; // Nombre exacto de la tabla en SQL Server
     protected $primaryKey = 'Users_ID';
@@ -38,6 +40,23 @@ class Users extends Model
         'Employe_Auto_Correction'
     ];
 
+    public function getAuthIdentifier()
+{
+    return $this->getAttribute($this->getAuthIdentifierName());
+}
+
+public function getAuthIdentifierName()
+{
+    return $this->getKeyName(); // Esto devuelve 'Users_ID' ya que tienes protected $primaryKey = 'Users_ID';
+}
+
+
+    // Si es necesario que compare con otro campo
+    public function getAuthPassword()
+    {
+        return $this->Users_Pwd;
+    }
+
     // Relación con TimeInput
     public function timeInputs()
     {
@@ -49,6 +68,13 @@ class Users extends Model
     {
         return trim("{$this->Users_Fname} {$this->Users_Name}");
     }
+
+    public function fonction()
+{
+    return $this->belongsTo(Fonction::class, 'Fonction_ID', 'Fonction_ID');
+}
+
+
 }
 
 ?>

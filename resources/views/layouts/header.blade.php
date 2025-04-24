@@ -8,6 +8,26 @@
     <!-- Sidebar toggle button -->
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div>
+
+  @auth
+
+<div class="d-flex align-items-center ms-auto dropdown pe-4">
+  <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->Users_Name }}  {{ Auth::user()?->fonction?->Fonction_Desc }}
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuración</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <form method="POST" action="{{ url('logout') }}">
+        @csrf
+        <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Logout</button>
+      </form>
+    </li>
+  </ul>
+</div>
+@endauth
+
 </header>
 <!-- End Header -->
 
@@ -24,21 +44,27 @@
     </a>
   </li>
 
+ 
   <!-- Login -->
+  @guest
   <li class="nav-item">
     <a class="nav-link {{ Request::is('login') ? 'active' : '' }}" href="{{ url('/login') }}">
       <i class="bi bi-box-arrow-in-right"></i><span>Login</span>
     </a>
   </li>
+@endguest
 
   <!-- Dashboard -->
+@if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
   <li class="nav-item">
     <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ url('/dashboard') }}">
       <i class="bi bi-speedometer2"></i><span>Dashboard</span>
     </a>
   </li>
+    @endif
 
   <!-- SALES -->
+  @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
   <li class="nav-item">
     <a class="nav-link {{ Request::is('sales/*') ? '' : 'collapsed' }}" data-bs-target="#sales-menu" data-bs-toggle="collapse" href="#">
       <i class="bi bi-cart-check"></i><span>Sales</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -54,24 +80,30 @@
       <li><a href="{{ url('/sales/reports') }}" class="{{ Request::is('sales/reports') ? 'active' : '' }}"><i class="bi bi-circle"></i>Reports</a></li>
     </ul>
   </li>
+  @endif
 
   <!-- PURCHASING -->
+  
   <li class="nav-item">
     <a class="nav-link {{ Request::is('purchasing/*') ? '' : 'collapsed' }}" data-bs-target="#purchasing-menu" data-bs-toggle="collapse" href="#">
       <i class="bi bi-box-seam"></i><span>Purchasing</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="purchasing-menu" class="nav-content collapse {{ Request::is('purchasing/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
       <li><a href="{{ url('/purchasing/requests') }}" class="{{ Request::is('purchasing/requests') ? 'active' : '' }}"><i class="bi bi-circle"></i>Requests</a></li>
+    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
       <li><a href="{{ url('/purchasing/orders') }}" class="{{ Request::is('purchasing/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Purchase Orders</a></li>
       <li><a href="{{ url('/purchasing/rfqs') }}" class="{{ Request::is('purchasing/rfqs') ? 'active' : '' }}"><i class="bi bi-circle"></i>RFQs</a></li>
       <li><a href="{{ url('/purchasing/agreements') }}" class="{{ Request::is('purchasing/agreements') ? 'active' : '' }}"><i class="bi bi-circle"></i>Agreements</a></li>
       <li><a href="{{ url('/purchasing/pricelists') }}" class="{{ Request::is('purchasing/pricelists') ? 'active' : '' }}"><i class="bi bi-circle"></i>Price Lists</a></li>
       <li><a href="{{ url('/purchasing/suppliers') }}" class="{{ Request::is('purchasing/suppliers') ? 'active' : '' }}"><i class="bi bi-circle"></i>Suppliers</a></li>
       <li><a href="{{ url('/purchasing/rating') }}" class="{{ Request::is('purchasing/rating') ? 'active' : '' }}"><i class="bi bi-circle"></i>Rating</a></li>
+    @endif
     </ul>
   </li>
+  
 
   <!-- PRODUCTION -->
+  @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
   <li class="nav-item">
     <a class="nav-link {{ Request::is('production/*') ? '' : 'collapsed' }}" data-bs-target="#production-menu" data-bs-toggle="collapse" href="#">
       <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -85,8 +117,10 @@
       <li><a href="{{ url('/production/efficiency') }}" class="{{ Request::is('production/efficiency') ? 'active' : '' }}"><i class="bi bi-circle"></i>Efficiency</a></li>
     </ul>
   </li>
+  @endif
 
   <!-- INVENTORY -->
+  @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
   <li class="nav-item">
     <a class="nav-link {{ Request::is('inventory/*') ? '' : 'collapsed' }}" data-bs-target="#inventory-menu" data-bs-toggle="collapse" href="#">
       <i class="bi bi-boxes"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -100,8 +134,10 @@
       <li><a href="{{ url('/inventory/alerts') }}" class="{{ Request::is('inventory/alerts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Alerts</a></li>
     </ul>
   </li>
+  @endif
 
   <!-- CRM -->
+  @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
   <li class="nav-item">
     <a class="nav-link {{ Request::is('crm/*') ? '' : 'collapsed' }}" data-bs-target="#crm-menu" data-bs-toggle="collapse" href="#">
       <i class="bi bi-people"></i><span>CRM</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -116,8 +152,10 @@
       <li><a href="{{ url('/crm/segments') }}" class="{{ Request::is('crm/segments') ? 'active' : '' }}"><i class="bi bi-circle"></i>Segmentation</a></li>
     </ul>
   </li>
+  @endif
 
   <!-- ACCOUNTING -->
+  @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
   <li class="nav-item">
     <a class="nav-link {{ Request::is('accounting/*') ? '' : 'collapsed' }}" data-bs-target="#accounting-menu" data-bs-toggle="collapse" href="#">
       <i class="bi bi-cash-coin"></i><span>Accounting</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -132,9 +170,11 @@
       <li><a href="{{ url('/accounting/balance') }}" class="{{ Request::is('accounting/balance') ? 'active' : '' }}"><i class="bi bi-circle"></i>Balance Sheet</a></li>
     </ul>
   </li>
+  @endif
 
   <!-- HR -->
   <!-- HR MODULE -->
+  @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
 <li class="nav-item">
   <a class="nav-link {{ Request::is('hr/*') ? '' : 'collapsed' }}" data-bs-target="#hr-menu" data-bs-toggle="collapse" href="#">
     <i class="bi bi-person-badge"></i><span>HR</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -191,6 +231,7 @@
 
   </ul>
 </li>
+@endif
 
 
   <!-- Tools -->
