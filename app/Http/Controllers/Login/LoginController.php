@@ -4,54 +4,62 @@ namespace App\Http\Controllers\Login;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use App\Models\HR\Users;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Response;
+use App\Models\HR\Users;
+use Illuminate\Http\RedirectResponse;
 
 class LoginController extends Controller
 {
+    /**
+     * Display the login form. If the user is already authenticated, redirect to dashboard.
+     *
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
     public function showLoginForm()
-{
-    if (session()->has('user_id')) {
-        return redirect('/dashboard'); // o cualquier ruta por defecto
+    {
+        if (session()->has('user_id')) {
+            return redirect('/dashboard');
+        }
+
+        $view = view('login.login');
+        return Response::noCache(response($view));
     }
 
-    $view = view('login.login');
-
-    return Response::noCache(response($view));
-
-}
-
-
+    /**
+     * Handle custom login request using user code and password in plain text.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function loginCustom(Request $request)
-{
-    $credentials = $request->validate([
-        'code' => 'required|string',
-        'password' => 'required|string',
-    ]);
+    {
+        $credentials = $request->validate([
+            'code'     => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-    $user = Users::where('Users_Code', $credentials['code'])->first();
+        $user = Users::where('Users_Code', $credentials['code'])->first();
 
-    if (!$user || $user->Users_Pwd !== $credentials['password']) {
-        return back()->with('error', 'Código o contraseña incorrecta.');
+        if (!$user || $user->Users_Pwd !== $credentials['password']) {
+            return back()->with('error', 'Invalid code or password.');
+        }
+
+        Auth::login($user);
+        return redirect()->intended('/dashboard')->with('success', 'Login successful.');
     }
 
-    // ✅ Autenticar usando Auth
-    Auth::login($user);
-   //dd(Auth::user()); 
-
-
-   return redirect()->intended('/dashboard')->with('success', 'Inicio de sesión exitoso');
-}
-
+    /**
+     * Alternative login method (not recommended if using loginCustom).
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function login(Request $request)
     {
         $request->validate([
             'Users_Code' => 'required|string',
-            'Users_Pwd' => 'required|string',
+            'Users_Pwd'  => 'required|string',
         ]);
 
         $user = Users::where('Users_Code', $request->Users_Code)->first();
@@ -60,20 +68,24 @@ class LoginController extends Controller
             return back()->withErrors(['login_error' => 'Invalid credentials.']);
         }
 
-        // Autenticación manual
         Auth::login($user);
-        Session::put('user', $user);
+        session(['user' => $user]);
 
         return redirect()->intended('/');
     }
 
+    /**
+     * Log out the currently authenticated user and destroy the session.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(): RedirectResponse
-{
-    Auth::logout(); // Cierra la sesión
+    {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
-    request()->session()->invalidate(); // Invalida la sesión actual
-    request()->session()->regenerateToken(); // Regenera el token CSRF
-
-    return redirect('/login')->with('success', 'Sesión cerrada correctamente');
+        return redirect('/login')->with('success', 'Logout successful.');
+    }
 }
-} 
+?>

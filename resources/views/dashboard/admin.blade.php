@@ -1,13 +1,14 @@
 @extends('layouts.app')
 
+@section('title', 'Orca Packaging')
+
 @section('content')
-  <div class="container">
-    <h1>Bienvenido Admin</h1>
-    <p>Panel con herramientas administrativas.</p>
-    @if(Auth::check())
-    Bienvenido {{ Auth::user()->Users_Name }}
-@else
-    <a href="/login">Login</a>
-@endif
-  </div>
+    <div class="container">
+        @if(Auth::check())
+            <h1>Welcome {{ Auth::user()->Users_Name }}</h1>
+            <p>Administrative tools panel.</p>
+        @else
+            <a href="{{ route('login') }}">Login</a>
+        @endif
+    </div>
 @endsection

@@ -12,13 +12,13 @@
                 <li class="breadcrumb-item active">Request</li>
             </ol>
         </nav>
-        <button id="openForm" class="btn btn-primary mb-3">Nueva Solicitud</button>
+        <button id="openForm" class="btn btn-primary mb-3">New Request</button>
         <button id="syncJotformBtn" class="btn btn-outline-primary mb-3">🔄 Sync with JotForm</button>
-    <div id="syncStatus" style="font-weight:bold;"></div>
-
+        <div id="syncStatus" style="font-weight:bold;"></div>
     </div>
-        <!-- Popup Formulario oculto inicialmente -->
-        <div id="popupForm" style="display: none;">
+
+    <!-- Popup Form, initially hidden -->
+    <div id="popupForm" style="display: none;">
         <iframe
             id="JotFormIFrame-250704767667064"
             title="Demande de fournitures"
@@ -33,17 +33,15 @@
         </iframe>
     </div>
 
-    <!-- Grid con solicitudes de JotForm -->
+    <!-- JotForm Submission Grid -->
     <section class="section mt-5">
         <h4>JotForm Submissions</h4>
         <div id="gridJotform"></div>
     </section>
-
 @endsection
 
 @push('scripts')
     <script> const supplyData = @json($requests); </script>
     <script> const jotformListUrl = "{{ url('/purchasing/requests/list') }}"; </script>
     <script src="/assets/js/suppliesRequest.js?v={{ time() }}"></script>
-
 @endpush

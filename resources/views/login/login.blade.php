@@ -23,13 +23,13 @@
                             <p class="text-muted small">Enter your username & password to login</p>
                         </div>
 
-                        {{-- Mensajes de error --}}
-                        <p class="text-muted">Sesión: {{ session('fonction_name') ?? 'NADA' }}</p>
+                        {{-- Success/Error Messages --}}
+                        <p class="text-muted">Session: {{ session('fonction_name') ?? 'N/A' }}</p>
                         @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @elseif(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @elseif(session('error'))
+                            <div class="alert alert-danger">{{ session('error') }}</div>
+                        @endif
 
                         <form class="row g-3 needs-validation" novalidate method="POST" action="{{ route('login.custom') }}">
                             @csrf

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="pagetitle">
-    <h1>Welcome Orca Packaging</h1>
+    <h1>Welcome to Orca Packaging</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -59,6 +59,7 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
+        // Data source for the grid
         var source = {
             datatype: "json",
             datafields: [
@@ -75,8 +76,10 @@
             url: "{{ route('hr.timeinput.data') }}"
         };
 
+        // Data adapter for jqxGrid
         var dataAdapter = new $.jqx.dataAdapter(source);
 
+        // Initialize the grid
         $("#timeInputGrid").jqxGrid({
             width: '100%',
             source: dataAdapter,
@@ -87,9 +90,9 @@
             columnsresize: true,
             columns: [
                 //{ text: 'ID', datafield: 'id', width: 70 },
-                { text: 'User', datafield: 'user', width: 150 },
-                { text: 'Start Time', datafield: 'start_time', width: 180, cellsformat: 'yyyy-MM-dd HH:mm' },
-                { text: 'Weekly Hours', datafield: 'weekly_hours', width: 120 },
+                { text: 'User', datafield: 'user', width: 300 },
+                { text: 'Start Time', datafield: 'start_time', width: 300, cellsformat: 'yyyy-MM-dd HH:mm' },
+                { text: 'Weekly Hours', datafield: 'weekly_hours', width: 300 },
                 //{ text: 'End Time', datafield: 'end_time', width: 180, cellsformat: 'yyyy-MM-dd HH:mm' },
                 //{ text: 'Comment', datafield: 'comment', width: 200 },
                 //{ text: 'Minutes', datafield: 'time_minutes', width: 100 },

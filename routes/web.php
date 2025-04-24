@@ -18,7 +18,7 @@ use App\Http\Controllers\Sales\SalesOrderController;
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
-     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.admin');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.admin');
 
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::prefix('sales')->group(function () {
         Route::get('/orders', [SalesOrderController::class, 'index'])->name('sales.orders');
-        // Otros módulos de ventas opcionales:
+        // Other optional sales modules:
         // Route::get('/quotations', [QuotationController::class, 'index']);
         // Route::get('/estimates', [EstimateController::class, 'index']);
         // Route::get('/invoices', [InvoiceController::class, 'index']);
@@ -43,8 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('purchasing')->group(function () {
         Route::get('/index', fn() => view('purchasing.index'));
 
-
-        // Otros módulos de compras opcionales:
+        // Other optional purchasing modules:
         // Route::get('/purchasing', fn() => view('purchasing.purchasing'));
         // Route::get('/reception', fn() => view('purchasing.reception'));
         // Route::get('/facture', fn() => view('purchasing.facture'));
@@ -52,14 +51,14 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::prefix('purchasing')->group(function () {
-        Route::get('/requests', [RequestController::class, 'index']);
-        Route::get('/requests/list', [RequestController::class, 'list']);
+    Route::get('/requests', [RequestController::class, 'index']);
+    Route::get('/requests/list', [RequestController::class, 'list']);
 
-        // Otros módulos de compras opcionales:
-        // Route::get('/purchasing', fn() => view('purchasing.purchasing'));
-        // Route::get('/reception', fn() => view('purchasing.reception'));
-        // Route::get('/facture', fn() => view('purchasing.facture'));
-    });
+    // Other optional purchasing modules:
+    // Route::get('/purchasing', fn() => view('purchasing.purchasing'));
+    // Route::get('/reception', fn() => view('purchasing.reception'));
+    // Route::get('/facture', fn() => view('purchasing.facture'));
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +72,7 @@ Route::get('/', fn() => view('home'));
 // Tools
 Route::get('/tools', fn() => view('home.tools'));
 
-// Production (pública por ahora)
+// Production (public for now)
 Route::get('/production', fn() => view('home.production'));
 
 /*
@@ -82,8 +81,8 @@ Route::get('/production', fn() => view('home.production'));
 |--------------------------------------------------------------------------
 */
 Route::get('/login', [LoginController::class, 'showLoginForm'])
-->middleware('guest')
-->name('login');
+    ->middleware('guest')
+    ->name('login');
 
 Route::post('/login', [LoginController::class, 'loginCustom'])
     ->name('login.custom');
@@ -101,14 +100,4 @@ Route::prefix('hr')->group(function () {
     Route::get('/timeinput/data', [TimeInputController::class, 'getClockData'])->name('hr.timeinput.data');
 });
 
-Route::get('/debug-auth', function () {
-    return [
-        'user' => Auth::user(),
-        'id' => Auth::id(),
-        'check' => Auth::check()
-    ];
-});
-
-
 ?>
-

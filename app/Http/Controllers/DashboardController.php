@@ -3,34 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Response;
 
 class DashboardController extends Controller
 {
+    /**
+     * Display the main dashboard view.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-     
-         $view = view('dashboard.admin');
+        $view = view('dashboard.admin');
 
-    return Response::noCache(response($view));
+        // Return the dashboard view with no cache headers
+        return Response::noCache(response($view));
 
-    /*$fonctionId = Session::get('fonction_id');
+        /*
+        // Optional: redirect based on role (stored in session or via Auth)
+        $fonctionId = Session::get('fonction_id');
 
         switch ($fonctionId) {
-            case 1: // Adjoin administratif
+            case 1: // Administrative Assistant
                 return view('dashboard.admin');
 
-            case 6: // Journalier
+            case 6: // General Worker
                 return view('dashboard.journalier');
 
-            case 9: // Opérateur de presse
+            case 9: // Press Operator
                 return view('dashboard.operateur');
 
             default:
                 return view('dashboard');
-        }*/
+        }
+        */
     }
 }
+
 
 ?>
