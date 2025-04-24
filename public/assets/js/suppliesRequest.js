@@ -106,12 +106,12 @@ function reloadJotformGrid() {
                 columnsresize: true,
                 selectionmode: 'singlerow',
                 columns: [
-                    { text: 'Date', datafield: 'created_at', width: 130 },
-                    { text: 'Machine', datafield: 'machine', width: 150 },
-                    { text: 'Description', datafield: 'description', width: 200 },
-                    { text: 'Urgency', datafield: 'urgency', width: 150 },
-                    { text: 'Qty in Stock', datafield: 'stock_quantity', width: 100, cellsalign: 'center' },
-                    { text: 'Notes', datafield: 'notes', width: 300 }
+                    { text: 'Date', datafield: 'created_at', width: 130, align: 'center', cellsalign: 'center' },
+                    { text: 'Machine', datafield: 'machine', width: 150, align: 'center', cellsalign: 'center' },
+                    { text: 'Description', datafield: 'description', width: 200, align: 'center', cellsalign: 'center' },
+                    { text: 'Urgency', datafield: 'urgency', width: 350, align: 'center', cellsalign: 'center' },
+                    { text: 'Qty in Stock', datafield: 'stock_quantity', width: 100, align: 'center', cellsalign: 'center' },
+                    { text: 'Notes', datafield: 'notes', width: 620, align: 'center', cellsalign: 'center' }
                 ]
             });
         });

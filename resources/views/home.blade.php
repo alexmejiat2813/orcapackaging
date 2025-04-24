@@ -46,12 +46,17 @@
 
         {{-- Clock-In Records --}}
         <div class="col-12">
-            <div class="container mt-4">
+            <div class="container d-flex justify-content-center mt-4">                
                 <h3 class="mb-3">Clock-In Records</h3>
+            </div>
+        </div>
+        
+        <div class="col-12">
+            <div class="container d-flex justify-content-center mt-4">                
                 <div id="timeInputGrid"></div>
             </div>
         </div>
-
+      
     </div>
 </section>
 @endsection
@@ -90,9 +95,9 @@
             columnsresize: true,
             columns: [
                 //{ text: 'ID', datafield: 'id', width: 70 },
-                { text: 'User', datafield: 'user', width: 300 },
-                { text: 'Start Time', datafield: 'start_time', width: 300, cellsformat: 'yyyy-MM-dd HH:mm' },
-                { text: 'Weekly Hours', datafield: 'weekly_hours', width: 300 },
+                { text: 'User', datafield: 'user', width: '33.3%', align: 'center', cellsalign: 'center' },
+                { text: 'Start Time', datafield: 'start_time', width: '33.3%', cellsformat: 'yyyy-MM-dd HH:mm', align: 'center', cellsalign: 'center' },
+                { text: 'Weekly Hours', datafield: 'weekly_hours', width: '33.3%', align: 'center', cellsalign: 'center' },
                 //{ text: 'End Time', datafield: 'end_time', width: 180, cellsformat: 'yyyy-MM-dd HH:mm' },
                 //{ text: 'Comment', datafield: 'comment', width: 200 },
                 //{ text: 'Minutes', datafield: 'time_minutes', width: 100 },
