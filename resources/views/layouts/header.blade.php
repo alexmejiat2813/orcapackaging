@@ -12,7 +12,7 @@
   @auth
   <div class="d-flex align-items-center ms-auto dropdown pe-4">
     <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->Users_Name }}  {{ Auth::user()?->fonction?->Fonction_Desc }}
+      <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->Users_Name }}
     </a>
     <ul class="dropdown-menu dropdown-menu-end">
       <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
@@ -104,7 +104,7 @@
         <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="production-menu" class="nav-content collapse {{ Request::is('production/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-        <li><a href="{{ url('/production/jobs') }}" class="{{ Request::is('production/jobs') ? 'active' : '' }}"><i class="bi bi-circle"></i>Production Jobs</a></li>
+        <li><a href="{{ url('/production/orders') }}" class="{{ Request::is('production/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Production Jobs</a></li>
         <li><a href="{{ url('/production/planning') }}" class="{{ Request::is('production/planning') ? 'active' : '' }}"><i class="bi bi-circle"></i>Planning</a></li>
         <li><a href="{{ url('/production/workorders') }}" class="{{ Request::is('production/workorders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Work Orders</a></li>
         <li><a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}"><i class="bi bi-circle"></i>BOM</a></li>

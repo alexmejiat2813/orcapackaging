@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HR\TimeInputController;
 use App\Http\Controllers\Purchasing\RequestController;
 use App\Http\Controllers\Sales\SalesOrderController;
+use App\Http\Controllers\Production\CommandesController;
 
 
 /*
@@ -48,7 +49,22 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/reception', fn() => view('purchasing.reception'));
         // Route::get('/facture', fn() => view('purchasing.facture'));
     });
+
+    // Production (public for now)
+    Route::prefix('production')->group(function () {
+        Route::get('/orders', [CommandesController::class, 'index']);
+        Route::get('/production/get-commandes', [CommandesController::class, 'getCommandes']);
+
+
+        // Other optional purchasing modules:
+        // Route::get('/purchasing', fn() => view('purchasing.purchasing'));
+        // Route::get('/reception', fn() => view('purchasing.reception'));
+        // Route::get('/facture', fn() => view('purchasing.facture'));
+    });
+
 });
+
+
 
 Route::prefix('purchasing')->group(function () {
     Route::get('/requests', [RequestController::class, 'index']);
@@ -72,8 +88,7 @@ Route::get('/', fn() => view('home'));
 // Tools
 Route::get('/tools', fn() => view('home.tools'));
 
-// Production (public for now)
-Route::get('/production', fn() => view('home.production'));
+
 
 /*
 |--------------------------------------------------------------------------

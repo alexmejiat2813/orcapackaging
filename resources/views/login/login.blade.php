@@ -24,7 +24,6 @@
                         </div>
 
                         {{-- Success/Error Messages --}}
-                        <p class="text-muted">Session: {{ session('fonction_name') ?? 'N/A' }}</p>
                         @if(session('success'))
                             <div class="alert alert-success">{{ session('success') }}</div>
                         @elseif(session('error'))
