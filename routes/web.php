@@ -9,6 +9,7 @@ use App\Http\Controllers\HR\TimeInputController;
 use App\Http\Controllers\Purchasing\RequestController;
 use App\Http\Controllers\Sales\SalesOrderController;
 use App\Http\Controllers\Production\CommandesController;
+use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
 
 
@@ -56,6 +57,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orders', [CommandesController::class, 'index']);
         Route::get('/production/get-commandes', [CommandesController::class, 'getCommandes']);
         Route::post('/orders/sync-schedule', [CommandesController::class, 'syncSchedule']);
+
+        Route::get('/bom', [BomController::class, 'index']);
+        Route::get('/bom/get-commandes', [CommandesController::class, 'getCommandes']);
+        Route::get('/production/bom/get-details/{lotId}', [BomController::class, 'getDetails']);
 
         Route::get('/planning', [PlanningController::class, 'index'])->name('production.planning');
 

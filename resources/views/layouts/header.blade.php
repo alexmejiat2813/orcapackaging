@@ -112,7 +112,7 @@
           </li>
           <li>
             <a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}">
-              <i class="bi bi-circle"></i>BOM
+              <i class="bi bi-circle"></i>BOM (Bill of Materials)
             </a>
           </li>
 
