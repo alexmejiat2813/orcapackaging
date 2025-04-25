@@ -70,7 +70,11 @@ class TimeInputController extends Controller
         }
 
         if ($openEntries->count() > 0) {
-            return back()->with('error', 'Previous open sessions were automatically closed. Please scan again to clock-in.');
+            //return back()->with('error', 'Previous open sessions were automatically closed. Please scan again to clock-in.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Clock-out registered for ' . $user->Users_Name
+            ]);
         }
 
         // 2. Create a new clock-in entry
@@ -84,7 +88,11 @@ class TimeInputController extends Controller
             'is_Punch_Clock'      => 1,
         ]);
 
-        return back()->with('success', 'Clock-in registered for ' . $user->Users_Name);
+        //return back()->with('success', 'Clock-in registered for ' . $user->Users_Name);
+        return response()->json([
+            'success' => true,
+            'message' => 'Clock-in registered for ' . $user->Users_Name
+        ]);
     }
 
     /**

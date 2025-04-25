@@ -20,13 +20,9 @@
             <div class="card p-4 shadow rounded-3">
                 <h4 class="text-center mb-4">🕒 Employee Clock In / Out</h4>
 
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @elseif(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
+                <div id="responseMessage" style="font-weight:bold;"></div>
 
-                <form method="POST" action="{{ route('hr.clock.process') }}">
+                <form id="clockInForm">
                     @csrf
 
                     <div class="mb-3">
@@ -46,65 +42,119 @@
 
         {{-- Clock-In Records --}}
         <div class="col-12">
-            <div class="container d-flex justify-content-center mt-4">                
+            <div class="container d-flex justify-content-center mt-4">
                 <h3 class="mb-3">Clock-In Records</h3>
             </div>
         </div>
-        
+
         <div class="col-12">
-            <div class="container d-flex justify-content-center mt-4">                
+            <div class="container d-flex justify-content-center mt-4">
                 <div id="timeInputGrid"></div>
             </div>
         </div>
-      
+
     </div>
 </section>
 @endsection
 
 @push('scripts')
 <script>
+    const jotformListUrl = "{{ url('/hr/timeinput/data') }}";
+
     $(document).ready(function () {
-        // Data source for the grid
-        var source = {
-            datatype: "json",
-            datafields: [
-                { name: 'id', type: 'int' },
-                { name: 'user', type: 'string' },
-                { name: 'start_time', type: 'date' },
-                { name: 'end_time', type: 'date' },
-                { name: 'comment', type: 'string' },
-                { name: 'time_minutes', type: 'int' },
-                { name: 'time_hours', type: 'float' },
-                { name: 'approved', type: 'string' },
-                { name: 'weekly_hours', type: 'string' },
-            ],
-            url: "{{ route('hr.timeinput.data') }}"
-        };
-
-        // Data adapter for jqxGrid
-        var dataAdapter = new $.jqx.dataAdapter(source);
-
-        // Initialize the grid
-        $("#timeInputGrid").jqxGrid({
-            width: '100%',
-            source: dataAdapter,
-            pageable: true,
-            autoheight: true,
-            sortable: true,
-            filterable: true,
-            columnsresize: true,
-            columns: [
-                //{ text: 'ID', datafield: 'id', width: 70 },
-                { text: 'User', datafield: 'user', width: '33.3%', align: 'center', cellsalign: 'center' },
-                { text: 'Start Time', datafield: 'start_time', width: '33.3%', cellsformat: 'yyyy-MM-dd HH:mm', align: 'center', cellsalign: 'center' },
-                { text: 'Weekly Hours', datafield: 'weekly_hours', width: '33.3%', align: 'center', cellsalign: 'center' },
-                //{ text: 'End Time', datafield: 'end_time', width: 180, cellsformat: 'yyyy-MM-dd HH:mm' },
-                //{ text: 'Comment', datafield: 'comment', width: 200 },
-                //{ text: 'Minutes', datafield: 'time_minutes', width: 100 },
-                //{ text: 'Hours', datafield: 'time_hours', width: 100 },
-                //{ text: 'Approved', datafield: 'approved', width: 90 }
-            ]
-        });
+        initializeGrids();
+        setupEventHandlers();
+        startAutoRefresh();
     });
+
+    function initializeGrids() {
+        reloadTimeInputGrid();
+    }
+
+    function reloadTimeInputGrid() {
+        fetch(jotformListUrl)
+            .then(res => res.json())
+            .then(data => {
+                const source = {
+                    localdata: data,
+                    datatype: "array",
+                    datafields: [
+                        { name: 'id', type: 'int' },
+                        { name: 'user', type: 'string' },
+                        { name: 'start_time', type: 'date' },
+                        { name: 'end_time', type: 'date' },
+                        { name: 'comment', type: 'string' },
+                        { name: 'time_minutes', type: 'int' },
+                        { name: 'time_hours', type: 'float' },
+                        { name: 'approved', type: 'string' },
+                        { name: 'weekly_hours', type: 'string' }
+                    ]
+                };
+
+                const dataAdapter = new $.jqx.dataAdapter(source);
+
+                $("#timeInputGrid").jqxGrid({
+                    width: '100%',
+                    source: dataAdapter,
+                    pageable: true,
+                    autoheight: true,
+                    sortable: true,
+                    filterable: true,
+                    columnsresize: true,
+                    columns: [
+                        { text: 'User', datafield: 'user', width: '33.3%', align: 'center', cellsalign: 'center' },
+                        { text: 'Start Time', datafield: 'start_time', width: '33.3%', cellsformat: 'yyyy-MM-dd HH:mm', align: 'center', cellsalign: 'center' },
+                        { text: 'Weekly Hours', datafield: 'weekly_hours', width: '33.3%', align: 'center', cellsalign: 'center' }
+                    ]
+                });
+            });
+    }
+
+    function setupEventHandlers() {
+        // Intercept form submit event and send via AJAX
+        $('#clockInForm').submit(function (e) {
+            e.preventDefault();
+
+            const formData = $(this).serialize();
+            const $repMsg = $('#responseMessage');
+
+            $.ajax({
+                url: '/hr/clock-process',
+                type: 'POST',
+                data: formData,
+
+                success: function (response) {
+                    if (response.success) {
+                        $repMsg.html('<div class="alert alert-success">' + response.message + '</div>');
+                    } else {
+                        $repMsg.html('<div class="alert alert-info">' + response.message + '</div>');
+                    }
+                    reloadTimeInputGrid();
+                },
+
+                error: function (xhr, status, error) {
+                    $repMsg.html('<div class="alert alert-error">' + xhr.responseText + '</div>');
+                },
+
+                complete: function () {
+                    $('#clockInForm')[0].reset();
+                    $('#barcode').focus();
+                    clearStatusMessage();
+                }
+            });
+        });
+    }
+
+    function startAutoRefresh() {
+        setInterval(reloadTimeInputGrid, 10000);
+    }
+
+    function clearStatusMessage() {
+        setTimeout(() => {
+            $('#responseMessage').fadeOut(300, function () {
+                $(this).html('').show();
+            });
+        }, 5000);
+    }
 </script>
 @endpush
