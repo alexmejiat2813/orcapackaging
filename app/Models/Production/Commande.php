@@ -22,6 +22,7 @@ class Commande extends Model
             ->where('p.ProductType_ID', 1)
             ->where('c.isReady_Production', 1)
             ->select(
+                'cs.Checked',
                 'cs.Scheduled_Date',
                 'c.Commande_Id',
                 'c.Customer_Code',

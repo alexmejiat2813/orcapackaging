@@ -13,20 +13,30 @@
         </nav>
     </div>
 
+    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
+        <div class="mt-3">
+            <button id="syncButton" class="btn btn-primary">⟳ Synchronize Schedule</button>
+        </div>
+    @endif
+
     <!-- Tabla para mostrar los datos de Commandes -->
     <section class="section mt-4">
         <div id="commandesGrid"></div>
     </section>
+
+    
 
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function () {
+            const today = new Date().toISOString().split('T')[0];
             // Definir el origen de los datos para jqxGrid
             var source = {
                 datatype: "json",
                 datafields: [
+                    { name: 'Checked', type: 'bool' },
                     { name: 'Scheduled_Date', type: 'date' },
                     { name: 'Commande_Id', type: 'int' },
                     { name: 'Customer_Code', type: 'string' },
@@ -65,7 +75,10 @@
                 filterable: true,
                 columnsresize: true,
                 pageSize: 18,
+                editable: true,
+                //selectionmode: 'checkbox',
                 columns: [
+                    { text: '', datafield: 'Checked', columntype: 'checkbox', width: 40 },
                     //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 150, cellsformat: 'yyyy-MM-dd' },
                     //{ text: 'Commande ID', datafield: 'Commande_Id', width: 100 },
                     { text: 'Order Code', datafield: 'InInvoiceNumber', width: 100, align: 'center', cellsalign: 'center' },
@@ -89,6 +102,38 @@
                     //{ text: 'Comment', datafield: 'Commentaire', width: 200 },
                     //{ text: 'Lot Completion', datafield: 'Lots_Complet', width: 150 },
                 ]
+            });
+
+            $('#syncButton').on('click', function () {
+                const rows = $('#commandesGrid').jqxGrid('getrows');
+                const selectedLots = rows.map(row => ({
+                    lot_id: row.Lot_Id,
+                    checked: !!row.Checked,
+                    current: !!row.Checked // Default to current as true, may adjust on controller
+                }));
+
+                if (selectedLots.length === 0) {
+                    alert('Please select at least one row to synchronize.');
+                    return;
+                }
+
+                fetch("{{ url('/production/orders/sync-schedule') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ lots: selectedLots })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    alert('Synchronization complete. Changes made: ' + result.updated);
+                    $('#commandesGrid').jqxGrid('updatebounddata');
+                })
+                .catch(error => {
+                    console.error('Error syncing:', error);
+                    alert('An error occurred during synchronization.');
+                });
             });
         });
     </script>

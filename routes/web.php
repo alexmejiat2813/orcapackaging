@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('production')->group(function () {
         Route::get('/orders', [CommandesController::class, 'index']);
         Route::get('/production/get-commandes', [CommandesController::class, 'getCommandes']);
+        Route::post('/orders/sync-schedule', [CommandesController::class, 'syncSchedule']);
 
         Route::get('/planning', [PlanningController::class, 'index'])->name('production.planning');
 
