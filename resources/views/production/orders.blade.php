@@ -31,7 +31,7 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            const today = new Date().toISOString().split('T')[0];
+            const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif');
             // Definir el origen de los datos para jqxGrid
             var source = {
                 datatype: "json",
@@ -78,25 +78,25 @@
                 editable: true,
                 //selectionmode: 'checkbox',
                 columns: [
-                    { text: '', datafield: 'Checked', columntype: 'checkbox', width: 40 },
+                    { text: '', datafield: 'Checked', columntype: 'checkbox', width: 40, editable: isAdmin },
                     //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 150, cellsformat: 'yyyy-MM-dd' },
                     //{ text: 'Commande ID', datafield: 'Commande_Id', width: 100 },
-                    { text: 'Order Code', datafield: 'InInvoiceNumber', width: 100, align: 'center', cellsalign: 'center' },
-                    { text: 'Customer Code', datafield: 'Customer_Code', width: 110, align: 'center', cellsalign: 'center' },
-                    { text: 'Customer Name', datafield: 'Customer_Name', width: 250, align: 'center' },
+                    { text: 'Order Code', datafield: 'InInvoiceNumber', width: 100, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Customer Code', datafield: 'Customer_Code', width: 110, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Customer Name', datafield: 'Customer_Name', width: 250, align: 'center', editable: false },
                     
-                    { text: 'Order Date', datafield: 'Date_Commande', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center' },
-                    { text: 'Requested Date', datafield: 'Date_Demander', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center' },
+                    { text: 'Order Date', datafield: 'Date_Commande', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Requested Date', datafield: 'Date_Demander', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: false },
                     //{ text: 'Expedition Date', datafield: 'Date_Expedition', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center' },
-                    { text: 'Client PO', datafield: 'Po_Client', width: 150, align: 'center', cellsalign: 'center' },
+                    { text: 'Client PO', datafield: 'Po_Client', width: 150, align: 'center', cellsalign: 'center', editable: false },
                     //{ text: 'Buyer', datafield: 'Acheteur', width: 150 },
                     //{ text: 'Transmit', datafield: 'Transmit', width: 80, align: 'center', cellsalign: 'center' },
                     //{ text: 'Ready for Production', datafield: 'isReady_Production', width: 150, align: 'center', cellsalign: 'center' },
-                    { text: 'Lot ID', datafield: 'Lot_Id', width: 60, align: 'center', cellsalign: 'center' },
+                    { text: 'Lot ID', datafield: 'Lot_Id', width: 60, align: 'center', cellsalign: 'center', editable: false },
                     //{ text: 'Product ID', datafield: 'Product_Id', width: 80, align: 'center', cellsalign: 'center' },
-                    { text: 'Product Number', datafield: 'PrNumber', width: 180, align: 'center', cellsalign: 'center' },
-                    { text: 'Product Description', datafield: 'PrDescription1', width: 680, align: 'center' },
-                    { text: 'Quantity', datafield: 'Lots_Qty', width: 100, align: 'center', cellsalign: 'center' },
+                    { text: 'Product Number', datafield: 'PrNumber', width: 180, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Product Description', datafield: 'PrDescription1', width: 680, align: 'center', editable: false },
+                    { text: 'Quantity', datafield: 'Lots_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
                     //{ text: 'Price', datafield: 'Lots_Price', width: 100 },
                     //{ text: 'Shipping Quantity', datafield: 'Shipping_Qty', width: 120 },
                     //{ text: 'Comment', datafield: 'Commentaire', width: 200 },
