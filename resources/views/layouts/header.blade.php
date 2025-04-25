@@ -99,20 +99,92 @@
 
     <!-- PRODUCTION -->
     @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
-    <li class="nav-item">
-      <a class="nav-link {{ Request::is('production/*') ? '' : 'collapsed' }}" data-bs-target="#production-menu" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="production-menu" class="nav-content collapse {{ Request::is('production/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-        <li><a href="{{ url('/production/orders') }}" class="{{ Request::is('production/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Production Jobs</a></li>
-        <li><a href="{{ url('/production/planning') }}" class="{{ Request::is('production/planning') ? 'active' : '' }}"><i class="bi bi-circle"></i>Planning</a></li>
-        <li><a href="{{ url('/production/workorders') }}" class="{{ Request::is('production/workorders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Work Orders</a></li>
-        <li><a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}"><i class="bi bi-circle"></i>BOM</a></li>
-        <li><a href="{{ url('/production/downtime') }}" class="{{ Request::is('production/downtime') ? 'active' : '' }}"><i class="bi bi-circle"></i>Machine Downtime</a></li>
-        <li><a href="{{ url('/production/efficiency') }}" class="{{ Request::is('production/efficiency') ? 'active' : '' }}"><i class="bi bi-circle"></i>Efficiency</a></li>
-      </ul>
-    </li>
+      <li class="nav-item">
+        <a class="nav-link {{ Request::is('production/*') ? '' : 'collapsed' }}" data-bs-target="#production-menu" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="production-menu" class="nav-content collapse {{ Request::is('production/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+
+          <li>
+            <a href="{{ url('/production/orders') }}" class="{{ Request::is('production/orders') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Production Jobs
+            </a>
+          </li>
+          <li>
+            <a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>BOM
+            </a>
+          </li>
+
+          <li>
+            <a href="{{ url('/production/planning') }}" class="{{ Request::is('production/planning') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Planning
+            </a>
+          </li>
+
+          <li>
+            <a class="{{ Request::is('production/workorders*') ? '' : 'collapsed' }}"
+               data-bs-target="#workorders-menu" data-bs-toggle="collapse" href="#">
+              <i class="bi bi-circle"></i><span>Work Orders</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="workorders-menu"
+                class="nav-content collapse {{ Request::is('production/workorders*') ? 'show' : '' }}"
+                data-bs-parent="#production-menu">
+
+              <li>
+                <a href="{{ url('/production/workorders') }}"
+                   class="{{ Request::is('production/workorders') ? 'active' : '' }}">
+                  <i class="bi bi-circle"></i>All Orders
+                </a>
+              </li>
+              <li>
+                <a href="{{ url('/production/workorders/uteco') }}"
+                   class="{{ Request::is('production/workorders/uteco') ? 'active' : '' }}">
+                  <i class="bi bi-circle"></i>Uteco
+                </a>
+              </li>
+              <li>
+                <a href="{{ url('/production/workorders/machine/conversion') }}"
+                   class="{{ Request::is('production/workorders/machine/conversion') ? 'active' : '' }}">
+                  <i class="bi bi-circle"></i>Conversion
+                </a>
+              </li>
+              <li>
+                <a href="{{ url('/production/workorders/machine/slitter') }}"
+                   class="{{ Request::is('production/workorders/machine/slitter') ? 'active' : '' }}">
+                  <i class="bi bi-circle"></i>Slitter
+                </a>
+              </li>
+              <li>
+                <a href="{{ url('/production/workorders/machine/silkscreen') }}"
+                   class="{{ Request::is('production/workorders/machine/silkscreen') ? 'active' : '' }}">
+                  <i class="bi bi-circle"></i>Silkscreen
+                </a>
+              </li>
+              <li>
+                <a href="{{ url('/production/workorders/machine/siat') }}"
+                   class="{{ Request::is('production/workorders/machine/siat') ? 'active' : '' }}">
+                  <i class="bi bi-circle"></i>Siat (Tapes)
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          
+          <li>
+            <a href="{{ url('/production/downtime') }}" class="{{ Request::is('production/downtime') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Machine Downtime
+            </a>
+          </li>
+          <li>
+            <a href="{{ url('/production/efficiency') }}" class="{{ Request::is('production/efficiency') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Efficiency
+            </a>
+          </li>
+        </ul>
+      </li>
     @endif
+
 
     <!-- INVENTORY -->
     @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')

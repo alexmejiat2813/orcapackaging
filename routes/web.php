@@ -9,6 +9,7 @@ use App\Http\Controllers\HR\TimeInputController;
 use App\Http\Controllers\Purchasing\RequestController;
 use App\Http\Controllers\Sales\SalesOrderController;
 use App\Http\Controllers\Production\CommandesController;
+use App\Http\Controllers\Production\PlanningController;
 
 
 /*
@@ -55,7 +56,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orders', [CommandesController::class, 'index']);
         Route::get('/production/get-commandes', [CommandesController::class, 'getCommandes']);
 
+        Route::get('/planning', [PlanningController::class, 'index'])->name('production.planning');
 
+
+        Route::get('/workorders/uteco', fn() => view('production.workorders.uteco'));
         // Other optional purchasing modules:
         // Route::get('/purchasing', fn() => view('purchasing.purchasing'));
         // Route::get('/reception', fn() => view('purchasing.reception'));
