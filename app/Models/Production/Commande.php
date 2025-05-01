@@ -23,6 +23,7 @@ class Commande extends Model
             ->where('c.isReady_Production', 1)
             ->select(
                 'cs.Checked',
+                'cs.Schedule_ID',
                 'cs.Scheduled_Date',
                 'c.Commande_Id',
                 'c.Customer_Code',
@@ -45,7 +46,8 @@ class Commande extends Model
                 'l.Commentaire',
                 'l.Lots_Complet'
             )
-            ->orderByDesc('c.InInvoiceNumber')
+            ->orderBydesc('cs.Checked')
+            ->orderBy('c.InInvoiceNumber')
             ->orderBy('cs.Scheduled_Date')
             ->orderBy('c.Date_Commande')
             ->orderBy('l.Lot_Id')

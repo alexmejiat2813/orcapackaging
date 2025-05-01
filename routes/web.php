@@ -60,9 +60,17 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/bom', [BomController::class, 'index']);
         Route::get('/bom/get-commandes', [CommandesController::class, 'getCommandes']);
-        Route::get('/production/bom/get-details/{lotId}', [BomController::class, 'getDetails']);
+        Route::get('/bom/get-details/{lotId}', [BomController::class, 'getDetails']);
 
-        Route::get('/planning', [PlanningController::class, 'index'])->name('production.planning');
+        Route::post('/bom/detail/store', [BomController::class, 'storeDetail']);
+        Route::put('/bom/detail/update/{id}', [BomController::class, 'updateDetail']);
+        Route::delete('/bom/detail/delete/{id}', [BomController::class, 'deleteDetail']);
+
+        Route::get('/planning', [PlanningController::class, 'index']);
+        Route::get('/planning/get-appointments', [PlanningController::class, 'getAppointments']);
+        Route::post('/planning/save-appointment', [PlanningController::class, 'saveAppointment']);
+        Route::post('/planning/delete-appointment', [PlanningController::class, 'deleteAppointment']);
+
 
 
         Route::get('/workorders/uteco', fn() => view('production.workorders.uteco'));

@@ -44,44 +44,13 @@
 
 
 <script type="text/javascript">
-        $(document).ready(function () {
-            const appointments = [
-                {
-                    id: "cmd1",
-                    description: "Uteco: cmd 3313 - VIBAC",
-                    subject: "cmd 3313 - VIBAC",
-                    calendar: "Uteco",
-                    start: new Date(2025, 3, 21, 0, 0),
-                    end: new Date(2025, 3, 21, 23, 59)
-                },
-                {
-                    id: "cmd2",
-                    description: "Conversion 1: cmd 3213 - Protek",
-                    subject: "cmd 3213 - Protek",
-                    calendar: "Conversion 1",
-                    start: new Date(2025, 3, 22, 0, 0),
-                    end: new Date(2025, 3, 22, 23, 59)
-                },
-                {
-                    id: "cmd3",
-                    description: "Conversion 2: cmd 3252 - Oze Delice",
-                    subject: "cmd 3252 - Oze Delice",
-                    calendar: "Conversion 2",
-                    start: new Date(2025, 3, 23, 0, 0),
-                    end: new Date(2025, 3, 23, 23, 59)
-                },
-                {
-                    id: "cmd4",
-                    description: "Slitter: cmd Slitter Test",
-                    subject: "cmd Slitter Test",
-                    calendar: "Slitter",
-                    start: new Date(2025, 3, 24, 0, 0),
-                    end: new Date(2025, 3, 24, 23, 59)
-                }
-            ];
+let adapter;
+let source;
 
-            const source = {
-                dataType: "array",
+        $(document).ready(function () {
+            
+            source = {
+                dataType: "json",
                 dataFields: [
                     { name: 'id', type: 'string' },
                     { name: 'description', type: 'string' },
@@ -91,39 +60,48 @@
                     { name: 'end', type: 'date' }
                 ],
                 id: 'id',
-                localData: appointments
+                url: "{{ url('/production/planning/get-appointments') }}"
+                //localData: appointments
             };
 
-            const adapter = new $.jqx.dataAdapter(source);
+            //const adapter = new $.jqx.dataAdapter(source);
 
+             adapter = new $.jqx.dataAdapter(source, {
+    beforeLoadComplete: function (records) {
+        return records.map(function (rec) {
+            rec.start = new Date(rec.start + 'Z'); // Forzar UTC
+            rec.end = new Date(rec.end + 'Z');
+            return rec;
+        });
+    }
+});
+    
+ 
             $('#scheduler').jqxScheduler({
-                //date: new Date(2025, 3, 21), // ✅ Replaced $.jqx.date with native JS Date
+                date: new $.jqx.date(new Date()), // ✅ Replaced $.jqx.date with native JS Date
                 width: '100%',
-                height: 630,
+                height: 700,
                 source: adapter,
                 view: 'timelineWeekView',
                 dayNameFormat: "abbr",
                 showLegend: true,
+                 localization: { firstDay: 1},
+
+
+
+
                 resources: {
-                    colorScheme: "scheme04",
-                    dataField: "calendar",
-                    orientation: "vertical",
-                    source: new $.jqx.dataAdapter({
-                        dataType: "array",
-                        dataFields: [
-                            { name: 'calendar', type: 'string' }
-                        ],
-                        localData: [
-                            { calendar: 'Uteco' },
-                            { calendar: 'Conversion 1' },
-                            { calendar: 'Conversion 2' },
-                            { calendar: 'Wicket' },
-                            { calendar: 'Slitter' },
-                            { calendar: 'Sérigraphie' },
-                            { calendar: 'Siat (Tapes)' }
-                        ]
-                    })
-                },
+    colorScheme: "scheme05",
+    dataField: "calendar",
+    
+    source: new $.jqx.dataAdapter({
+        dataType: "array",
+        dataFields: [
+            { name: 'calendar', type: 'string' },  // ID real
+        ],
+        localData: @json($machines) // Dinámico desde el backend
+    })
+},
                 appointmentDataFields: {
                     from: 'start',
                     to: 'end',
@@ -132,13 +110,104 @@
                     subject: 'subject',
                     resourceId: 'calendar'
                 },
+
                 views: [
-                    { type: 'timelineDayView', appointmentHeight: 30 },
-                    { type: 'timelineWeekView', appointmentHeight: 30 },
-                    { type: 'timelineMonthView', appointmentHeight: 30 }
-                ]
+                    //{ type: "dayView", showWeekends: true },
+                    //{ type: "weekView", showWeekends: true }
+                    { type: "timelineDayView", text : "Day", showWeekends: true, timeSlotWidth: 64,showWorkTime: true,workTime:
+                    {
+                        fromDayOfWeek: 1,
+                        toDayOfWeek: 5,
+                        fromHour: 7,
+                        toHour: 19
+                    }, timeRuler: { formatString: "HH:mm", scale : "hour" } },
+                    { type: "timelineWeekView", text : "Week", showWeekends: true, timeSlotWidth: 50,showWorkTime: true, workTime:
+                    {
+                        fromDayOfWeek: 1,
+                        toDayOfWeek: 5,
+                        fromHour: 7,
+                        toHour: 19
+                    },  timeRuler: { formatString: "HH:mm", scale : "hour" } },
+                    { type: 'monthView', text : "Month", showWeekNumbers: true },
+                    //{ type: "timelineMonthView", showWeekends: true, timeRuler: { formatString: "dd" } },
+                    'agendaView'
+        
+    ]
             });
+
+
+
+
         });
+
+        function saveAppointment(appointment) {
+            
+
+    const payload = {
+        id: appointment.id,
+        subject: appointment.subject,
+        description: appointment.description,
+        calendar: appointment.resourceId,
+        start: appointment.from.toDate().toISOString(), // ✅ ISO sin duplicar timezone
+        end: appointment.to.toDate().toISOString()
+    };
+
+    $.ajax({
+        url: "/production/planning/save-appointment",
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": '{{ csrf_token() }}'
+        },
+        data: payload,
+        success: function (response) {
+            console.log("Saved", response);
+            // ✅ Refresca el source
+    adapter.dataBind();
+
+
+             // ✅ Toast simple
+            alert("Appointment saved successfully!");
+        },
+        error: function (err) {
+            console.error("Error in saveAppointment", err);
+        }
+    });
+}
+
+
+function deleteAppointment(id) {
+    $.ajax({
+        url: "/production/planning/delete-appointment",
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": '{{ csrf_token() }}'
+        },
+        data: { id: id },
+        success: function (response) {
+            console.log("Deleted", response);
+            adapter.dataBind();
+
+            refreshAppointments();
+        }
+    });
+}
+
+       // 🔁 Agrega esto después de crear el scheduler:
+$('#scheduler').on('appointmentAdd', function (event) {
+    const appointment = event.args.appointment;
+    saveAppointment(appointment); // INSERT
+});
+
+$('#scheduler').on('appointmentChange', function (event) {
+    const appointment = event.args.appointment;
+    saveAppointment(appointment); // UPDATE
+});
+
+$('#scheduler').on('appointmentDelete', function (event) {
+    const appointment = event.args.appointment;
+    deleteAppointment(appointment.id); // DELETE
+});
+
     </script>
 @endpush
 

@@ -74,12 +74,13 @@
                 sortable: true,
                 filterable: true,
                 columnsresize: true,
+                showfilterrow: true,
                 pageSize: 18,
                 editable: true,
                 //selectionmode: 'checkbox',
                 columns: [
                     { text: '', datafield: 'Checked', columntype: 'checkbox', width: 40, editable: isAdmin },
-                    //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 150, cellsformat: 'yyyy-MM-dd' },
+                    { text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
                     //{ text: 'Commande ID', datafield: 'Commande_Id', width: 100 },
                     { text: 'Order Code', datafield: 'InInvoiceNumber', width: 100, align: 'center', cellsalign: 'center', editable: false },
                     { text: 'Customer Code', datafield: 'Customer_Code', width: 110, align: 'center', cellsalign: 'center', editable: false },
@@ -95,7 +96,7 @@
                     { text: 'Lot ID', datafield: 'Lot_Id', width: 60, align: 'center', cellsalign: 'center', editable: false },
                     //{ text: 'Product ID', datafield: 'Product_Id', width: 80, align: 'center', cellsalign: 'center' },
                     { text: 'Product Number', datafield: 'PrNumber', width: 180, align: 'center', cellsalign: 'center', editable: false },
-                    { text: 'Product Description', datafield: 'PrDescription1', width: 680, align: 'center', editable: false },
+                    { text: 'Product Description', datafield: 'PrDescription1', width: 500, align: 'center', editable: false },
                     { text: 'Quantity', datafield: 'Lots_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
                     //{ text: 'Price', datafield: 'Lots_Price', width: 100 },
                     //{ text: 'Shipping Quantity', datafield: 'Shipping_Qty', width: 120 },
@@ -106,15 +107,23 @@
 
             $('#syncButton').on('click', function () {
                 const rows = $('#commandesGrid').jqxGrid('getrows');
+            
                 const selectedLots = rows.map(row => ({
                     lot_id: row.Lot_Id,
                     checked: !!row.Checked,
-                    current: !!row.Checked // Default to current as true, may adjust on controller
+                    current: !!row.Checked, // Default to current as true, may adjust on controller
+                    Scheduled_Date: row.Scheduled_Date
                 }));
 
-                if (selectedLots.length === 0) {
-                    alert('Please select at least one row to synchronize.');
-                    return;
+                for (const row of rows) {
+                        if (row.Checked && !row.Scheduled_Date) {
+                            alert(`Lot ${row.Lot_Id} is checked but has no date assigned.`);
+                            return;
+                        }
+                        if (!row.Checked && row.Scheduled_Date) {
+                            alert(`Lot ${row.Lot_Id} has a date but is not checked.`);
+                            return;
+                        }
                 }
 
                 fetch("{{ url('/production/orders/sync-schedule') }}", {
