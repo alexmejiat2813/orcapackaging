@@ -21,7 +21,9 @@ use App\Http\Controllers\Production\PlanningController;
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.admin');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard/chart/', [DashboardController::class, 'getInvoiceData']);
+    Route::get('dashboard/chart/top-clients', [DashboardController::class, 'getTopClientsByYear']);
 
     /*
     |--------------------------------------------------------------------------
@@ -71,7 +73,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/planning/save-appointment', [PlanningController::class, 'saveAppointment']);
         Route::post('/planning/delete-appointment', [PlanningController::class, 'deleteAppointment']);
 
-
+        Route::get('/tracking', fn() => view('tracking'));
 
         Route::get('/workorders/uteco', fn() => view('production.workorders.uteco'));
         // Other optional purchasing modules:

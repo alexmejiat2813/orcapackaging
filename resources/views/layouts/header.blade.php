@@ -104,7 +104,11 @@
           <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="production-menu" class="nav-content collapse {{ Request::is('production/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-
+           <li>
+            <a href="{{ url('/production/tracking') }}" class="{{ Request::is('production/tracking') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Order Tracking
+            </a>
+          </li>
           <li>
             <a href="{{ url('/production/orders') }}" class="{{ Request::is('production/orders') ? 'active' : '' }}">
               <i class="bi bi-circle"></i>Production Jobs

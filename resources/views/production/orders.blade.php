@@ -28,7 +28,4 @@
     <!-- Import JS modules -->
     <script type="module" src="/assets/js/config.js"></script>
     <script type="module" src="/assets/js/commandes.js"></script>
-
-
-
 @endpush
