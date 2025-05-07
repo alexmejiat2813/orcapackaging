@@ -14,137 +14,128 @@
     </div>
 
     @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
-        <div class="mt-3">
-            <button id="syncButton" class="btn btn-primary">⟳ Synchronize Schedule</button>
-        </div>
+        <!-- Button visible only for admin -->
     @endif
 
-    <!-- Tabla para mostrar los datos de Commandes -->
     <section class="section mt-4">
         <div id="commandesGrid"></div>
     </section>
-
-    
-
 @endsection
 
 @push('scripts')
-    <script>
-        $(document).ready(function () {
-            const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif');
-            // Definir el origen de los datos para jqxGrid
-            var source = {
-                datatype: "json",
-                datafields: [
-                    { name: 'Checked', type: 'bool' },
-                    { name: 'Scheduled_Date', type: 'date' },
-                    { name: 'Commande_Id', type: 'int' },
-                    { name: 'Customer_Code', type: 'string' },
-                    { name: 'Customer_Name', type: 'string' },
-                    { name: 'InInvoiceNumber', type: 'string' },
-                    { name: 'Date_Commande', type: 'date' },
-                    { name: 'Date_Demander', type: 'date' },
-                    { name: 'Date_Expedition', type: 'date' },
-                    { name: 'Po_Client', type: 'string' },
-                    { name: 'Acheteur', type: 'string' },
-                    { name: 'Transmit', type: 'string' },
-                    { name: 'isReady_Production', type: 'boolean' },
-                    { name: 'Lot_Id', type: 'int' },
-                    { name: 'Product_Id', type: 'int' },
-                    { name: 'PrNumber', type: 'string' },
-                    { name: 'PrDescription1', type: 'string' },
-                    { name: 'Lots_Qty', type: 'int' },
-                    { name: 'Lots_Price', type: 'float' },
-                    { name: 'Shipping_Qty', type: 'int' },
-                    { name: 'Commentaire', type: 'string' },
-                    { name: 'Lots_Complet', type: 'string' },
-                ],
-                url: "{{ url('/production/production/get-commandes') }}", // Ruta para obtener los datos
-                id: 'Commande_Id'
-            };
+<script>
+    $(document).ready(function () {
+        const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif');
 
-            var dataAdapter = new $.jqx.dataAdapter(source);
+        // Define source for jqxGrid
+        var source = {
+            datatype: "json",
+            datafields: [
+                { name: 'Scheduled_Date', type: 'date' },
+                { name: 'Commande_Id', type: 'int' },
+                { name: 'Customer_Code', type: 'string' },
+                { name: 'Customer_Name', type: 'string' },
+                { name: 'InInvoiceNumber', type: 'string' },
+                { name: 'Date_Commande', type: 'date' },
+                { name: 'Date_Demander', type: 'date' },
+                { name: 'Date_Expedition', type: 'date' },
+                { name: 'Po_Client', type: 'string' },
+                { name: 'Acheteur', type: 'string' },
+                { name: 'Transmit', type: 'string' },
+                { name: 'isReady_Production', type: 'boolean' },
+                { name: 'Lot_Id', type: 'int' },
+                { name: 'Product_Id', type: 'int' },
+                { name: 'PrNumber', type: 'string' },
+                { name: 'PrDescription1', type: 'string' },
+                { name: 'Lots_Qty', type: 'int' },
+                { name: 'Lots_Price', type: 'float' },
+                { name: 'Shipping_Qty', type: 'float' },
+                { name: 'Commentaire', type: 'string' },
+                { name: 'Lots_Complet', type: 'string' },
+                { name: 'SubTotal', type: 'float' },
+                { name: 'Total', type: 'float' },
+                { name: 'Qty_Finish', type: 'float' }
+            ],
+            url: "{{ url('/production/production/get-commandes') }}",
+            id: 'Commande_Id'
+        };
 
-            // Configuración de jqxGrid
-            $("#commandesGrid").jqxGrid({
-                width: '100%',
-                source: dataAdapter,
-                pageable: true,
-                autoheight: true,
-                sortable: true,
-                filterable: true,
-                columnsresize: true,
-                showfilterrow: true,
-                pageSize: 18,
-                editable: true,
-                //selectionmode: 'checkbox',
-                columns: [
-                    { text: '', datafield: 'Checked', columntype: 'checkbox', width: 40, editable: isAdmin },
-                    { text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
-                    //{ text: 'Commande ID', datafield: 'Commande_Id', width: 100 },
-                    { text: 'Order Date', datafield: 'Date_Commande', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: false },
-                    { text: 'Requested Date', datafield: 'Date_Demander', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: false },
-                    { text: 'Order Code', datafield: 'InInvoiceNumber', width: 100, align: 'center', cellsalign: 'center', editable: false },
-                    { text: 'Customer Code', datafield: 'Customer_Code', width: 110, align: 'center', cellsalign: 'center', editable: false },
-                    { text: 'Customer Name', datafield: 'Customer_Name', width: 250, align: 'center', editable: false },
-                    
-                    
-                    //{ text: 'Expedition Date', datafield: 'Date_Expedition', width: 110, cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center' },
-                    { text: 'Client PO', datafield: 'Po_Client', width: 160, align: 'center', editable: false },
-                    //{ text: 'Buyer', datafield: 'Acheteur', width: 150 },
-                    //{ text: 'Transmit', datafield: 'Transmit', width: 80, align: 'center', cellsalign: 'center' },
-                    //{ text: 'Ready for Production', datafield: 'isReady_Production', width: 150, align: 'center', cellsalign: 'center' },
-                    { text: 'Lot ID', datafield: 'Lot_Id', width: 60, align: 'center', cellsalign: 'center', editable: false },
-                    //{ text: 'Product ID', datafield: 'Product_Id', width: 80, align: 'center', cellsalign: 'center' },
-                    { text: 'Product Number', datafield: 'PrNumber', width: 180, align: 'center', editable: false },
-                    { text: 'Product Description', datafield: 'PrDescription1', width: 500, align: 'center', editable: false },
-                    { text: 'Quantity', datafield: 'Lots_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
-                    //{ text: 'Price', datafield: 'Lots_Price', width: 100 },
-                    //{ text: 'Shipping Quantity', datafield: 'Shipping_Qty', width: 120 },
-                    //{ text: 'Comment', datafield: 'Commentaire', width: 200 },
-                    //{ text: 'Lot Completion', datafield: 'Lots_Complet', width: 150 },
-                ]
-            });
+        var dataAdapter = new $.jqx.dataAdapter(source);
 
-            $('#syncButton').on('click', function () {
-                const rows = $('#commandesGrid').jqxGrid('getrows');
-            
-                const selectedLots = rows.map(row => ({
-                    lot_id: row.Lot_Id,
-                    checked: !!row.Checked,
-                    current: !!row.Checked, // Default to current as true, may adjust on controller
-                    Scheduled_Date: row.Scheduled_Date
-                }));
+        // jqxGrid configuration
+        $("#commandesGrid").jqxGrid({
+            width: '100%',
+            source: dataAdapter,
+            pageable: true,
+            autoheight: true,
+            sortable: true,
+            filterable: true,
+            columnsresize: true,
+            showfilterrow: true,
+            pageSize: 17,
+            editable: true,
+            showtoolbar: true,
+            rendertoolbar: function (toolbar) {
+                var container = $("<div style='margin: 5px;'></div>");
+                toolbar.append(container);
+                container.append('<input class="btn btn-primary" id="syncButton" type="button" value="Synchronize Schedule" />');
+                $("#syncButton").jqxButton();
 
-                for (const row of rows) {
-                        if (row.Checked && !row.Scheduled_Date) {
-                            alert(`Lot ${row.Lot_Id} is checked but has no date assigned.`);
-                            return;
-                        }
-                        if (!row.Checked && row.Scheduled_Date) {
-                            alert(`Lot ${row.Lot_Id} has a date but is not checked.`);
-                            return;
-                        }
-                }
+                $('#syncButton').on('click', function () {
+                    const rows = $('#commandesGrid').jqxGrid('getrows');
 
-                fetch("{{ url('/production/orders/sync-schedule') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ lots: selectedLots })
-                })
-                .then(response => response.json())
-                .then(result => {
-                    alert('Synchronization complete. Changes made: ' + result.updated);
-                    $('#commandesGrid').jqxGrid('updatebounddata');
-                })
-                .catch(error => {
-                    console.error('Error syncing:', error);
-                    alert('An error occurred during synchronization.');
+                    // Only rows with a valid Scheduled_Date will be processed
+                    const selectedLots = rows
+                        .filter(row => row.Scheduled_Date)
+                        .map(row => ({
+                            lot_id: row.Lot_Id,
+                            commande_id: row.Commande_Id,
+                            Scheduled_Date: row.Scheduled_Date
+                        }));
+
+                    if (selectedLots.length === 0) {
+                        $('#commandesGrid').jqxGrid('updatebounddata');
+                        return;
+                    }
+
+                    fetch("{{ url('/production/orders/sync-schedule') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ lots: selectedLots })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        alert('Synchronization complete. Changes made: ' + result.updated);
+                        $('#commandesGrid').jqxGrid('updatebounddata');
+                    })
+                    .catch(error => {
+                        console.error('Error syncing:', error);
+                        alert('An error occurred during synchronization.');
+                    });
                 });
-            });
+            },
+            columns: [
+                { text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
+                { text: 'ID', datafield: 'Commande_Id', width: 100 },
+                { text: '# Customer', datafield: 'Customer_Code', width: 95, align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Customer', datafield: 'Customer_Name', width: 255, align: 'center', editable: false },
+                { text: '# Order', datafield: 'InInvoiceNumber', width: 75, align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Client PO', datafield: 'Po_Client', width: 160, align: 'center', editable: false },
+                { text: 'Order Date', datafield: 'Date_Commande', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Requested Date', datafield: 'Date_Demander', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Lot ID', datafield: 'Lot_Id', width: 60, align: 'center', cellsalign: 'center', editable: false },
+                { text: '# Product', datafield: 'PrNumber', width: 180, align: 'center', editable: false },
+                { text: 'Product', datafield: 'PrDescription1', width: 500, align: 'center', editable: false },
+                { text: 'Order Quantity', datafield: 'Lots_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Shipping Quantity', datafield: 'Shipping_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Finish Quantity', datafield: 'Qty_Finish', width: 100, align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Sub-Total', datafield: 'SubTotal', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
+                { text: 'Total', datafield: 'Total', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false }
+            ]
         });
-    </script>
+    });
+</script>
 @endpush
