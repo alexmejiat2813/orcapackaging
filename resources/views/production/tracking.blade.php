@@ -13,6 +13,13 @@
         </nav>
     </div>
 
+    <div class="row mb-3">
+    <div class="col-md-4">
+        <label for="filterInput">Filter by Order Number (InInvoiceNumber):</label>
+        <input id="filterInput" type="text" class="form-control" placeholder="e.g. 5341" />
+    </div>
+</div>
+
     <section class="section mt-4">
         <div id="kanban"></div>
     </section>
@@ -22,76 +29,83 @@
 @endsection
 
 @push('scripts')
-<script type="text/javascript">
-        $(document).ready(function () {
-            var fields = [
-                     { name: "id", type: "string" },
-                     { name: "status", map: "state", type: "string" },
-                     { name: "text", map: "label", type: "string" },
-                     { name: "tags", type: "string" },
-                     { name: "color", map: "hex", type: "string" },
-                     { name: "resourceId", type: "number" }
-            ];
-            var source =
-             {
-                 localData: [
-                          { id: "1161", state: "new", label: "Make a new Dashboard", tags: "dashboard", hex: "#36c7d0", resourceId: 3 },
-                          { id: "1645", state: "work", label: "Prepare new release", tags: "release", hex: "#ff7878", resourceId: 1 },
-                          { id: "9213", state: "new", label: "One item added to the cart", tags: "cart", hex: "#96c443", resourceId: 3 },
-                          { id: "6546", state: "done", label: "Edit Item Price", tags: "price, edit", hex: "#ff7878", resourceId: 4 },
-                          { id: "9034", state: "new", label: "Login 404 issue", tags: "issue, login", hex: "#96c443" }
-                 ],
-                 dataType: "array",
-                 dataFields: fields
-             };
-            var dataAdapter = new $.jqx.dataAdapter(source);
-            var resourcesAdapterFunc = function () {
-                var resourcesSource =
-                {
-                    localData: [
-                          { id: 0, name: "No name", image: "../../jqwidgets/styles/images/common.png", common: true },
-                          { id: 1, name: "Andrew Fuller", image: "../../images/andrew.png" },
-                          { id: 2, name: "Janet Leverling", image: "../../images/janet.png" },
-                          { id: 3, name: "Steven Buchanan", image: "../../images/steven.png" },
-                          { id: 4, name: "Nancy Davolio", image: "../../images/nancy.png" },
-                          { id: 5, name: "Michael Buchanan", image: "../../images/Michael.png" },
-                          { id: 6, name: "Margaret Buchanan", image: "../../images/margaret.png" },
-                          { id: 7, name: "Robert Buchanan", image: "../../images/robert.png" },
-                          { id: 8, name: "Laura Buchanan", image: "../../images/Laura.png" },
-                          { id: 9, name: "Laura Buchanan", image: "../../images/Anne.png" }
-                    ],
+<script src="/assets/jqwidgets/jqxcore.js"></script>
+    <script src="/assets/jqwidgets/jqxbuttons.js"></script>
+    <script src="/assets/jqwidgets/jqxscrollbar.js"></script>
+    <script src="/assets/jqwidgets/jqxlistbox.js"></script>
+    <script src="/assets/jqwidgets/jqxdragdrop.js"></script>
+    <script src="/assets/jqwidgets/jqxsortable.js"></script>
+    <script src="/assets/jqwidgets/jqxdata.js"></script>
+    <script src="/assets/jqwidgets/jqxkanban.js"></script>
+<script type="module">
+    import { TrackingKanban } from '/assets/js/trackingKanban.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new TrackingKanban('kanban', 'filterInput', '{{ url("/production/tracking/kanban") }}');
+    });
+
+   /* $(document).ready(function () {
+        const fields = [
+            { name: "id", type: "string" },
+            { name: "status", map: "kanban_status", type: "string" },
+            { name: "text", map: "label", type: "string" },
+            { name: "tags", type: "string" },
+            { name: "color", type: "string" },
+            //{ name: "resourceId", type: "number" }
+        ];
+
+        fetch("{{ url('/production/tracking/kanban') }}")
+            .then(response => response.json())
+            .then(json => {
+                const items = json.map((item, index) => ({
+                    id: `${item.Lot_Id}`,
+                    kanban_status: mapStatus(item.KANBAN_STATUS),
+                    label: `Lot ${item.Lot_Id} - ${item.PrDescription1.substring(0, 100)} ${item.PrDescription2.substring(0, 100)}`,
+                    tags: `${item.Customer_Code}, ${item.InInvoiceNumber}, ${item.PrNumber}`,
+                    color: getColor(item.KANBAN_STATUS)
+                    //resourceId: 0
+                }));
+
+                const source = {
+                    localData: items,
                     dataType: "array",
-                    dataFields: [
-                         { name: "id", type: "number" },
-                         { name: "name", type: "string" },
-                         { name: "image", type: "string" },
-                         { name: "common", type: "boolean" }
-                    ]
+                    dataFields: fields
                 };
-                var resourcesDataAdapter = new $.jqx.dataAdapter(resourcesSource);
-                return resourcesDataAdapter;
-            }
-            $('#kanban').jqxKanban({
-                resources: resourcesAdapterFunc(),
-                width: getWidth('kanban'),
-                source: dataAdapter,
-                columns: [
-                    { text: "Backlog", dataField: "new", maxItems: 4 },
-                    { text: "In Progress", dataField: "work", maxItems: 2 },
-                    { text: "Done", dataField: "done", collapsible: false, maxItems: 5 }
-                ],
-                // render column headers.
-                columnRenderer: function (element, collapsedElement, column) {
-                    var columnItems = $("#kanban").jqxKanban('getColumnItems', column.dataField).length;
-                    // update header's status.
-                    element.find(".jqx-kanban-column-header-status").html(" (" + columnItems + "/" + column.maxItems + ")");
-                    // update collapsed header's status.
-                    collapsedElement.find(".jqx-kanban-column-header-status").html(" (" + columnItems + "/" + column.maxItems + ")");
-                }
+
+                const dataAdapter = new $.jqx.dataAdapter(source);
+
+                $('#kanban').jqxKanban({
+                    width: '100%',
+                    height: 700,
+                    source: dataAdapter,
+                    columns: [
+                        { text: "Backlog", dataField: "backlog" },
+                        { text: "In Progress", dataField: "work" },
+                        { text: "Partial", dataField: "partial" },
+                        { text: "Done", dataField: "done" }
+                    ]
+                });
             });
-        });
-    </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2FX5PV9DNT"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-2FX5PV9DNT');</script></head>   
 
+        function mapStatus(status) {
+            switch (status.toLowerCase()) {
+                case 'backlog': return 'backlog';
+                case 'in progress': return 'work';
+                case 'partial': return 'partial';
+                case 'done': return 'done';
+                default: return 'backlog';
+            }
+        }
 
+        function getColor(status) {
+            switch (status.toLowerCase()) {
+                case 'backlog': return '#5dc3f0';
+                case 'in progress': return '#f19b60';
+                case 'partial': return '#fedd69';
+                case 'done': return '#6bbd49';
+                default: return '#cccccc';
+            }
+        }
+    });*/
+</script>
 @endpush

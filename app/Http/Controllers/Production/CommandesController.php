@@ -45,9 +45,9 @@ public function index()
             if (!isset($lot['lot_id']) || !isset($lot['Scheduled_Date'])) {
                 continue;
             }
-
+        
             $commandeId = $lot['commande_id'];
-            $date = isset($lot['Scheduled_Date']) ? Carbon::parse($lot['Scheduled_Date'])->setTimezone('America/Toronto')->format('Y-m-d H:i:s') : null;
+            $date = isset($lot['Scheduled_Date']) ? Carbon::parse($lot['Scheduled_Date'])->addHours(11)->setTimezone('America/Toronto')->format('Y-m-d H:i:s') : null;
 
             
             

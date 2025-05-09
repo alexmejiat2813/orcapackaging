@@ -11,6 +11,7 @@ use App\Http\Controllers\Sales\SalesOrderController;
 use App\Http\Controllers\Production\CommandesController;
 use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
+use App\Http\Controllers\Production\TrackingController;
 
 
 /*
@@ -73,7 +74,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/planning/save-appointment', [PlanningController::class, 'saveAppointment']);
         Route::post('/planning/delete-appointment', [PlanningController::class, 'deleteAppointment']);
 
-        Route::get('/tracking', fn() => view('tracking'));
+        Route::get('/tracking', [TrackingController::class, 'index']);
+        Route::get('/tracking/kanban', [TrackingController::class, 'getKanbanData']);
 
         Route::get('/workorders/uteco', fn() => view('production.workorders.uteco'));
         // Other optional purchasing modules:
