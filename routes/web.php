@@ -13,6 +13,8 @@ use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
 use App\Http\Controllers\Production\TrackingController;
 
+use App\Http\Controllers\Settings\SettingsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +84,18 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/purchasing', fn() => view('purchasing.purchasing'));
         // Route::get('/reception', fn() => view('purchasing.reception'));
         // Route::get('/facture', fn() => view('purchasing.facture'));
+    });
+
+    Route::prefix('settings')->group(function () {
+
+        Route::get('/', [SettingsController::class, 'index'])->name('settings');
+
+        Route::prefix('requis')->group(function () {
+            Route::get('/', [RequisController::class, 'index']);
+            Route::post('/', [RequisController::class, 'store']);
+            Route::put('/{id}', [RequisController::class, 'update']);
+            Route::delete('/{id}', [RequisController::class, 'destroy']);
+        });
     });
 
 });

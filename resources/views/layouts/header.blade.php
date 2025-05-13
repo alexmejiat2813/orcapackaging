@@ -15,7 +15,9 @@
       <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->Users_Name }}
     </a>
     <ul class="dropdown-menu dropdown-menu-end">
-      <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
+      <li><a href="{{ route('settings') }}" class="dropdown-item">
+    <i class="fas fa-cog"></i> Settings
+</a></li>
       <li><hr class="dropdown-divider"></li>
       <li>
         <form method="POST" action="{{ url('logout') }}">
