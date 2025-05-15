@@ -12,6 +12,7 @@ use App\Http\Controllers\Production\CommandesController;
 use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
 use App\Http\Controllers\Production\TrackingController;
+use App\Http\Controllers\Sales\EstimateController;
 
 
 /*
@@ -33,12 +34,16 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::prefix('sales')->group(function () {
         Route::get('/orders', [SalesOrderController::class, 'index'])->name('sales.orders');
-        // Other optional sales modules:
         // Route::get('/quotations', [QuotationController::class, 'index']);
-        // Route::get('/estimates', [EstimateController::class, 'index']);
+        Route::get('/estimates', [EstimateController::class, 'index'])->name('sales.estimate');
         // Route::get('/invoices', [InvoiceController::class, 'index']);
         // Route::get('/clients', [ClientController::class, 'index']);
         // Route::get('/reports', [SalesReportController::class, 'index']);
+        ///////////////////////////////////////////////////////////////////
+        Route::post('/soumission/gerer', [EstimateController::class, 'gerer'])->name('soumission.gerer');
+        Route::post('/soumission/supprimer', [EstimateController::class, 'supprimer'])->name('soumission.supprimer');
+        Route::post('/soumission/copier', [EstimateController::class, 'copier'])->name('soumission.copier');
+        Route::get('/soumission/item', [EstimateController::class, 'item'])->name('soumission.item');
     });
 
     /*

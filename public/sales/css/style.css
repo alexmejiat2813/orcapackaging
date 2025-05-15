@@ -1,0 +1,140 @@
+body {
+    background-color: #4d5c5d;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+h1 {
+    color: #e32;
+    font-size: xx-large;
+}
+
+#container-commande, #container-choix, #container-clients {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+#container-choix {
+    margin-bottom: 100px;
+}
+
+#choix-client {
+    align-items: center;
+}
+
+#choix , #commande{
+    width: auto;
+}
+
+
+.parametres {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    justify-items: center;
+    align-items: center;
+    justify-content: space-evenly; /* Étend l'espace de manière égale entre les éléments */
+    grid-auto-rows: auto;
+    box-sizing: border-box; 
+}
+
+.parametres input {
+    width: 90%; /* Prend toute la largeur disponible */
+    font-size: 1.2rem; /* Augmente la taille de la police */
+    height: 40px; /* Augmente la hauteur des inputs */
+    padding: 0 10px; /* Espace interne des inputs */
+    border-radius: 5px; /* Coins arrondis */
+    border: 1px solid #ccc; /* Bordure légère */
+}
+
+.parametres input:focus {
+    outline: none; /* Enlève le contour bleu de focus */
+    border: 1px solid #007BFF; /* Bordure bleue au focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Ombre douce au focus */
+}
+
+
+.divParametres {
+    font-size: x-large;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.divHorizontale {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.divVerticale {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.validationIcon {
+    margin-left: 5px;
+}
+
+label:has(+ input:required):after, label:has(+ select:required)::after {
+    content: ' *';
+    color: #e32;
+    margin-left: 2px;
+}
+
+.divHorizontale input:required + .validationIcon::before {
+    content: ' *';
+    color: #e32;
+    margin-right: 5px;
+}
+
+#centergrid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 20px;
+}
+
+.align-content {
+    align-content: center;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+input[readonly] {
+    background-color: #d2cdcd;
+    border: 1px solid #d2cdcd;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    cursor: default;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, cursor 0.3s ease;
+  }
+  
+  input[readonly]:hover {
+    cursor: not-allowed; /* Curseur en croix */
+  }
+
+  input:hover {
+    background-color: #eef9bd; /* Un poil plus foncé que #262626 */
+  }
+  
