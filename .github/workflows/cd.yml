@@ -1,0 +1,29 @@
+name: Deploy Laravel to 192.168.0.97
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Local Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH to 192.168.0.97
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          port: 22
+          script: |
+            cd /laragon/www/orcapackaging/
+            git fetch origin
+            git checkout main
+            git reset --hard origin/main
+            composer install --no-interaction --prefer-dist
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
