@@ -2,7 +2,7 @@
     @csrf
     <div id="container-clients" class="divParametres">
         <label for="clients"> Choix du client </label>
-        <select name="client" id="clients" style="width: 300px;" required>
+        <select name="clients" id="clients" style="width: 300px;" required>
             <option value="">-- Sélectionner --</option>
             @foreach($clients as $client)
                 <option value="{{ $client->Customer_No }}">

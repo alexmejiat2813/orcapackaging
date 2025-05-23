@@ -105,8 +105,9 @@ label:has(+ input:required):after, label:has(+ select:required)::after {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px ;
 }
 
 .align-content {
