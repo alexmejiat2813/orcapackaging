@@ -206,38 +206,35 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
   attacherListener(inputLargeur, calculerSurface);
 });
 
-// quantite / totalSacsParPalette (rouleauxParPalette) = totalPalettes 20      // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", event => {
-  let form = document.getElementById("form-" + document.getElementById("commande").value);
-  const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
+document.querySelectorAll('[id^="form-"]').forEach(form => {
+  const inputQuantite = document.getElementById("form-inputsCommunItem")?.querySelector('[name="quantite"]');
   const inputSacsParPalette = form.querySelector('[name="totalSacsParPalette"]');
   const inputRouleauxParPalette = form.querySelector('[name="rouleauxParPalettes"]');
   const inputPalettes = form.querySelector('[name="totalPalettes"]');
 
   if (!inputQuantite || !inputPalettes) return;
 
-  function calculerPalettes() {
+  const calculerPalettes = () => {
     const quantite = parseFloat(inputQuantite.value) || 0;
 
-    // Choisir la valeur palette existante
-    var valeurPalette = 1;
+    let valeurPalette = 1;
     if (inputSacsParPalette) valeurPalette = parseFloat(inputSacsParPalette.value);
     if (inputRouleauxParPalette) valeurPalette = parseFloat(inputRouleauxParPalette.value);
 
     const total = Math.ceil(quantite / valeurPalette);
     inputPalettes.value = total;
     inputPalettes.dispatchEvent(new Event("input", { bubbles: true }));
-  }
+  };
 
-  inputQuantite.addEventListener("input", calculerPalettes);
-  if (inputSacsParPalette) inputSacsParPalette.addEventListener("input", calculerPalettes);
-  if (inputRouleauxParPalette) inputRouleauxParPalette.addEventListener("input", calculerPalettes);
+  attacherListener(inputQuantite, calculerPalettes);
+  if (inputSacsParPalette) attacherListener(inputSacsParPalette, calculerPalettes);
+  if (inputRouleauxParPalette) attacherListener(inputRouleauxParPalette, calculerPalettes);
 });
 
 
+
 // boitesParPalettes (rouleauxParPalettes) * sacsParBoite (impressionsParRouleaux) = totalSacsParPalette 21    // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", event => {
-  let form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputBoitesParPalette = form.querySelector('[name="boitesParPalettes"]');
   const inputSacsParBoite = form.querySelector('[name="sacsParBoite"]');
   const inputRouleauxParPalette = form.querySelector('[name="rouleauxParPalettes"]');
@@ -281,8 +278,7 @@ document.getElementById("container-commande").addEventListener("change", event =
 });
 
 // ((coutsFinaux * 1.5) / quantite ) * 1000 = prixFinauxCinquantePourcent 23               // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrixFinaux = form.querySelector('[name="prixFinauxCinquantePourcent"]');
@@ -302,8 +298,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // ((coutsFinaux * 1.4) / quantite ) * 1000 = prixFinauxCinquantePourcent 24               // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrixFinaux = form.querySelector('[name="prixFinauxQuarantePourcent"]');
@@ -324,8 +319,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // ((coutsFinaux * 1.3) / quantite ) * 1000 = prixFinauxCinquantePourcent 25               // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrixFinaux = form.querySelector('[name="prixFinauxTrentePourcent"]');
@@ -346,8 +340,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // ((coutsFinaux * 1.2) / quantite ) * 1000 = prixFinauxCinquantePourcent 26               // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrixFinaux = form.querySelector('[name="prixFinauxVingtPourcent"]');
@@ -367,8 +360,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // ((coutsFinaux * 1.1) / quantite ) * 1000 = prixFinauxCinquantePourcent 27               // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrixFinaux = form.querySelector('[name="prixFinauxDixPourcent"]');
@@ -388,8 +380,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // coutsPlusComission / quantite = prixFinauxUniteAvecProfit 29   // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCouts = form.querySelector('[name="coutsPlusComission"]');
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrixUnite = form.querySelector('[name="prixFinauxUniteAvecProfit"]');
@@ -409,8 +400,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // prixFinauxUniteAvecProfit * 1000 = prixFinauxMilleAvecProfit 28    // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputPrixUnite = form.querySelector('[name="prixFinauxUniteAvecProfit"]');
   const inputPrixMille = form.querySelector('[name="prixFinauxMilleAvecProfit"]');
 
@@ -427,8 +417,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // coutsFinaux / quantite = prixFinauxSansProfit 30   // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrixSansProfit = form.querySelector('[name="prixFinauxSansProfit"]');
@@ -449,9 +438,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // ((commission / 100) * coutsFinaux) + coutsPlusProfit = coutsPlusComission 31     // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCommission = document.getElementById("form-inputsCommunItem").querySelector('[name="commission"]');
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputCoutsPlusProfit = form.querySelector('[name="coutsPlusProfit"]');
@@ -478,9 +465,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // (1+(profit/100) * coutsFinaux = coutsPlusProfit 32         // ARRONDIR
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputProfit = document.getElementById("form-inputsCommunItem").querySelector('[name="profit"]');
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputCoutsPlusProfit = form.querySelector('[name="coutsPlusProfit"]');
@@ -500,13 +485,9 @@ document.getElementById("container-commande").addEventListener("change", () => {
   inputCoutsFinaux.addEventListener("input", calculerCoutsPlusProfit);
 });
 
-
-
 // coutTotauxProductionPlaques + coutTotauxProductionPellicule + coutTotauxProductionEncre + coutTotauxProductionSolvant + coutTotauxProductionImpression +
 // coutTotauxProductionConversion + coutTotauxProductionEmballage + coutTotauxProductionLivraison + coutTotauxProductionEntrepot = coutsFinaux  36
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputPlaques = form.querySelector('[name="coutTotauxProductionPlaques"]');
   const inputPellicule = form.querySelector('[name="coutTotauxProductionPellicule"]');
   const inputEncre = form.querySelector('[name="coutTotauxProductionEncre"]');
@@ -539,9 +520,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // dureeTotaleConversion + dureeMontageConversion + dureeMenageConversion = tempsTotalConversion 39
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputDureeTotale = form.querySelector('[name="dureeTotaleConversion"]');
   const inputMontage = form.querySelector('[name="dureeMontageConversion"]');
   const inputMenage = form.querySelector('[name="dureeMenageConversion"]');
@@ -566,9 +545,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // dureeTotaleConversion * 0.05 = dureeMenageConversion 40
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputDureeTotale = form.querySelector('[name="dureeTotaleConversion"]');
   const inputDureeMenage = form.querySelector('[name="dureeMenageConversion"]');
 
@@ -585,9 +562,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // dureeTotaleConversion * 0.05 = dureeMontageConversion 45
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputDureeTotale = form.querySelector('[name="dureeTotaleConversion"]');
   const inputDureeMontage = form.querySelector('[name="dureeMontageConversion"]');
 
@@ -605,9 +580,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // (quantite / sacsParHeure) * 60 = dureeTotaleConversion 46
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputSacsParHeure = form.querySelector('[name="sacsParHeure"]');
   const inputDureeTotale = form.querySelector('[name="dureeTotaleConversion"]');
@@ -628,9 +601,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // quantite / sacsParBoite = nbBoites 54
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputSacsParBoite = form.querySelector('[name="sacsParBoite"]');
   const inputNbBoites = form.querySelector('[name="nbBoites"]');
@@ -650,9 +621,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // (nbBoites * coutBoite) + (totalPalettes * coutPalette) = coutTotauxProductionEmballage 56
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputNbBoites = form.querySelector('[name="nbBoites"]');
   const inputCoutBoite = form.querySelector('[name="coutBoite"]');
   const inputTotalPalettes = form.querySelector('[name="totalPalettes"]');
@@ -679,9 +648,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // (salaireConversion * tempsTotalConversion) / 60 = coutTotauxProductionConversion 57  // BIZARRE
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSalaire = form.querySelector('[name="salaireConversion"]');
   const inputTemps = form.querySelector('[name="tempsTotalConversion"]');
   const inputCout = form.querySelector('[name="coutTotauxProductionConversion"]');
@@ -701,9 +668,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // (salaireImpression * tempsTotalProduction) / 60 = coutTotauxProductionImpression 58  // BIZARRE
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSalaire = form.querySelector('[name="salaireImpression"]');
   const inputTemps = form.querySelector('[name="tempsTotalProduction"]');
   const inputCout = form.querySelector('[name="coutTotauxProductionImpression"]');
@@ -723,9 +688,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // coutTotalSolvant = coutTotauxProductionSolvant 59
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSource = form.querySelector('[name="coutTotalSolvant"]');
   const inputDestination = form.querySelector('[name="coutTotauxProductionSolvant"]');
 
@@ -741,9 +704,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // coutTotalEncre = coutTotauxProductionEncre 60
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSource = form.querySelector('[name="coutTotalEncre"]');
   const inputDestination = form.querySelector('[name="coutTotauxProductionEncre"]');
 
@@ -759,9 +720,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // coutTotal = coutTotauxProductionPellicule 61
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSource = form.querySelector('[name="coutTotal"]');
   const inputDestination = form.querySelector('[name="coutTotauxProductionPellicule"]');
 
@@ -777,9 +736,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // (coutTotalEncre1 + CoutTotalEncre2 + ....) = coutTotalEncre 67
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputNbEncres = form.querySelector('[name="nbEncres"]');
   const inputTotalEncre = form.querySelector('[name="coutTotalEncre"]');
 
@@ -807,8 +764,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // (kg1 + kg2 + ....) = totalKilosEncre 68
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputTotalKg = form.querySelector('[name="totalKilosEncre"]');
   const inputNbEncres = form.querySelector('[name="nbEncres"]');
 
@@ -836,9 +792,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // dureeTotaleImpression + dureeMontagePlaques + dureeMiseEnTrain + dureeLavage = tempsTotalProduction 69
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputImpression = form.querySelector('[name="dureeTotaleImpression"]');
   const inputMontage = form.querySelector('[name="dureeMontagePlaques"]');
   const inputMiseEnTrain = form.querySelector('[name="dureeMiseEnTrain"]');
@@ -867,9 +821,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 // nbEncres * 0.33 = dureeLavage 70
 // nbEncres * 0.5 = dureeMiseEnTrain 71
 // nbEncres * 0.25 = dureeMontagePlaques 72
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputNbEncres = form.querySelector('[name="nbEncres"]');
   const inputLavage = form.querySelector('[name="dureeLavage"]');
   const inputMiseEnTrain = form.querySelector('[name="dureeMiseEnTrain"]');
@@ -893,9 +845,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // totalPiedsPlusTolerance / piedsParHeure = dureeTotaleImpression 73
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputTotalPieds = form.querySelector('[name="totalPiedsPlusTolerance"]');
   const inputPiedsParHeure = form.querySelector('[name="piedsParHeure"]');
   const inputDureeImpression = form.querySelector('[name="dureeTotaleImpression"]');
@@ -915,8 +865,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // Pour chaque encre : (surface(num) / (largeur * web)) * 100 = couverture(num)  74-78
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputLargeur = form.querySelector('[name="largeur"]');
   const inputWeb = form.querySelector('[name="web"]');
 
@@ -952,8 +901,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // (kg1 + kg2 + ....)*0.3 = quantiteKGSolvant 79
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSolvant = form.querySelector('[name="quantiteKGSolvant"]');
 
   if (!inputSolvant) return;
@@ -979,9 +927,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // quantiteKGSolvant * coutKGSolvant = coutTotalSolvant 80
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantiteSolvant = form.querySelector('[name="quantiteKGSolvant"]');
   const inputCoutParKg = form.querySelector('[name="coutKGSolvant"]');
   const inputCoutTotal = form.querySelector('[name="coutTotalSolvant"]');
@@ -1002,9 +948,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // kg(num) * coutParKG(num) = coutTotalEncre(num) 81-85
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   function calculerCoutsEncres() {
     for (let i = 1; i <= 5; i++) {
       const inputKg = form.querySelector(`[name="kg${i}"]`);
@@ -1033,9 +977,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // (constante * poucesCarresParQuantiteAProduire) * (couverture(num) / 100) = kg(num)  86-90
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputConstante = form.querySelector('[name="constante"]');
   const inputSurfaceTotale = form.querySelector('[name="poucesCarresParQuantiteAProduire"]');
 
@@ -1069,8 +1011,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // quantite * (1 + (tolerance / 100)) * largeur * web = poucesCarresParQuantiteAProduire 91
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputTolerance = document.getElementById("form-inputsCommunItem").querySelector('[name="tolerance"]');
   const inputLargeur = form.querySelector('[name="largeur"]');
@@ -1098,9 +1039,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // totalLivresPlusTolerance * coutParLivre = coutTotal 94
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputLivres = form.querySelector('[name="totalLivresPlusTolerance"]');
   const inputCoutParLivre = form.querySelector('[name="coutParLivre"]');
   const inputCoutTotal = form.querySelector('[name="coutTotal"]');
@@ -1120,9 +1059,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // totalLivres * (1 + (tolerance/100)) = totalLivresPlusTolerance 95
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputTotalLivres = form.querySelector('[name="totalLivres"]');
   const inputTolerance = document.getElementById("form-inputsCommunItem").querySelector('[name="tolerance"]');
   const inputTotalAvecTolerance = form.querySelector('[name="totalLivresPlusTolerance"]');
@@ -1142,9 +1079,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // totalPieds * (1 + (tolerance/100)) = totalPiedsPlusTolerance 96
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputTotalPieds = form.querySelector('[name="totalPieds"]');
   const inputTolerance = document.getElementById("form-inputsCommunItem").querySelector('[name="tolerance"]');
   const inputTotalAvecTolerance = form.querySelector('[name="totalPiedsPlusTolerance"]');
@@ -1165,8 +1100,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 // ((web/2) * largeur * hauteur ) / typeMateriauInitial = lbParMil 97 ?
 // (((web/2) * largeur * hauteur ) / typeMateriauInitial) * (quantite/1000) = totalLivres 98
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
 
   const inputWeb = form.querySelector('[name="web"]');
@@ -1206,8 +1140,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // (quantite * largeur) / 12 = totalPieds 99 ?
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputLargeur = form.querySelector('[name="largeur"]');
   const inputTotalPieds = form.querySelector('[name="totalPieds"]');
@@ -1228,9 +1161,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 
 
 // (hauteur*2) + poignee + gousset = web 100
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputHauteur = form.querySelector('[name="hauteur"]');
   const inputPoignee = form.querySelector('[name="poignee"]');
   const inputGousset = form.querySelector('[name="gousset"]');
@@ -1254,9 +1185,7 @@ document.getElementById("container-commande").addEventListener("change", () => {
 });
 
 // Gestion variation de prix selon quantite
-document.getElementById("container-commande").addEventListener("change", () => {
-  const form = document.getElementById("form-" + document.getElementById("commande").value);
-
+document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputPrix = document.getElementById("form-inputsCommunItem").querySelector('[name="prix"]');
   const inputQuantiteInformative1 = form.querySelector('[name="quantiteInformative1"]');
