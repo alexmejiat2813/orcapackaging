@@ -1,3 +1,21 @@
+// Gestion refresh page
+window.addEventListener('load', function () {
+
+    const forms = document.querySelectorAll('form[id^="form-"]');
+    forms.forEach(form => {
+        form.reset(); 
+    });
+
+    const selectCommande = document.getElementById('commande');
+        if (selectCommande) {
+            // Déclenche manuellement l'événement 'change'
+            const event = new Event('change', { bubbles: true });
+            selectCommande.dispatchEvent(event);
+        }
+
+    setTimeout(() => window.scrollTo(0, 0), 50);
+});
+
 // ON CHANGE type item
 function afficherTexte() {
     var choix = document.getElementById("commande").value;
@@ -31,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .filter(cb => cb.checked)
         .map(cb => cb.value);
       hiddenInput.value = selected.join(', ');
+      console.log(hiddenInput.value);
     }
   
     checkboxes.forEach(cb => {

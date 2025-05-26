@@ -276,7 +276,7 @@
         </div>
         <div class="divParametres">
             <label for="typeEyeMark"> Type de Eye Mark </label>
-            <select name="quiVaFournirEncre" id="quiVaFournirEncre">
+            <select name="typeEyeMark" id="typeEyeMark">
                 <option value="">--- Selectionner ---</option>
                 <option value="standard">Standard</option>
                 <option value="lecteur-optique">Speciale : Lecteur Optique</option>
