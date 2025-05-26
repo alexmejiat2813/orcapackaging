@@ -16,6 +16,28 @@ window.addEventListener('load', function () {
     setTimeout(() => window.scrollTo(0, 0), 50);
 });
 
+function alertBeforeUnload(e) {
+        // Affiche une alerte simple, le message est généré automatiquement par le navigateur
+        e.preventDefault();
+        e.returnValue = '';
+    }
+
+    // Active la protection
+    window.addEventListener("beforeunload", alertBeforeUnload);
+
+    // Pour les liens internes, confirmation explicite
+    document.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", function (e) {
+            const confirmation = confirm("Êtes-vous sûr de vouloir quitter cette page ?");
+            if (!confirmation) {
+                e.preventDefault();
+            } else {
+                // Supprime aussi beforeunload si on clique volontairement
+                window.removeEventListener("beforeunload", alertBeforeUnload);
+            }
+        });
+    });
+
 // ON CHANGE type item
 function afficherTexte() {
     var choix = document.getElementById("commande").value;
@@ -25,16 +47,27 @@ function afficherTexte() {
     document.getElementById("zoneSacsPapier").style.display = "none";
     document.getElementById("zoneTape").style.display = "none";
 
+    var section = null;
     if (choix === "sacsImpr") {
-        document.getElementById("zoneSacsImpr").style.display = "block";
+        section = document.getElementById("zoneSacsImpr");
+        section.style.display = "block";
+        section.offsetHeight;
     } else if (choix === "sacsNonImpr") {
-        document.getElementById("zoneSacsNonImpr").style.display = "block";
+        section = document.getElementById("zoneSacsNonImpr");
+        section.style.display = "block";
+        section.offsetHeight; 
     } else if (choix === "rouleaux") {
-        document.getElementById("zoneRouleaux").style.display = "block";
+        section = document.getElementById("zoneRouleaux");
+        section.style.display = "block";
+        section.offsetHeight; 
     } else if (choix === "sacsPapier") {
-        document.getElementById("zoneSacsPapier").style.display = "block";
+        section = document.getElementById("zoneSacsPapier");
+        section.style.display = "block";
+        section.offsetHeight; 
     } else if (choix === "tape") {
-        document.getElementById("zoneTape").style.display = "block";
+        section = document.getElementById("zoneTape");
+        section.style.display = "block";
+        section.offsetHeight; 
     }
 }
 afficherTexte();

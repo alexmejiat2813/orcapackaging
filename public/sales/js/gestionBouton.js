@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             alert('Erreur Laravel (contacter un administrateur):', data);
                         } else {
                             alert('Item enregistré/modifié avec succès');
+                            window.removeEventListener("beforeunload", alertBeforeUnload);
                             window.location.reload();
                         }
                     } else {

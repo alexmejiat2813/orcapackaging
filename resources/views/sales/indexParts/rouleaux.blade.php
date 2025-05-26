@@ -396,6 +396,8 @@
             <label for="prixFinauxUniteAvecProfit"> Prix par unite avec profit et commission </label>
             <input name="prixFinauxUniteAvecProfit" type="number" id="prixFinauxUniteAvecProfit" required>
         </div>
+    </div>
+    <div class="parametres">
         <div class="divParametres">
             <label for="prixFinauxMilleAvecProfit"> Prix par mille unites </label>
             <input name="prixFinauxMilleAvecProfit" type="number" id="prixFinauxMilleAvecProfit" required>
@@ -408,6 +410,8 @@
             <label for="prixFinauxVingtPourcent"> Prix plus 20% </label>
             <input name="prixFinauxVingtPourcent" type="number" id="prixFinauxVingtPourcent" required>
         </div>
+    </div>
+    <div class="parametres">
         <div class="divParametres">
             <label for="prixFinauxTrentePourcent"> Prix plus 30% </label>
             <input name="prixFinauxTrentePourcent" type="number" id="prixFinauxTrentePourcent" required>

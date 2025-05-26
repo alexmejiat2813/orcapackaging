@@ -9,6 +9,23 @@ h1, h2 {
 h1 {
     color: #e32;
     font-size: xx-large;
+    overflow: visible;
+}
+
+h2 {
+    color: greenyellow;
+    font-size: x-large;
+}
+
+h1::before {
+    position: relative; /* ou absolute si nécessaire */
+    content: "";
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: #ccc;
+    margin: 2rem 0 1rem 0;
+    z-index: 1;
 }
 
 #container-commande, #container-choix, #container-clients {
@@ -33,8 +50,9 @@ h1 {
 .parametres {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    gap: 0px;
+    padding-top: 30px;
+    padding-bottom: 30px;
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
@@ -65,7 +83,7 @@ h1 {
     font-size: x-large;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
     justify-content: center;
     align-items: center;
 }

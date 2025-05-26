@@ -70,7 +70,7 @@
 
     <div id="container-commande">
         <select name="commande" id="commande" onchange="afficherTexte()">
-            <option value="">-- Sélectionne une option --</option>
+            <option value="- Aucun -">-- Sélectionne une option --</option>
             @foreach($options as $value => $label)
                 <option value="{{ $value }}">{{ $label }}</option>
             @endforeach
