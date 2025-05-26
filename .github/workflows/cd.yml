@@ -19,7 +19,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           port: 22
           script: |
-            cd /laragon/www/orcapackaging/
+            cd /c/laragon/www/orcapackaging
             git fetch origin
             git checkout main
             git reset --hard origin/main
