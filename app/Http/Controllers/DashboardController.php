@@ -29,10 +29,10 @@ class DashboardController extends Controller
 
         
         // Optional: redirect based on role (stored in session or via Auth)
-        $fonctionId = Auth::user()?->Fonction_ID;
+        //$fonctionId = Auth::user()?->Fonction_ID;
 
-        switch ($fonctionId) {
-            case 1: // Administrative Assistant
+        //switch ($fonctionId) {
+            //case 1: // Administrative Assistant
                 $data = DB::table('View_Invoice_TotalxMonth')
                 ->select('year_invoice', 'month_invoice', 'subtotal', 'total')
                 ->orderBy('year_invoice')
@@ -41,15 +41,15 @@ class DashboardController extends Controller
 
                 return response()->json($data);
 
-            case 6: // General Worker
-                return view('dashboard.journalier');
+            //case 6: // General Worker
+            //    return view('dashboard.journalier');
 
-            case 9: // Press Operator
-                return view('dashboard.operateur');
+            //case 9: // Press Operator
+            //    return view('dashboard.operateur');
 
-            default:
-                return view('dashboard');
-        }
+            //default:
+            //    return view('dashboard');
+       // }
         
     }
 
@@ -58,10 +58,10 @@ class DashboardController extends Controller
     $year = $request->get('year');
 
     // Optional: redirect based on role (stored in session or via Auth)
-        $fonctionId = Auth::user()?->Fonction_ID;
+        //$fonctionId = Auth::user()?->Fonction_ID;
 
-        switch ($fonctionId) {
-            case 1: // Administrative Assistant
+        //switch ($fonctionId) {
+            //case 1: // Administrative Assistant
     $data = DB::select('WITH RankedCustomers AS (
             SELECT 
 		        Customer_No,
@@ -108,9 +108,9 @@ class DashboardController extends Controller
     }
 
     return response()->json($finalData);
-    default:
-                return view('dashboard');
-        }
+    //default:
+    //            return view('dashboard');
+     //   }
 }
 
 
