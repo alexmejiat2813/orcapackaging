@@ -90,6 +90,7 @@
         <li><a href="{{ url('/purchasing/requests') }}" class="{{ Request::is('purchasing/requests') ? 'active' : '' }}"><i class="bi bi-circle"></i>Requests</a></li>
         @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
         <li><a href="{{ url('/purchasing/orders') }}" class="{{ Request::is('purchasing/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Purchase Orders</a></li>
+        <li><a href="{{ url('/purchasing/followup') }}" class="{{ Request::is('purchasing/followup') ? 'active' : '' }}"><i class="bi bi-circle"></i>Follow-Up</a></li>
         <li><a href="{{ url('/purchasing/rfqs') }}" class="{{ Request::is('purchasing/rfqs') ? 'active' : '' }}"><i class="bi bi-circle"></i>RFQs</a></li>
         <li><a href="{{ url('/purchasing/agreements') }}" class="{{ Request::is('purchasing/agreements') ? 'active' : '' }}"><i class="bi bi-circle"></i>Agreements</a></li>
         <li><a href="{{ url('/purchasing/pricelists') }}" class="{{ Request::is('purchasing/pricelists') ? 'active' : '' }}"><i class="bi bi-circle"></i>Price Lists</a></li>

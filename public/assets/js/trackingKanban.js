@@ -26,7 +26,7 @@ export class TrackingKanban {
                 this.originalData = json.map((item, index) => ({
                     id: `${item.Lot_Id}`,
                     kanban_status: this.mapStatus(item.KANBAN_STATUS),
-                    label: `Lot ${item.Lot_Id} (${item.PrNumber}) <br> ${item.PrDescription1.substring(0, 100)} ${item.PrDescription2.substring(0, 100)} ${item.PrDescription3.substring(0, 100)} <br> `,
+                    label: `Lot ${item.Lot_Id} (${item.PrNumber}) <br> ${item.PrDescription1.substring(0, 100)} <br> ${item.PrDescription2.substring(0, 100)} <br> ${item.PrDescription3.substring(0, 100)} `,
                     tags: `${item.Customer_Code}, ${item.InInvoiceNumber}`,
                     color: this.getColor(item.KANBAN_STATUS),
                     invoice: item.InInvoiceNumber

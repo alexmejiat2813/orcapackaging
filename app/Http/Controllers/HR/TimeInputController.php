@@ -61,9 +61,10 @@ class TimeInputController extends Controller
             $minutes = (int) $start->diffInMinutes($now);
 
             $entry->update([
-                'TimeInput_EndTime'    => now(),
-                'TimeInput_Comment'    => ($entry->TimeInput_Comment ?? '') . ' | Automatically closed before new clock-in.',
+                'TimeInput_EndTime'    => Carbon::parse(now())->addHours(-4)->toISOString(),
+                'TimeInput_Comment'    => ($entry->TimeInput_Comment ?? '') . 'Automatically closed before new clock-in.',
                 'TimeInput_Time'       => $minutes,
+                'TimeInput_Approved'   => 0,
                 'TimeInput_TimeInHour' => round($minutes / 60, 2),
                 'TimeInput_IsStart'    => 0,
             ]);
@@ -77,15 +78,27 @@ class TimeInputController extends Controller
             ]);
         }
 
+        $lastEntry = TimeInput::where('Users_ID', $user->Users_ID)
+            ->whereNotNull('TimeInput_EndTime')
+            ->orderByDesc('TimeInput_EndTime')
+            ->first();
+
+        $now = Carbon::now()->addHours(-4); // Hora ajustada
+        $lastEndTime = $lastEntry ? Carbon::parse($lastEntry->TimeInput_EndTime) : null;
+        $delayMinutes =$delayMinutes = $lastEndTime ? (int) $lastEndTime->diffInMinutes($now) : null;
+
         // 2. Create a new clock-in entry
         TimeInput::create([
             'Users_ID'            => $user->Users_ID,
             'Activity_ID'         => 7,
             'TimeInput_IsStart'   => 1,
-            'TimeInput_StartTime' => now(),
-            'TimeInput_Comment'   => $request->note,
-            'Period_Week_Id'      => $period->Period_Week_Id,
-            'is_Punch_Clock'      => 1,
+            'TimeInput_StartTime'        => $now->toISOString(),
+            'TimeInput_TimeStamp'        => $now->toISOString(),
+            'TimeInput_Comment'          => $request->note,
+            'Period_Week_Id'             => $period->Period_Week_Id,
+            'is_Punch_Clock'             => 1,
+            'TimeInput_Last_EndTime'     => $lastEndTime ? $lastEndTime->toISOString() : null,
+            'TimeInput_Last_Delay_EndTime' => $delayMinutes,
         ]);
 
         //return back()->with('success', 'Clock-in registered for ' . $user->Users_Name);
@@ -137,6 +150,7 @@ class TimeInputController extends Controller
 
         $entries = TimeInput::with('user')
             ->where('TimeInput_IsStart', 1)
+             ->where('Activity_ID', 7)
             ->whereNull('TimeInput_EndTime')
             ->where('Period_Week_Id', $week->Period_Week_Id)
             ->orderByDesc('TimeInput_StartTime')
@@ -152,7 +166,7 @@ class TimeInputController extends Controller
                 return [
                     'id'           => $entry->TimeInput_ID,
                     'user'         => $entry->user->Users_Name ?? 'N/A',
-                    'start_time'   => $entry->TimeInput_StartTime,
+                    'start_time'   => Carbon::parse($entry->TimeInput_StartTime)->addHours(4)->toISOString(),
                     'end_time'     => $entry->TimeInput_EndTime,
                     'comment'      => $entry->TimeInput_Comment,
                     'time_minutes' => $entry->TimeInput_Time,

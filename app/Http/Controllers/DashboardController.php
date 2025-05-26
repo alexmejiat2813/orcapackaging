@@ -65,7 +65,7 @@ class DashboardController extends Controller
     $data = DB::select('WITH RankedCustomers AS (
             SELECT 
 		        Customer_No,
-                Customer_Name,
+                Customer.CuSortKey as Customer_Name,
                 DATEPART(YEAR, Invoice.Invoice_Date) AS Year,
                 SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) AS Total,
                 RANK() OVER (PARTITION BY DATEPART(YEAR, Invoice.Invoice_Date) ORDER BY SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) DESC) AS RankPerYear
@@ -73,7 +73,7 @@ class DashboardController extends Controller
             JOIN ThomasOrca.dbo.Customer ON Customer.Customer_ID = Invoice.Customer_Id
             WHERE Invoice.Invoice_Transmit = 1
               AND DATEPART(YEAR, Invoice.Invoice_Date) BETWEEN YEAR(GETDATE()) - 4 AND YEAR(GETDATE())
-            GROUP BY Customer.Customer_No,Customer.Customer_Name, DATEPART(YEAR, Invoice.Invoice_Date)
+            GROUP BY Customer.Customer_No,Customer.CuSortKey, DATEPART(YEAR, Invoice.Invoice_Date)
         )
         SELECT  Customer_No, Customer_Name, Year, Total
         FROM RankedCustomers

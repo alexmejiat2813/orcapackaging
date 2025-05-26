@@ -3,6 +3,8 @@ $(document).ready(function () {
     initializeGrids();
     setupEventHandlers();
     startAutoRefresh();
+    setupGridEditing();
+    clearStatusLater();
 });
 
 // ----------------------------------
@@ -104,17 +106,77 @@ function reloadJotformGrid() {
                 filterable: true,
                 showfilterrow: true,
                 columnsresize: true,
+                editable: true,
                 selectionmode: 'singlerow',
                 columns: [
-                    { text: 'Date', datafield: 'created_at', width: 130, align: 'center', cellsalign: 'center' },
-                    { text: 'Machine', datafield: 'machine', width: 150, align: 'center', cellsalign: 'center' },
-                    { text: 'Description', datafield: 'description', width: 200, align: 'center', cellsalign: 'center' },
-                    { text: 'Urgency', datafield: 'urgency', width: 350, align: 'center', cellsalign: 'center' },
-                    { text: 'Qty in Stock', datafield: 'stock_quantity', width: 100, align: 'center', cellsalign: 'center' },
-                    { text: 'Notes', datafield: 'notes', width: 620, align: 'center', cellsalign: 'center' }
+                    { text: 'Form ID', datafield: 'jotform_id', width: 200 },
+                    {
+                        text: 'Managed',
+                        datafield: 'managed',
+                        cellsalign: 'center',
+                        width: 70,
+                        columntype: 'checkbox',
+                        editable: true,
+                        cellclassname: function () {
+                            return 'highlight-editable';
+                        }
+                    },
+                    { text: 'Date', datafield: 'created_at', width: 130, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Machine', datafield: 'machine', width: 150, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Description', datafield: 'description', width: 200, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Urgency', datafield: 'urgency', width: 350, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Qty in Stock', datafield: 'stock_quantity', width: 100, align: 'center', cellsalign: 'center', editable: false },
+                    { text: 'Notes', datafield: 'notes', width: 620, align: 'center', cellsalign: 'center', editable: false }
                 ]
             });
+        })
+        .catch(() => {
+            $('#syncStatus').html('❌ Failed to load data from server.');
+            clearStatusLater();
         });
+}
+
+// ----------------------------------
+// Editar "Managed" y enviar cambios
+// ----------------------------------
+function setupGridEditing() {
+    $('#gridJotform').on('cellendedit', function (event) {
+        const args = event.args;
+        const datafield = args.datafield;
+        const newValue = args.value;
+        const rowIndex = args.rowindex;
+
+        if (datafield === 'managed') {
+            const row = $('#gridJotform').jqxGrid('getrowdata', rowIndex);
+
+            alert(row.jotform_id);
+
+            $.ajax({
+                url: '/purchasing/jotform/jotformSupplies/updateManaged',
+                method: 'POST', // ✅
+                data: {
+                    submission_id: row.jotform_id,
+                    managed: newValue ? 1 : 0
+                },
+                headers: {
+                    "X-CSRF-TOKEN": window.csrfToken
+                },
+                success: function () {
+                    $('#syncStatus').html('✅ Synced successfully!').fadeIn();
+                    clearStatusLater();
+                },
+                error: function (xhr) {
+                    $('#syncStatus').html('❌ Sync error:' + xhr.responseText).fadeIn();
+                    clearStatusLater();
+                }
+            });
+
+           
+            return false; // 👈 para evitar bubbling innecesario
+
+        }
+
+    });
 }
 
 // ----------------------------------
@@ -129,7 +191,7 @@ function setupEventHandlers() {
         $status.html('🔄 Syncing with JotForm...').show();
 
         $.ajax({
-            url: '/jotform/jotformSupplies/importAllSubmissions',
+            url: '/purchasing/jotform/jotformSupplies/importAllSubmissions',
             type: 'GET',
             success: function () {
                 $status.html('✅ Synced successfully!');
@@ -153,6 +215,29 @@ function startAutoRefresh() {
 
 // Clear sync status message
 function clearStatusMessage() {
+    setTimeout(() => {
+        $('#syncStatus').fadeOut(300, function () {
+            $(this).html('').show();
+        });
+    }, 5000);
+}
+
+// ----------------------------------
+// Detección de envío desde el iframe
+// ----------------------------------
+function checkJotformSubmit() {
+    const iframe = document.getElementById('JotFormIFrame-250704767667064');
+    if (iframe && iframe.contentWindow && iframe.contentWindow.location.href.includes("thankyou")) {
+        $('#popupForm').jqxWindow('close');
+        $('#syncStatus').html('📨 Form submitted! Syncing...');
+        setTimeout(() => {
+            reloadJotformGrid();
+            clearStatusLater();
+        }, 1000);
+    }
+}
+
+function clearStatusLater() {
     setTimeout(() => {
         $('#syncStatus').fadeOut(300, function () {
             $(this).html('').show();

@@ -14,9 +14,25 @@
     </div>
 
     <div class="row mb-3">
-    <div class="col-md-4">
-        <label for="filterInput">Filter by Order Number (InInvoiceNumber):</label>
-        <input id="filterInput" type="text" class="form-control" placeholder="e.g. 5341" />
+    <div class="col-md-2">
+        <label for="filterInput1">Code Client:</label>
+        <input id="filterInput1" type="text" class="form-control" placeholder="e.g. 5017" />
+    </div>
+    <div class="col-md-3">
+        <label for="filterInput2">Name Client:</label>
+        <input id="filterInput2" type="text" class="form-control" placeholder="e.g. Vibac" />
+    </div>
+    <div class="col-md-2">
+        <label for="filterInput">Order Number:</label>
+        <input id="filterInput" type="text" class="form-control" placeholder="e.g. 2830" />
+    </div>
+    <div class="col-md-2">
+        <label for="filterInput4">Lot:</label>
+        <input id="filterInput4" type="text" class="form-control" placeholder="e.g. 20900" />
+    </div>
+     <div class="col-md-3">
+        <label for="filterInput5">Name Product:</label>
+        <input id="filterInput5" type="text" class="form-control" placeholder="e.g. T15" />
     </div>
 </div>
 

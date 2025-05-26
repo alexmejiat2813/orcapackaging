@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HR\TimeInputController;
+
+use App\Http\Controllers\Purchasing\POController;
 use App\Http\Controllers\Purchasing\RequestController;
+use App\Http\Controllers\Purchasing\JotformSuppliesController;
+use App\Http\Controllers\Purchasing\FollowUp\PurchaseOrderFollowUpController;
+
+
 use App\Http\Controllers\Sales\SalesOrderController;
 use App\Http\Controllers\Production\CommandesController;
 use App\Http\Controllers\Production\BomController;
@@ -15,6 +21,25 @@ use App\Http\Controllers\Production\TrackingController;
 
 use App\Http\Controllers\Settings\SettingsController;
 
+use App\Http\Controllers\Settings\Modules\General\DepartmentController;
+use App\Http\Controllers\Settings\Modules\General\EquipmentController;
+
+use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
+
+
+
+use App\Routes\Helpers\AutoSettingsRouter;
+
+Route::get('/check-app-key', function () {
+    return response()->json([
+        'env_key' => env('APP_KEY'),
+        'config_key' => config('app.key'),
+    ]);
+});
+
+Route::middleware(['web', 'auth'])->group(function () {
+    AutoSettingsRouter::register();
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/chart/', [DashboardController::class, 'getInvoiceData']);
-    Route::get('dashboard/chart/top-clients', [DashboardController::class, 'getTopClientsByYear']);
+    Route::get('/dashboard/chart/top-clients', [DashboardController::class, 'getTopClientsByYear']);
 
     /*
     |--------------------------------------------------------------------------
@@ -50,6 +75,17 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::prefix('purchasing')->group(function () {
         Route::get('/index', fn() => view('purchasing.index'));
+
+        Route::get('/orders', fn() => view('purchasing.orders'));
+        Route::get('/orders/data', [POController::class, 'index']);
+        //Route::get('/orders/data', [POController::class, 'data']); // si necesitas otra vista
+
+        Route::get('/followup', fn() => view('purchasing.followup'));
+        Route::get('/purchase-followup', [PurchaseOrderFollowUpController::class, 'index']);
+        Route::get('/follow-up/logs', [PurchaseOrderFollowUpController::class, 'logs']);
+        Route::get('/follow-up/statuses', [PurchaseOrderFollowUpController::class, 'getStatuses']);
+        Route::post('/follow-up/store', [PurchaseOrderFollowUpController::class, 'store']);
+       
 
         // Other optional purchasing modules:
         // Route::get('/purchasing', fn() => view('purchasing.purchasing'));
@@ -89,13 +125,47 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('settings')->group(function () {
 
         Route::get('/', [SettingsController::class, 'index'])->name('settings');
+        // Opcionales si agregás secciones específicas
+        Route::get('/profile', [SettingsController::class, 'profile'])->name('settings.profile');
+        Route::get('/password', [SettingsController::class, 'password'])->name('settings.password');
+        Route::get('/notifications', [SettingsController::class, 'notifications'])->name('settings.notifications');
 
-        Route::prefix('requis')->group(function () {
-            Route::get('/', [RequisController::class, 'index']);
-            Route::post('/', [RequisController::class, 'store']);
-            Route::put('/{id}', [RequisController::class, 'update']);
-            Route::delete('/{id}', [RequisController::class, 'destroy']);
+        Route::prefix('modules')->group(function () {
+ 
+            Route::prefix('hr')->group(function () {
+                Route::get('/', [RequisController::class, 'index']);
+                Route::post('/', [RequisController::class, 'store']);
+                Route::put('/{id}', [RequisController::class, 'update']);
+                Route::delete('/{id}', [RequisController::class, 'destroy']);
+            });
+
+            Route::prefix('general')->group(function () {
+
+                Route::get('/deparment/data', [RequisController::class, 'data']);
+                Route::post('/deparment/', [RequisController::class, 'store']);
+                Route::put('/deparment/{id}', [RequisController::class, 'update']);
+                Route::delete('/deparment/{id}', [RequisController::class, 'destroy']);
+
+                Route::get('/equipment/data', [RequisController::class, 'data']);
+
+            });
+
+            Route::prefix('production')->group(function () {
+
+                Route::prefix('requis')->group(function () {
+
+                    Route::get('/requis/data', [RequisController::class, 'data']);
+                    Route::post('/requis/', [RequisController::class, 'store']);
+                    Route::put('/requis/{id}', [RequisController::class, 'update']);
+                    Route::delete('/requis/{id}', [RequisController::class, 'destroy']);
+
+                });
+
+            });
+
         });
+
+
     });
 
 });
@@ -105,6 +175,17 @@ Route::middleware(['auth'])->group(function () {
 Route::prefix('purchasing')->group(function () {
     Route::get('/requests', [RequestController::class, 'index']);
     Route::get('/requests/list', [RequestController::class, 'list']);
+
+
+    // Ruta para importar manualmente todos los registros desde JotForm
+    Route::get('/jotform/jotformSupplies/importAllSubmissions', [JotformSuppliesController::class, 'importAllSubmissions'])->name('jotform.importAll');
+    // Ruta para recibir nuevos registros desde Webhook (POST desde JotForm)
+    Route::post('/jotform/jotformSupplies/receiveWebhook', [JotformSuppliesController::class, 'receiveWebhook'])->name('jotform.receiveWebhook');
+    // Ruta para actualizar estado "managed" desde UI
+    Route::post('/jotform/jotformSupplies/updateManaged', [JotformSuppliesController::class, 'updateManaged'])->name('jotform.updateManaged');
+    // Ruta para cargar todas las solicitudes de insumos (para frontend)
+    Route::get('/jotform/jotformSupplies/list', [JotformSuppliesController::class, 'list'])->name('jotform.list');
+
 
     // Other optional purchasing modules:
     // Route::get('/purchasing', fn() => view('purchasing.purchasing'));

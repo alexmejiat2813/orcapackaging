@@ -3,12 +3,12 @@
 @section('title', 'Orca Packaging')
 
 @section('content')
+{{ config('app.key') }}
     <div class="pagetitle">
         <h1>Request</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active"><a href="/purchasing/index">Purchasing</a></li>
                 <li class="breadcrumb-item active">Request</li>
             </ol>
         </nav>
