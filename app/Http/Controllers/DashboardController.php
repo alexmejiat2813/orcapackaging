@@ -16,8 +16,19 @@ class DashboardController extends Controller
      */
      public function index()
     {
+         // Optional: redirect based on role (stored in session or via Auth)
+        $fonctionId = Auth::user()?->Fonction_ID;
+
+        switch ($fonctionId) {
+            case 1: // Administrative Assistant
         $view = view('dashboard.admin');
         return Response::noCache(response($view));
+         case 14: // Administrative Assistant
+         $view = view('dashboard.admin');
+        return Response::noCache(response($view));
+         default:
+                return view('home');
+        }
     }
 
     public function getInvoiceData()
@@ -29,10 +40,10 @@ class DashboardController extends Controller
 
         
         // Optional: redirect based on role (stored in session or via Auth)
-        //$fonctionId = Auth::user()?->Fonction_ID;
+        $fonctionId = Auth::user()?->Fonction_ID;
 
-        //switch ($fonctionId) {
-            //case 1: // Administrative Assistant
+        switch ($fonctionId) {
+            case 1: // Administrative Assistant
                 $data = DB::table('View_Invoice_TotalxMonth')
                 ->select('year_invoice', 'month_invoice', 'subtotal', 'total')
                 ->orderBy('year_invoice')
@@ -41,15 +52,18 @@ class DashboardController extends Controller
 
                 return response()->json($data);
 
-            //case 6: // General Worker
-            //    return view('dashboard.journalier');
+            case 14: // Administrative Assistant
+                $data = DB::table('View_Invoice_TotalxMonth')
+                ->select('year_invoice', 'month_invoice', 'subtotal', 'total')
+                ->orderBy('year_invoice')
+                ->orderBy('month_invoice')
+                ->get();
 
-            //case 9: // Press Operator
-            //    return view('dashboard.operateur');
+                return response()->json($data);
 
-            //default:
-            //    return view('dashboard');
-       // }
+            default:
+                return view('home');
+        }
         
     }
 
@@ -58,10 +72,10 @@ class DashboardController extends Controller
     $year = $request->get('year');
 
     // Optional: redirect based on role (stored in session or via Auth)
-        //$fonctionId = Auth::user()?->Fonction_ID;
+        $fonctionId = Auth::user()?->Fonction_ID;
 
-        //switch ($fonctionId) {
-            //case 1: // Administrative Assistant
+        switch ($fonctionId) {
+            case 1: // Administrative Assistant
     $data = DB::select('WITH RankedCustomers AS (
             SELECT 
 		        Customer_No,
@@ -108,9 +122,58 @@ class DashboardController extends Controller
     }
 
     return response()->json($finalData);
-    //default:
-    //            return view('dashboard');
-     //   }
+
+    case 14: // Administrative Assistant
+    $data = DB::select('WITH RankedCustomers AS (
+            SELECT 
+		        Customer_No,
+                Customer.CuSortKey as Customer_Name,
+                DATEPART(YEAR, Invoice.Invoice_Date) AS Year,
+                SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) AS Total,
+                RANK() OVER (PARTITION BY DATEPART(YEAR, Invoice.Invoice_Date) ORDER BY SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) DESC) AS RankPerYear
+            FROM ThomasOrca.dbo.Invoice
+            JOIN ThomasOrca.dbo.Customer ON Customer.Customer_ID = Invoice.Customer_Id
+            WHERE Invoice.Invoice_Transmit = 1
+              AND DATEPART(YEAR, Invoice.Invoice_Date) BETWEEN YEAR(GETDATE()) - 4 AND YEAR(GETDATE())
+            GROUP BY Customer.Customer_No,Customer.CuSortKey, DATEPART(YEAR, Invoice.Invoice_Date)
+        )
+        SELECT  Customer_No, Customer_Name, Year, Total
+        FROM RankedCustomers
+        WHERE RankPerYear <= 10 and Year = ?
+        ORDER BY Year, Total DESC;', [$year]);
+
+    $allYears = [];
+    $allClients = [];
+
+    // Index by year and client
+    $matrix = [];
+
+    foreach ($data as $row) {
+        $year = $row->Year;
+        $client = substr($row->Customer_Name, 0, 20);
+        $safeClient = preg_replace('/[^a-zA-Z0-9]/', '_', $client); // clean label
+
+        $allYears[$year] = true;
+        $allClients[$safeClient] = true;
+
+        $matrix[$year][$safeClient] = round($row->Total, 2);
+    }
+
+    // Build consistent structure
+    $finalData = [];
+    foreach (array_keys($allYears) as $year) {
+        $entry = ['Year' => $year];
+        foreach (array_keys($allClients) as $client) {
+            $entry[$client] = $matrix[$year][$client] ?? 0;
+        }
+        $finalData[] = $entry;
+    }
+
+    return response()->json($finalData);
+
+    default:
+                return view('home');
+        }
 }
 
 

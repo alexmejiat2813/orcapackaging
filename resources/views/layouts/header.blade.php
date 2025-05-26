@@ -85,18 +85,21 @@
     </x-permission-users>
 
     <!-- PURCHASING -->
-     <x-permission-users :allowed-roles="['Thomas Admin']">
+     <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('purchasing/*') ? '' : 'collapsed' }}" data-bs-target="#purchasing-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-box-seam"></i><span>Purchasing</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
+
       <ul id="purchasing-menu" class="nav-content collapse {{ Request::is('purchasing/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+      <x-permission-users :allowed-roles="['Thomas Admin']">
+
       <li><a href="{{ url('/purchasing/requests') }}" class="{{ Request::is('purchasing/requests') ? 'active' : '' }}"><i class="bi bi-circle"></i>Requests</a></li>
       </x-permission-users>
-        <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
+        
         <li><a href="{{ url('/purchasing/orders') }}" class="{{ Request::is('purchasing/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Purchase Orders</a></li>
         <li><a href="{{ url('/purchasing/followup') }}" class="{{ Request::is('purchasing/followup') ? 'active' : '' }}"><i class="bi bi-circle"></i>Follow-Up</a></li>
-        </x-permission-users>
+        
 
         <x-permission-users :allowed-roles="['Thomas Admin']">
         <li><a href="{{ url('/purchasing/rfqs') }}" class="{{ Request::is('purchasing/rfqs') ? 'active' : '' }}"><i class="bi bi-circle"></i>RFQs</a></li>
@@ -104,6 +107,7 @@
         <li><a href="{{ url('/purchasing/pricelists') }}" class="{{ Request::is('purchasing/pricelists') ? 'active' : '' }}"><i class="bi bi-circle"></i>Price Lists</a></li>
         <li><a href="{{ url('/purchasing/suppliers') }}" class="{{ Request::is('purchasing/suppliers') ? 'active' : '' }}"><i class="bi bi-circle"></i>Suppliers</a></li>
         <li><a href="{{ url('/purchasing/rating') }}" class="{{ Request::is('purchasing/rating') ? 'active' : '' }}"><i class="bi bi-circle"></i>Rating</a></li>
+        </x-permission-users>
         </x-permission-users>
 
       </ul>
