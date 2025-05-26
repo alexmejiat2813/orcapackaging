@@ -56,7 +56,7 @@ class OrdersModule {
             pageSize: 17,
             editable: true,
             showtoolbar: true,
-            rendertoolbar: function (toolbar) {
+            /*rendertoolbar: function (toolbar) {
                 const container = $("<div style='margin: 5px;'></div>");
                 toolbar.append(container);
                 container.append('<input class="btn btn-primary" id="syncButton" type="button" value="Synchronize Schedule" />');
@@ -114,17 +114,17 @@ class OrdersModule {
                             $("#syncButton").prop("disabled", false).val("Synchronize Schedule");
                         });
                 });
-            },
+            },*/
 
             columns: [
-                { text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
+                //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
                 { text: 'ID', datafield: 'Commande_Id', align: 'center', cellsalign: 'center', width: 60 },
                 { text: '# Customer', datafield: 'Customer_Code', width: 95, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Customer', datafield: 'Customer_Name', width: 255, align: 'center', editable: false },
                 { text: '# Order', datafield: 'InInvoiceNumber', width: 75, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Client PO', datafield: 'Po_Client', width: 160, align: 'center', editable: false },
-                { text: 'Order Date', datafield: 'Date_Commande', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', editable: false },
-                { text: 'Requested Date', datafield: 'Date_Demander', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Order Date', datafield: 'Date_Commande', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', filtertype: 'range', editable: false },
+                { text: 'Requested Date', datafield: 'Date_Demander', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', filtertype: 'range', editable: false },
                 { text: 'Lot ID', datafield: 'Lot_Id', width: 60, align: 'center', cellsalign: 'center', editable: false },
                 { text: '# Product', datafield: 'PrNumber', width: 180, align: 'center', editable: false },
                 { text: 'Product', datafield: 'PrDescription1', width: 500, align: 'center', editable: false },

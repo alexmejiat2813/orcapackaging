@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Blade;
+use App\View\Components\PermissionUsers;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
                     ->header('Expires', '0');
             });
         });
+        Blade::component('permission-users', PermissionUsers::class);
     }
 }
 

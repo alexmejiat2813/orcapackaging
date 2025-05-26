@@ -3,7 +3,9 @@
 @section('title', 'Orca Packaging')
 
 @section('content')
+<x-permission-users :allowed-roles="['Thomas Admin']">
 {{ config('app.key') }}
+</x-permission-users>
     <div class="pagetitle">
         <h1>Request</h1>
         <nav>
@@ -13,8 +15,10 @@
             </ol>
         </nav>
         <button id="openForm" class="btn btn-primary mb-3">New Request</button>
+        <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
         <button id="syncJotformBtn" class="btn btn-outline-primary mb-3">🔄 Sync with JotForm</button>
         <div id="syncStatus" style="font-weight:bold;"></div>
+        </x-permission-users>
     </div>
 
     <!-- Popup Form, initially hidden -->

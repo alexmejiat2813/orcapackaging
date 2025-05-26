@@ -109,7 +109,7 @@ function reloadJotformGrid() {
                 editable: true,
                 selectionmode: 'singlerow',
                 columns: [
-                    { text: 'Form ID', datafield: 'jotform_id', width: 200 },
+                    /*{ text: 'Form ID', datafield: 'jotform_id', width: 200 },
                     {
                         text: 'Managed',
                         datafield: 'managed',
@@ -120,7 +120,7 @@ function reloadJotformGrid() {
                         cellclassname: function () {
                             return 'highlight-editable';
                         }
-                    },
+                    },*/
                     { text: 'Date', datafield: 'created_at', width: 130, align: 'center', cellsalign: 'center', editable: false },
                     { text: 'Machine', datafield: 'machine', width: 150, align: 'center', cellsalign: 'center', editable: false },
                     { text: 'Description', datafield: 'description', width: 200, align: 'center', cellsalign: 'center', editable: false },

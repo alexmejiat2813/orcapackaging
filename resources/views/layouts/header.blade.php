@@ -14,11 +14,14 @@
     <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->Users_Name }}
     </a>
+   
     <ul class="dropdown-menu dropdown-menu-end">
+     <x-permission-users :allowed-roles="['Thomas Admin']">
       <li><a href="{{ route('settings') }}" class="dropdown-item">
     <i class="fas fa-cog"></i> Settings
 </a></li>
       <li><hr class="dropdown-divider"></li>
+      </x-permission-users>
       <li>
         <form method="POST" action="{{ url('logout') }}">
           @csrf
@@ -54,54 +57,61 @@
     @endguest
 
     <!-- Dashboard -->
-    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
-    <li class="nav-item">
-      <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ url('/dashboard') }}">
-        <i class="bi bi-speedometer2"></i><span>Dashboard</span>
-      </a>
-    </li>
-    @endif
+    <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
+        <li class="nav-item">
+          <a class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}" href="{{ url('/dashboard') }}">
+            <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+          </a>
+        </li>
+    </x-permission-users>
 
     <!-- SALES -->
-    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
-    <li class="nav-item">
-      <a class="nav-link {{ Request::is('sales/*') ? '' : 'collapsed' }}" data-bs-target="#sales-menu" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-cart-check"></i><span>Sales</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="sales-menu" class="nav-content collapse {{ Request::is('sales/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-        <li><a href="{{ url('/sales/estimates') }}" class="{{ Request::is('sales/estimates') ? 'active' : '' }}"><i class="bi bi-circle"></i>Estimates</a></li>
-        <li><a href="{{ url('/sales/quotations') }}" class="{{ Request::is('sales/quotations') ? 'active' : '' }}"><i class="bi bi-circle"></i>Quotations</a></li>
-        <li><a href="{{ url('/sales/orders') }}" class="{{ Request::is('sales/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Sales Orders</a></li>
-        <li><a href="{{ url('/sales/invoices') }}" class="{{ Request::is('sales/invoices') ? 'active' : '' }}"><i class="bi bi-circle"></i>Invoices</a></li>
-        <li><a href="{{ url('/sales/returns') }}" class="{{ Request::is('sales/returns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Returns</a></li>
-        <li><a href="{{ url('/sales/contracts') }}" class="{{ Request::is('sales/contracts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contracts</a></li>
-        <li><a href="{{ url('/sales/goals') }}" class="{{ Request::is('sales/goals') ? 'active' : '' }}"><i class="bi bi-circle"></i>Sales Goals</a></li>
-        <li><a href="{{ url('/sales/reports') }}" class="{{ Request::is('sales/reports') ? 'active' : '' }}"><i class="bi bi-circle"></i>Reports</a></li>
-      </ul>
-    </li>
-    @endif
+    <x-permission-users :allowed-roles="['Thomas Admin']">
+        <li class="nav-item">
+          <a class="nav-link {{ Request::is('sales/*') ? '' : 'collapsed' }}" data-bs-target="#sales-menu" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-cart-check"></i><span>Sales</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="sales-menu" class="nav-content collapse {{ Request::is('sales/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+            <li><a href="{{ url('/sales/estimates') }}" class="{{ Request::is('sales/estimates') ? 'active' : '' }}"><i class="bi bi-circle"></i>Estimates</a></li>
+            <li><a href="{{ url('/sales/quotations') }}" class="{{ Request::is('sales/quotations') ? 'active' : '' }}"><i class="bi bi-circle"></i>Quotations</a></li>
+            <li><a href="{{ url('/sales/orders') }}" class="{{ Request::is('sales/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Sales Orders</a></li>
+            <li><a href="{{ url('/sales/invoices') }}" class="{{ Request::is('sales/invoices') ? 'active' : '' }}"><i class="bi bi-circle"></i>Invoices</a></li>
+            <li><a href="{{ url('/sales/returns') }}" class="{{ Request::is('sales/returns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Returns</a></li>
+            <li><a href="{{ url('/sales/contracts') }}" class="{{ Request::is('sales/contracts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contracts</a></li>
+            <li><a href="{{ url('/sales/goals') }}" class="{{ Request::is('sales/goals') ? 'active' : '' }}"><i class="bi bi-circle"></i>Sales Goals</a></li>
+            <li><a href="{{ url('/sales/reports') }}" class="{{ Request::is('sales/reports') ? 'active' : '' }}"><i class="bi bi-circle"></i>Reports</a></li>
+          </ul>
+        </li>
+    </x-permission-users>
 
     <!-- PURCHASING -->
+     <x-permission-users :allowed-roles="['Thomas Admin']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('purchasing/*') ? '' : 'collapsed' }}" data-bs-target="#purchasing-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-box-seam"></i><span>Purchasing</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="purchasing-menu" class="nav-content collapse {{ Request::is('purchasing/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-        <li><a href="{{ url('/purchasing/requests') }}" class="{{ Request::is('purchasing/requests') ? 'active' : '' }}"><i class="bi bi-circle"></i>Requests</a></li>
-        @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
+      <li><a href="{{ url('/purchasing/requests') }}" class="{{ Request::is('purchasing/requests') ? 'active' : '' }}"><i class="bi bi-circle"></i>Requests</a></li>
+      </x-permission-users>
+        <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
         <li><a href="{{ url('/purchasing/orders') }}" class="{{ Request::is('purchasing/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Purchase Orders</a></li>
         <li><a href="{{ url('/purchasing/followup') }}" class="{{ Request::is('purchasing/followup') ? 'active' : '' }}"><i class="bi bi-circle"></i>Follow-Up</a></li>
+        </x-permission-users>
+
+        <x-permission-users :allowed-roles="['Thomas Admin']">
         <li><a href="{{ url('/purchasing/rfqs') }}" class="{{ Request::is('purchasing/rfqs') ? 'active' : '' }}"><i class="bi bi-circle"></i>RFQs</a></li>
         <li><a href="{{ url('/purchasing/agreements') }}" class="{{ Request::is('purchasing/agreements') ? 'active' : '' }}"><i class="bi bi-circle"></i>Agreements</a></li>
         <li><a href="{{ url('/purchasing/pricelists') }}" class="{{ Request::is('purchasing/pricelists') ? 'active' : '' }}"><i class="bi bi-circle"></i>Price Lists</a></li>
         <li><a href="{{ url('/purchasing/suppliers') }}" class="{{ Request::is('purchasing/suppliers') ? 'active' : '' }}"><i class="bi bi-circle"></i>Suppliers</a></li>
         <li><a href="{{ url('/purchasing/rating') }}" class="{{ Request::is('purchasing/rating') ? 'active' : '' }}"><i class="bi bi-circle"></i>Rating</a></li>
-        @endif
+        </x-permission-users>
+
       </ul>
     </li>
+    
 
     <!-- PRODUCTION -->
-    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
+    <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
       <li class="nav-item">
         <a class="nav-link {{ Request::is('production/*') ? '' : 'collapsed' }}" data-bs-target="#production-menu" data-bs-toggle="collapse" href="#">
           <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -117,6 +127,7 @@
               <i class="bi bi-circle"></i>Production Jobs
             </a>
           </li>
+          <x-permission-users :allowed-roles="['Thomas Admin']">
           <li>
             <a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}">
               <i class="bi bi-circle"></i>BOM (Bill of Materials)
@@ -188,13 +199,14 @@
               <i class="bi bi-circle"></i>Efficiency
             </a>
           </li>
+          </x-permission-users>
         </ul>
       </li>
-    @endif
+    </x-permission-users>
 
 
     <!-- INVENTORY -->
-    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
+   <x-permission-users :allowed-roles="['Thomas Admin']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('inventory/*') ? '' : 'collapsed' }}" data-bs-target="#inventory-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-boxes"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -208,10 +220,10 @@
         <li><a href="{{ url('/inventory/alerts') }}" class="{{ Request::is('inventory/alerts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Alerts</a></li>
       </ul>
     </li>
-    @endif
+   </x-permission-users>
 
     <!-- CRM -->
-    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
+    <x-permission-users :allowed-roles="['Thomas Admin']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('crm/*') ? '' : 'collapsed' }}" data-bs-target="#crm-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-people"></i><span>CRM</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -226,10 +238,10 @@
         <li><a href="{{ url('/crm/segments') }}" class="{{ Request::is('crm/segments') ? 'active' : '' }}"><i class="bi bi-circle"></i>Segmentation</a></li>
       </ul>
     </li>
-    @endif
+   </x-permission-users>
 
     <!-- ACCOUNTING -->
-    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
+   <x-permission-users :allowed-roles="['Thomas Admin']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('accounting/*') ? '' : 'collapsed' }}" data-bs-target="#accounting-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-cash-coin"></i><span>Accounting</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -244,11 +256,11 @@
         <li><a href="{{ url('/accounting/balance') }}" class="{{ Request::is('accounting/balance') ? 'active' : '' }}"><i class="bi bi-circle"></i>Balance Sheet</a></li>
       </ul>
     </li>
-    @endif
+   </x-permission-users>
 
     <!-- HR -->
     <!-- HR MODULE -->
-    @if(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif')
+    <x-permission-users :allowed-roles="['Thomas Admin']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('hr/*') ? '' : 'collapsed' }}" data-bs-target="#hr-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-person-badge"></i><span>HR</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -296,15 +308,16 @@
         </li>
       </ul>
     </li>
-    @endif
+   </x-permission-users>
 
     <!-- Tools -->
+     <x-permission-users :allowed-roles="['Thomas Admin']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('tools') ? 'active' : '' }}" href="{{ url('/tools') }}">
         <i class="bi bi-tools"></i><span>Tools</span>
       </a>
     </li>
-
+    </x-permission-users>
   </ul>
 
 </aside>

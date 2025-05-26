@@ -23,7 +23,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Global machine data -->
-    <script>const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif');</script>
+    <script>const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Thomas Admin');</script>
 
     <!-- Import JS modules -->
     <script type="module" src="/assets/js/config.js"></script>

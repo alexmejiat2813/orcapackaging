@@ -21,7 +21,7 @@
 @push('scripts')
 <script>
 $(document).ready(function () {
-    const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Adjoin administratif');
+    const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Thomas Admin');
 
     var source = {
         datatype: "json",

@@ -18,15 +18,17 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
 
                 <!-- Botonera -->
+                 <x-permission-users :allowed-roles="['Thomas Admin']">
                 <div class="d-flex gap-2">
                     <button id="btnRefreshGrid" type="button" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh Data">
                         <i class="bi bi-arrow-clockwise"></i>
                     </button>
                 </div>
+                 </x-permission-users>
 
                 <h4 class="mb-0 ms-3">List of unbilled purchase orders</h4>
 
-
+                <x-permission-users :allowed-roles="['Thomas Admin']">
                 <div class="d-flex flex-wrap gap-3 align-items-center">
                         <!-- Filtros booleanos -->
                     <div class="form-check">
@@ -47,6 +49,8 @@
                         <label class="form-check-label" for="is_blocked">Barré</label>
                     </div>
                 </div>
+                 </x-permission-users>
+
             </div>
         </div>
 

@@ -18,6 +18,7 @@
         <div class="d-flex justify-content-between align-items-center mb-2">
 
             <!-- Botonera -->
+            <x-permission-users :allowed-roles="['Thomas Admin']">
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
                     <i class="bi bi-file-earmark-plus"></i> 
@@ -35,6 +36,7 @@
                     <i class="bi bi-search"></i> 
                 </button>
             </div>
+            </x-permission-users>
 
             <h4 class="mb-0 ms-3">List of unbilled purchase orders</h4>
 
@@ -107,8 +109,8 @@
             columns: [
                 { text: "Supplier Code", datafield: "Supplier_No", width: '8%', align: 'center', cellsalign: 'center' },
                 { text: "Supplier", datafield: "Supplier_Name", width: '20%', align: 'center' },
-                { text: "PO", datafield: "PO_No", width: '6%', align: 'center', cellsalign: 'center', filtertype: 'range' },
-                { text: "Date", datafield: "PO_Date", width: '8%', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center' },
+                { text: "PO", datafield: "PO_No", width: '6%', align: 'center', cellsalign: 'center' },
+                { text: "Date", datafield: "PO_Date", width: '8%', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', filtertype: 'range' },
                 { text: "Date_Requis", datafield: "PO_Date_Reception", width: '8%', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', filtertype: 'range' },
                 { text: "Note", datafield: "PO_Note", width: '30%', align: 'center' },                
                 { text: "Reception Status", datafield: "Reception_Status", width: '10%', align: 'center', cellsalign: 'center' },
