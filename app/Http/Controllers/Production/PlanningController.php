@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\Equipment;
+use App\Models\Settings\Modules\General\Equipment;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 

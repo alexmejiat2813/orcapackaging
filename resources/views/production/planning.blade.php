@@ -15,10 +15,18 @@
         </nav>
     </div>
 
-    <section class="section">
+    <div class="d-flex">
+    <div id="docketList" style="width: 300px;">
+        <div class="docket-item" data-title="Cmd 3381 – Lot 23341" data-id="3381">Cmd 3381 – Lot 23341</div>
+        <div class="docket-item" data-title="Cmd 3382 – Lot 23342" data-id="3382">Cmd 3382 – Lot 23342</div>
+    </div>
+    <section id="schedulerContainer" class="section" style="flex-grow: 1;">
         <div id="scheduler"></div>
         <div id="messageBox"></div>
     </section>
+</div>
+
+    
 
 @endsection
 
@@ -42,6 +50,7 @@
     <script src="/assets/jqwidgets/jqxnumberinput.js"></script>
     <script src="/assets/jqwidgets/jqxradiobutton.js"></script>
     <script src="/assets/jqwidgets/jqxinput.js"></script>
+    <script src="/assets/jqwidgets/jqxdragdrop.js"></script>
 
     <!-- SweetAlert for alerts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
