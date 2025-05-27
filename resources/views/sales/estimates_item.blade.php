@@ -41,6 +41,7 @@
                 datatype: "json",
                 datafields: [
                     { name: 'ID', type: 'number' },
+                    { name: 'isReady', type: 'bool' },
                     { name: 'descriptionProduit', type: 'string' },
                     { name: 'quantite', type: 'number' },
                     { name: 'commande', type: 'string' },
@@ -60,13 +61,62 @@
             filterable: true,
             showfilterrow: true,
             columnsresize: true,
+            editable : true,
+            editmode: 'click',
             selectionmode: 'singlerow',
             columns: [
-                { text: 'ID', datafield: 'ID', width: 60, cellsalign: 'center' },
-                { text: 'Description Item', datafield: 'descriptionProduit' },
-                { text: 'Quantite', datafield: 'quantite', width: 100, cellsalign: 'center' },
-                { text: 'Type Commande', datafield: 'commande', width: 150, cellsalign: 'center' }
+                { text: 'ID', datafield: 'ID', width: 60, editable : false, cellsalign: 'center' },
+                { text: 'Commande acceptee ?', datafield: 'isReady', columntype: 'checkbox', editable : true, width: 100, cellsalign: 'center'},
+                { text: 'Description Item', datafield: 'descriptionProduit', editable : false },
+                { text: 'Quantite', datafield: 'quantite', width: 100, cellsalign: 'center', editable : false },
+                { text: 'Type Commande', datafield: 'commande', width: 150, cellsalign: 'center', editable : false }
             ]});
+
+            $('#jqxgrid').on('cellendedit', function (event) {
+                const args = event.args;
+                const rowindex = args.rowindex;
+                const datafield = args.datafield;
+                const oldvalue = args.oldvalue;
+                const newvalue = args.newvalue;
+
+                if (datafield === "isReady") {
+                    const rowData = $('#jqxgrid').jqxGrid('getrowdata', rowindex);
+                
+                    // Si déjà TRUE, on empêche toute modification
+                    if (oldvalue === true) {
+                        setTimeout(() => {
+                            $('#jqxgrid').jqxGrid('setcellvalue', rowindex, 'isReady', true);
+                        }, 100); 
+                        return;
+                    }
+                
+                    // Confirmation utilisateur
+                    const confirmAction = confirm("Confirmez-vous que cet item est prêt ? Cette action est irréversible.");
+                    if (!confirmAction) {
+                        event.cancel = true;
+                        return;
+                    } 
+
+                    fetch('/sales/estimates_item/itemReady', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ id: rowData.ID })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors de la requête');
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        alert("❌ Erreur lors de la mise à jour.");
+                        $('#jqxgrid').jqxGrid('setcellvalue', rowindex, 'isReady', false); // rollback
+                    });
+                }
+            });
         });
     </script>
     <script src="{{ asset('sales/js/boutonsItem.js') }}"></script>

@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/modifier', [EstimateItemController::class, 'modifier']);
             Route::post('/supprimer', [EstimateItemController::class, 'supprimer']);
             Route::post('/copier', [EstimateItemController::class, 'copier']);
+            Route::post('/itemReady', [EstimateItemController::class, 'itemReady']);
             Route::get('/getSession', [EstimateItemController::class, 'getSession']);
         });
         

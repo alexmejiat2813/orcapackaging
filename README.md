@@ -65,6 +65,17 @@ Ensuite, il faut aller chercher le certificat dans :
 - Win + R > certlm.msc > Personnel > Certificats > Clic-droit sur le certificat > Toutes les taches > Exporter > Ne pas exporter la cle privee et le sortir en .cer
 
 Une fois cela fait, il faut acceder a ce fichier .cer sur la machine sur laquelle vous desirez vous connecter a la base de donnees de Thomas.  
-Double-clic sur le fichier et installer le certificat.
+Double-clic sur le fichier et installer le certificat DANS LA MACHINE LOCAL et DANS LE FICHIER Trusted Root Certification Authorities.
+
+Les informations de connection a la DB sur la machine serveur devraient etre :
+
+```
+DB_CONNECTION=sqlsrv
+DB_HOST=ORCA-SERVER
+DB_PORT=52791
+DB_DATABASE=ThomasOrca
+DB_USERNAME=thomas
+DB_PASSWORD=thomasbsc
+```
 
 Le projet ne devrait plus donner d'erreur de certificat.

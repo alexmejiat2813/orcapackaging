@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .filter(cb => cb.checked)
         .map(cb => cb.value);
       hiddenInput.value = selected.join(', ');
-      console.log(hiddenInput.value);
     }
   
     checkboxes.forEach(cb => {

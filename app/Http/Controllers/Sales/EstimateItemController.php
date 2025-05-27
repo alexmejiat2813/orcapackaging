@@ -60,8 +60,12 @@ class EstimateItemController extends Controller
             ->join('ItemsSoumissionsSynology', 'ItemsSynology.ID', '=', 'ItemsSoumissionsSynology.ItemID')
             ->where('ItemsSoumissionsSynology.SoumissionID', $id)
             ->orderByDesc('ItemsSynology.ID')
-            ->select('ItemsSynology.*')
-            ->get();
+            ->select('ItemsSynology.ID','ItemsSynology.descriptionProduit','ItemsSynology.quantite','ItemsSynology.commande','ItemsSynology.isReady', )
+            ->get()
+            ->map(function ($item) {
+                $item->isReady = (bool) $item->isReady; // 🔥 conversion ici
+                return $item;
+            });
 
         return response()->json($data);
     }
@@ -137,6 +141,15 @@ class EstimateItemController extends Controller
                 'message' => 'Erreur lors de la duplication : ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function itemReady(Request $request) {
+        $idItem = $request->input('id');
+        $item = DB::table('ItemsSynology')->where('ID', $idItem)->update([
+                'isReady' => 1
+            ]);
+
+        return response()->json(['message' => 'Item marked as ready.']);
     }
 }
 

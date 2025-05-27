@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ajouterChampsAuFormData(formData, formCommande);
 
             if (validerForm(formData)) {
-                console.log(formData);
                 try {
                     const response = await fetch('/sales/estimates_item/storeItem', {
                         method: 'POST',
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 
                     const contentType = response.headers.get('content-type');
-                    console.log(response);
+
                 
                     if (contentType && contentType.includes('application/json')) {
                         const data = await response.json();

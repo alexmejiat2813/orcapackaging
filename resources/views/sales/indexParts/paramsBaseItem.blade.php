@@ -68,6 +68,13 @@
         </div>
     </div>
 
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="commentaire">Commentaire</label>
+            <textarea id="commentaire" name="commentaire" rows="6" cols="40" placeholder="Ecrivez un commentaire sur cet item"></textarea>
+        </div>
+    </div>
+
     <div id="container-commande">
         <select name="commande" id="commande" onchange="afficherTexte()">
             <option value="- Aucun -">-- Sélectionne une option --</option>
