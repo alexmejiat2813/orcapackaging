@@ -18,12 +18,11 @@ use App\Http\Controllers\Production\CommandesController;
 use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
 use App\Http\Controllers\Production\TrackingController;
-
+use App\Http\Controllers\Sales\EstimateController;
+use App\Http\Controllers\Sales\EstimateItemController;
 use App\Http\Controllers\Settings\SettingsController;
-
 use App\Http\Controllers\Settings\Modules\General\DepartmentController;
 use App\Http\Controllers\Settings\Modules\General\EquipmentController;
-
 use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
 
 
@@ -60,12 +59,33 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::prefix('sales')->group(function () {
         Route::get('/orders', [SalesOrderController::class, 'index'])->name('sales.orders');
-        // Other optional sales modules:
         // Route::get('/quotations', [QuotationController::class, 'index']);
-        // Route::get('/estimates', [EstimateController::class, 'index']);
         // Route::get('/invoices', [InvoiceController::class, 'index']);
         // Route::get('/clients', [ClientController::class, 'index']);
         // Route::get('/reports', [SalesReportController::class, 'index']);
+        ///////////////////////////////////////////////////////////////////
+        Route::prefix('estimates')->group(function () {
+            Route::get('/', [EstimateController::class, 'index'])->name('sales.estimate');
+            Route::post('/gerer', [EstimateController::class, 'gerer'])->name('estimates.gerer');
+            Route::post('/supprimer', [EstimateController::class, 'supprimer'])->name('estimates.supprimer');
+            Route::post('/copier', [EstimateController::class, 'copier'])->name('estimates.copier');
+            Route::post('/storeSoumission', [EstimateController::class, 'storeSoumission'])->name('estimates.storeSoumission');
+            Route::post('/modifier', [EstimateController::class, 'modifier']);
+            Route::get('/gridData', [EstimateController::class, 'gridData']);
+            Route::get('/getSession', [EstimateController::class, 'getSession']);
+        });
+        Route::prefix('estimates_item')->group(function () {
+            Route::get('/', [EstimateItemController::class, 'index']);
+            Route::post('/storeItem', [EstimateItemController::class, 'storeItem']);
+            Route::get('/gridData', [EstimateItemController::class, 'gridData']);
+            Route::post('/modifier', [EstimateItemController::class, 'modifier']);
+            Route::post('/supprimer', [EstimateItemController::class, 'supprimer']);
+            Route::post('/copier', [EstimateItemController::class, 'copier']);
+            Route::post('/itemReady', [EstimateItemController::class, 'itemReady']);
+            Route::get('/getSession', [EstimateItemController::class, 'getSession']);
+        });
+        
+        ///////////////////////////////////////////////////////////////////
     });
 
     /*

@@ -20,6 +20,8 @@
     <!-- jqWidgets CSS -->
     <link rel="stylesheet" href="/assets/jqwidgets/styles/jqx.base.css" type="text/css" />
 
+    @stack('styles')
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
