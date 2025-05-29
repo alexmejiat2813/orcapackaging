@@ -112,6 +112,7 @@ class SchedulerModule {
             Swal.fire('Acción bloqueada', 'No se permite crear nuevas citas.', 'warning');
         });
 
+
     }
 
     refreshScheduler() {

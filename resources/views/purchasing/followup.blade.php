@@ -111,6 +111,7 @@
 
 @push('scripts')
  <script src="/assets/jqwidgets/jqxsplitter.js"></script>
+ <script src="/assets/jqwidgets/jqxgrid.grouping.js"></script>
 <script>
     $(document).ready(function () {
 
@@ -167,6 +168,7 @@
             enabletooltips: true,
             contextmenuenabled: true,
             showgroupsheader: true,
+            groupable: true,
             columns: [
                 { text: "Supplier Code", datafield: "Supplier_No", columnGroup: 'supplier', width: '7%', align: 'center', cellsalign: 'center' },
                 { text: "Supplier Name", datafield: "Supplier_Name", columnGroup: 'supplier', width: '15%', align: 'center' },
@@ -193,13 +195,13 @@
                 { text: "Product Name", datafield: "PrDescription1", columnGroup: 'product', width: '40%', align: 'center' },
                 { text: "PO Note", datafield: "PO_Note", width: '200%' }
             ],
-            columnGroups: [
+            /*columnGroups: [
                 { text: 'Order Info', name: 'order', align: 'center' },
                 { text: 'Supplier Info', name: 'supplier', align: 'center' },
                 { text: 'Receiving Info', name: 'receiving', align: 'center' },
                 { text: 'Invoice Info', name: 'invoice', align: 'center' },
                 { text: 'Product Info', name: 'product', align: 'center' }
-            ]
+            ]*/
         });
 
         var listSource = [

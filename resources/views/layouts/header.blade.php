@@ -93,11 +93,12 @@
 
       <ul id="purchasing-menu" class="nav-content collapse {{ Request::is('purchasing/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
       <x-permission-users :allowed-roles="['Thomas Admin']">
-
+      <li><a href="{{ url('/purchasing/suppliers') }}" class="{{ Request::is('purchasing/suppliers') ? 'active' : '' }}"><i class="bi bi-circle"></i>Suppliers</a></li>
       <li><a href="{{ url('/purchasing/requests') }}" class="{{ Request::is('purchasing/requests') ? 'active' : '' }}"><i class="bi bi-circle"></i>Requests</a></li>
       </x-permission-users>
         
         <li><a href="{{ url('/purchasing/orders') }}" class="{{ Request::is('purchasing/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Purchase Orders</a></li>
+        <li><a href="{{ url('/purchasing/receivings') }}" class="{{ Request::is('purchasing/receivings') ? 'active' : '' }}"><i class="bi bi-circle"></i>Receivings</a></li>
         <li><a href="{{ url('/purchasing/followup') }}" class="{{ Request::is('purchasing/followup') ? 'active' : '' }}"><i class="bi bi-circle"></i>Follow-Up</a></li>
         
 
@@ -105,7 +106,7 @@
         <li><a href="{{ url('/purchasing/rfqs') }}" class="{{ Request::is('purchasing/rfqs') ? 'active' : '' }}"><i class="bi bi-circle"></i>RFQs</a></li>
         <li><a href="{{ url('/purchasing/agreements') }}" class="{{ Request::is('purchasing/agreements') ? 'active' : '' }}"><i class="bi bi-circle"></i>Agreements</a></li>
         <li><a href="{{ url('/purchasing/pricelists') }}" class="{{ Request::is('purchasing/pricelists') ? 'active' : '' }}"><i class="bi bi-circle"></i>Price Lists</a></li>
-        <li><a href="{{ url('/purchasing/suppliers') }}" class="{{ Request::is('purchasing/suppliers') ? 'active' : '' }}"><i class="bi bi-circle"></i>Suppliers</a></li>
+        
         <li><a href="{{ url('/purchasing/rating') }}" class="{{ Request::is('purchasing/rating') ? 'active' : '' }}"><i class="bi bi-circle"></i>Rating</a></li>
         </x-permission-users>
         </x-permission-users>

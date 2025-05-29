@@ -47,6 +47,7 @@ class OrdersModule {
         $("#commandesGrid").jqxGrid({
             width: '100%',
             source: this.adapter,
+            pagermode: "simple",
             pageable: true,
             autoheight: true,
             sortable: true,
@@ -55,7 +56,7 @@ class OrdersModule {
             showfilterrow: true,
             pageSize: 17,
             editable: true,
-            showtoolbar: true,
+            showtoolbar: true, groupable: true, showgroupsheader: true,
             /*rendertoolbar: function (toolbar) {
                 const container = $("<div style='margin: 5px;'></div>");
                 toolbar.append(container);
@@ -118,7 +119,7 @@ class OrdersModule {
 
             columns: [
                 //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
-                { text: 'ID', datafield: 'Commande_Id', align: 'center', cellsalign: 'center', width: 60 },
+                //{ text: 'ID', datafield: 'Commande_Id', align: 'center', cellsalign: 'center', width: 60 },
                 { text: '# Customer', datafield: 'Customer_Code', width: 95, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Customer', datafield: 'Customer_Name', width: 255, align: 'center', editable: false },
                 { text: '# Order', datafield: 'InInvoiceNumber', width: 75, align: 'center', cellsalign: 'center', editable: false },
