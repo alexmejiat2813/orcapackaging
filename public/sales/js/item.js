@@ -6,6 +6,9 @@ window.addEventListener('load', function () {
         form.reset(); 
     });
 
+    // Reset du hiddenInput pour les checkbox
+    document.getElementById('formatProduit').value = '';
+
     const selectCommande = document.getElementById('commande');
         if (selectCommande) {
             // Déclenche manuellement l'événement 'change'
@@ -72,27 +75,9 @@ function afficherTexte() {
 }
 afficherTexte();
 
-// GESTION CHECKBOX
-document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('.formatProduit-checkbox');
-    const hiddenInput = document.getElementById('formatProduit');
-  
-    function updateHiddenInput() {
-      const selected = Array.from(checkboxes)
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-      hiddenInput.value = selected.join(', ');
-    }
-  
-    checkboxes.forEach(cb => {
-      cb.addEventListener('change', updateHiddenInput);
-    });
-  
-    updateHiddenInput();
-});
-
 // COULEURS
 const couleurs = [
+    { label: "- Choississez une couleur -", value: "" },
     { label: "Beige", value: "beige" },
     { label: "Blanc", value: "blanc" },
     { label: "Bleu", value: "bleu" },
@@ -119,7 +104,7 @@ const couleurs = [
       <div class="parametres">
         <div class="divParametres">
           <label for="couleur${index}"> Couleur</label>
-          <select name="couleur${index}" id="couleur${index}" class="select-couleur" required></select>
+          <select name="couleur${index}" id="couleur${index}" class="select-couleur"></select>
         </div>
         <div class="divParametres">
           <label for="surface${index}"> Surface </label>
@@ -192,11 +177,24 @@ const couleurs = [
     });
   });
 
-// Pour rajouter des classes pour tous les objets HTML avec un ID
+// Pour rajouter des classes pour tous les objets HTML avec un ID et pour les checkboxes
 
 document.querySelectorAll("form").forEach(form => {
   form.querySelectorAll("[id]").forEach(el => {
     el.classList.add(el.id);
+  });
+  // GESTION CHECKBOX
+  form.addEventListener('change', function (event) {
+    if (event.target.classList.contains('formatProduit-checkbox')) {
+      const checkboxes = form.querySelectorAll('.formatProduit-checkbox');
+      const hiddenInput = form.querySelector('#formatProduit');
+
+      const selected = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value.trim());
+
+      hiddenInput.value = Array.from(new Set(selected)).join(', ');
+    }
   });
 });
 
@@ -257,10 +255,12 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
   attacherListener(inputLargeur, calculerSurface);
 });
 
+// Calcul nombre palettes necessaires
 document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem")?.querySelector('[name="quantite"]');
   const inputSacsParPalette = form.querySelector('[name="totalSacsParPalette"]');
   const inputRouleauxParPalette = form.querySelector('[name="rouleauxParPalettes"]');
+  const inputTapeParPalette = form.querySelector('[name="totalTapeParPalette"]');
   const inputPalettes = form.querySelector('[name="totalPalettes"]');
 
   if (!inputQuantite || !inputPalettes) return;
@@ -271,6 +271,7 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
     let valeurPalette = 1;
     if (inputSacsParPalette) valeurPalette = parseFloat(inputSacsParPalette.value);
     if (inputRouleauxParPalette) valeurPalette = parseFloat(inputRouleauxParPalette.value);
+    if (inputTapeParPalette) valeurPalette = parseFloat(inputTapeParPalette.value);
 
     const total = Math.ceil(quantite / valeurPalette);
     inputPalettes.value = total;
@@ -280,9 +281,8 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
   attacherListener(inputQuantite, calculerPalettes);
   if (inputSacsParPalette) attacherListener(inputSacsParPalette, calculerPalettes);
   if (inputRouleauxParPalette) attacherListener(inputRouleauxParPalette, calculerPalettes);
+  if (inputTapeParPalette) attacherListener(inputTapeParPalette, calculerPalettes);
 });
-
-
 
 // boitesParPalettes (rouleauxParPalettes) * sacsParBoite (impressionsParRouleaux) = totalSacsParPalette 21    // ARRONDIR
 document.querySelectorAll('[id^="form-"]').forEach(form => {
@@ -290,6 +290,8 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSacsParBoite = form.querySelector('[name="sacsParBoite"]');
   const inputRouleauxParPalette = form.querySelector('[name="rouleauxParPalettes"]');
   const inputImpressionsParRouleaux = form.querySelector('[name="impressionsParRouleaux"]');
+  const inputTotalTapeParPalette = form.querySelector('[name="totalTapeParPalette"]');
+  const inputTapeParBoite = form.querySelector('[name="tapeParBoite"]');
   const inputTotalSacsParPalette = form.querySelector('[name="totalSacsParPalette"]');
   const inputTotalImpressionsParPalette = form.querySelector('[name="totalImpressionsParPalette"]');
 
@@ -313,11 +315,25 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
     }
   }
 
+  function calculerTotalTapeParPalette() {
+    const boites = parseFloat(inputBoitesParPalette.value) || 0;
+    const tapeParBoite = parseFloat(inputTapeParBoite.value) || 0;
+    const total = Math.ceil(boites * tapeParBoite);
+    if (inputTotalTapeParPalette) {
+      inputTotalTapeParPalette.value = total;
+      inputTotalTapeParPalette.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  }
+
   function calculerTotalPalette() {
     if (inputBoitesParPalette && inputSacsParBoite) {
       calculerTotalSacsParPalette();
-    } else if (inputRouleauxParPalette && inputImpressionsParRouleaux) {
+    }
+    if (inputRouleauxParPalette && inputImpressionsParRouleaux) {
       calculerTotalImpressionsParPalette();
+    }
+    if (inputBoitesParPalette && inputTapeParBoite) {
+      calculerTotalTapeParPalette();
     }
   }
 
@@ -326,6 +342,7 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
   if (inputSacsParBoite) inputSacsParBoite.addEventListener("input", calculerTotalPalette);
   if (inputRouleauxParPalette) inputRouleauxParPalette.addEventListener("input", calculerTotalPalette);
   if (inputImpressionsParRouleaux) inputImpressionsParRouleaux.addEventListener("input", calculerTotalPalette);
+  if (inputTapeParBoite) inputTapeParBoite.addEventListener("input", calculerTotalPalette);
 });
 
 // ((coutsFinaux * 1.5) / quantite ) * 1000 = prixFinauxCinquantePourcent 23               // ARRONDIR
@@ -539,36 +556,38 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
 // coutTotauxProductionPlaques + coutTotauxProductionPellicule + coutTotauxProductionEncre + coutTotauxProductionSolvant + coutTotauxProductionImpression +
 // coutTotauxProductionConversion + coutTotauxProductionEmballage + coutTotauxProductionLivraison + coutTotauxProductionEntrepot = coutsFinaux  36
 document.querySelectorAll('[id^="form-"]').forEach(form => {
-  const inputPlaques = form.querySelector('[name="coutTotauxProductionPlaques"]');
-  const inputPellicule = form.querySelector('[name="coutTotauxProductionPellicule"]');
-  const inputEncre = form.querySelector('[name="coutTotauxProductionEncre"]');
-  const inputSolvant = form.querySelector('[name="coutTotauxProductionSolvant"]');
-  const inputImpression = form.querySelector('[name="coutTotauxProductionImpression"]');
-  const inputConversion = form.querySelector('[name="coutTotauxProductionConversion"]');
-  const inputEmballage = form.querySelector('[name="coutTotauxProductionEmballage"]');
-  const inputLivraison = form.querySelector('[name="coutTotauxProductionLivraison"]');
-  const inputEntrepot = form.querySelector('[name="coutTotauxProductionEntrepot"]');
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
 
-  if (!inputPlaques || !inputPellicule || !inputEncre || !inputSolvant || !inputImpression ||
-      !inputConversion || !inputEmballage || !inputLivraison || !inputEntrepot || !inputCoutsFinaux) return;
+  if (!inputCoutsFinaux) return;
+
+  const champs = [
+    'coutTotauxProductionPlaques',
+    'coutTotauxProductionPellicule',
+    'coutTotauxProductionEncre',
+    'coutTotauxProductionSolvant',
+    'coutTotauxProductionImpression',
+    'coutTotauxProductionConversion',
+    'coutTotauxProductionEmballage',
+    'coutTotauxProductionLivraison',
+    'coutTotauxProductionEntrepot',
+    'coutTotauxProductionMateriau'
+  ];
 
   function calculerCoutsFinaux() {
-    const total = [
-      inputPlaques, inputPellicule, inputEncre, inputSolvant, inputImpression,
-      inputConversion, inputEmballage, inputLivraison, inputEntrepot
-    ].reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+    const total = champs.reduce((somme, nom) => {
+      const input = form.querySelector(`[name="${nom}"]`);
+      return somme + (input ? parseFloat(input.value) || 0 : 0);
+    }, 0);
 
     inputCoutsFinaux.value = total.toFixed(2);
     inputCoutsFinaux.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
-  [
-    inputPlaques, inputPellicule, inputEncre, inputSolvant, inputImpression,
-    inputConversion, inputEmballage, inputLivraison, inputEntrepot
-  ].forEach(input => input.addEventListener("input", calculerCoutsFinaux));
+  champs.forEach(nom => {
+    const input = form.querySelector(`[name="${nom}"]`);
+    if (input) input.addEventListener("input", calculerCoutsFinaux);
+  });
 });
-
 
 // dureeTotaleConversion + dureeMontageConversion + dureeMenageConversion = tempsTotalConversion 39
 document.querySelectorAll('[id^="form-"]').forEach(form => {
@@ -651,51 +670,35 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
 });
 
 
-// quantite / sacsParBoite = nbBoites 54
+// quantite / sacsParBoite = nbBoites (avec tape aussi) 54
 document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
   const inputSacsParBoite = form.querySelector('[name="sacsParBoite"]');
+  const inputTapeParBoite = form.querySelector('[name="tapeParBoite"]');
   const inputNbBoites = form.querySelector('[name="nbBoites"]');
 
-  if (!inputQuantite || !inputSacsParBoite || !inputNbBoites) return;
+  if (!inputQuantite || !inputNbBoites) return;
 
   function calculerNbBoites() {
     const quantite = parseFloat(inputQuantite.value) || 0;
-    const sacsParBoite = parseFloat(inputSacsParBoite.value) || 1;
-    const nb = quantite / sacsParBoite;
-    inputNbBoites.value = Math.ceil(nb); // on arrondit vers le haut pour ne pas rater de boîte
+    const sacsParBoite = parseFloat(inputSacsParBoite?.value) || 0;
+    const tapeParBoite = parseFloat(inputTapeParBoite?.value) || 0;
+
+    let nb = 0;
+
+    if (sacsParBoite > 0) {
+      nb = quantite / sacsParBoite;
+    } else if (tapeParBoite > 0) {
+      nb = quantite / tapeParBoite;
+    }
+
+    inputNbBoites.value = Math.ceil(nb);
     inputNbBoites.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
   inputQuantite.addEventListener("input", calculerNbBoites);
-  inputSacsParBoite.addEventListener("input", calculerNbBoites);
-});
-
-// (nbBoites * coutBoite) + (totalPalettes * coutPalette) = coutTotauxProductionEmballage 56
-document.querySelectorAll('[id^="form-"]').forEach(form => {
-  const inputNbBoites = form.querySelector('[name="nbBoites"]');
-  const inputCoutBoite = form.querySelector('[name="coutBoite"]');
-  const inputTotalPalettes = form.querySelector('[name="totalPalettes"]');
-  const inputCoutPalette = form.querySelector('[name="coutPalette"]');
-  const inputCoutEmballage = form.querySelector('[name="coutTotauxProductionEmballage"]');
-
-  if (!inputNbBoites || !inputCoutBoite || !inputTotalPalettes || !inputCoutPalette || !inputCoutEmballage) return;
-
-  function calculerCoutEmballage() {
-    const nbBoites = parseFloat(inputNbBoites.value) || 0;
-    const coutBoite = parseFloat(inputCoutBoite.value) || 0;
-    const totalPalettes = parseFloat(inputTotalPalettes.value) || 0;
-    const coutPalette = parseFloat(inputCoutPalette.value) || 0;
-
-    const total = (nbBoites * coutBoite) + (totalPalettes * coutPalette);
-    inputCoutEmballage.value = total.toFixed(2);
-    inputCoutEmballage.dispatchEvent(new Event("input", { bubbles: true }));
-  }
-
-  inputNbBoites.addEventListener("input", calculerCoutEmballage);
-  inputCoutBoite.addEventListener("input", calculerCoutEmballage);
-  inputTotalPalettes.addEventListener("input", calculerCoutEmballage);
-  inputCoutPalette.addEventListener("input", calculerCoutEmballage);
+  if (inputSacsParBoite) inputSacsParBoite.addEventListener("input", calculerNbBoites);
+  if (inputTapeParBoite) inputTapeParBoite.addEventListener("input", calculerNbBoites);
 });
 
 // (salaireConversion * tempsTotalConversion) / 60 = coutTotauxProductionConversion 57  // BIZARRE
@@ -1238,31 +1241,306 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
 // Gestion variation de prix selon quantite
 document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
-  const inputPrix = document.getElementById("form-inputsCommunItem").querySelector('[name="prix"]');
-  const inputQuantiteInformative1 = form.querySelector('[name="quantiteInformative1"]');
-  const inputQuantiteInformative2 = form.querySelector('[name="quantiteInformative2"]');
-  const inputQuantiteInformative3 = form.querySelector('[name="quantiteInformative3"]');
-  const inputPrixInformatif1 = form.querySelector('[name="prixInformatif1"]');
-  const inputPrixInformatif2 = form.querySelector('[name="prixInformatif2"]');
-  const inputPrixInformatif3 = form.querySelector('[name="prixInformatif3"]');
+  const inputPrix = form.querySelector('[name="prixFinauxMilleAvecProfit"]');
+  const inputQuantiteInformative = form.querySelector('[name="quantiteInformative"]');
+  const inputPrixInformatif = form.querySelector('[name="prixInformatif"]');
 
-  if (!inputQuantite || !inputPrix || !inputQuantiteInformative1 || !inputQuantiteInformative2 || !inputQuantiteInformative3
-    || !inputPrixInformatif1 || !inputPrixInformatif2 || !inputPrixInformatif3
-  ) return;
+  if (!inputQuantite || !inputPrix || !inputQuantiteInformative || !inputPrixInformatif ) return;
 
   function calculerQuantiteInformative() {
-    inputQuantiteInformative1.value = inputQuantite.value;
-    inputQuantiteInformative2.value = inputQuantite.value / 2;
-    inputQuantiteInformative3.value = inputQuantite.value * 2;
+    inputQuantiteInformative.value = inputQuantite.value;
   }
 
   function calculerPrixInformatif() {
-    inputPrixInformatif1.value = inputPrix.value;
-    inputPrixInformatif2.value = inputPrix.value / 2;
-    inputPrixInformatif3.value = inputPrix.value * 2;
+    inputPrixInformatif.value = inputPrix.value;
   }
 
   inputQuantite.addEventListener("input", calculerQuantiteInformative);
   inputPrix.addEventListener("input", calculerPrixInformatif);
 });
+
+// Gestion du calcul des couts pour differentes quantites (variation prix)
+document.querySelectorAll('[id^="form-"]').forEach(form => {
+  if (!form.querySelector('[name="calculAutreQuantite"]')) return;
+  form.querySelector('[name="calculAutreQuantite"]').addEventListener('click', () => {
+      const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]'); // ton input principal
+      const inputPrixFinal = form.querySelector('[name="prixInformatif"]'); // prix par mille calculé à la fin normalement ?
+      const inputNouvelleQuantite = form.querySelector('[name="nvlQuantite"]');
+      const inputNvPrix = form.querySelector('[name="nvPrix"]');
+
+      if (!inputQuantite || !inputPrixFinal || !inputNouvelleQuantite || !inputNvPrix) {
+          alert("Un ou plusieurs champs requis sont manquants.");
+          return;
+      }
+
+      const ancienneQuantite = inputQuantite.value;
+      const nouvelleQuantite = parseFloat(inputNouvelleQuantite.value);
+
+      if (isNaN(nouvelleQuantite) || nouvelleQuantite <= 0) {
+          alert("Veuillez entrer une nouvelle quantité valide.");
+          return;
+      }
+
+      // Remplacement temporaire
+      inputQuantite.value = nouvelleQuantite;
+      inputQuantite.dispatchEvent(new Event("input", { bubbles: true }));
+
+      // Laisser le temps aux autres scripts de recalculer les prix
+      setTimeout(() => {
+          const prixCalcule = parseFloat(inputPrixFinal.value);
+          if (!isNaN(prixCalcule)) {
+              inputNvPrix.value = prixCalcule.toFixed(2);
+          } else {
+              alert("Impossible de calculer le prix. Vérifiez vos scripts de calcul.");
+          }
+
+          // Restauration
+          inputQuantite.value = ancienneQuantite;
+          inputQuantite.dispatchEvent(new Event("input", { bubbles: true }));
+      }, 200); // délai pour laisser les autres scripts réagir
+  });
+});
+
+// nbBoites (quantite) * coutBoite (coutRouleau) + totalPalettes * coutPalette = coutTotauxProductionEmballage (bonus)
+document.querySelectorAll('[id^="form-"]').forEach(form => {
+  const inputNbBoites = form.querySelector('[name="nbBoites"]') || document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
+  const inputCoutBoite = form.querySelector('[name="coutBoite"]') || form.querySelector('[name="coutRouleau"]');
+  const inputTotalPalettes = form.querySelector('[name="totalPalettes"]');
+  const inputCoutPalette = form.querySelector('[name="coutPalette"]');
+  const inputResultat = form.querySelector('[name="coutTotauxProductionEmballage"]');
+
+  if (!inputResultat) return;
+
+  function calculerCoutEmballage() {
+    const nb = parseFloat(inputNbBoites?.value) || 0;
+    const coutUnitaire = parseFloat(inputCoutBoite?.value) || 0;
+    const palettes = parseFloat(inputTotalPalettes?.value) || 0;
+    const coutPalette = parseFloat(inputCoutPalette?.value) || 0;
+
+    const total = (nb * coutUnitaire) + (palettes * coutPalette);
+    inputResultat.value = total.toFixed(2);
+    inputResultat.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  [inputNbBoites, inputCoutBoite, inputTotalPalettes, inputCoutPalette].forEach(input => {
+    if (input) input.addEventListener("input", calculerCoutEmballage);
+  });
+});
+
+
+///////////////////////////// TAPE //////////////////////////////// 
+const formTape = document.getElementById('form-tape');
+
+//  largeur / largeurTape = nbPistes (FormTape)
+if (formTape) {
+  const selectLargeur = formTape.querySelector('#largeur');
+  const selectLargeurTape = formTape.querySelector('#largeurTape');
+  const inputNbPistes = formTape.querySelector('#nbPistes');
+
+  function calculerNbPistes() {
+    const largeur = parseFloat(selectLargeur.value) || 0;
+    const largeurTape = parseFloat(selectLargeurTape.value) || 1;
+
+    let nbPistes = 0;
+    if (largeurTape !== 1) nbPistes = largeur / largeurTape;
+
+    inputNbPistes.value = nbPistes > 0 ? Math.floor(nbPistes) : 0;
+    inputNbPistes.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  selectLargeur.addEventListener('change', calculerNbPistes);
+  selectLargeurTape.addEventListener('change', calculerNbPistes);
+}
+
+// (longueur / repetitionsTape) * quantite = totalRepetitionsTape (FormTape)
+if (formTape) {
+  const inputLongueur = formTape.querySelector('#longueurTape');
+  const inputRepetition = formTape.querySelector('#repetitionsTape');
+  const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('#quantite');
+  const inputTotal = formTape.querySelector('#totalRepetitionsTape');
+
+  function calculerRepetitions() {
+    const longueurMetres = parseFloat(inputLongueur.value) || 0;
+    const repetitionPouces = parseFloat(inputRepetition.value) || 1;
+    const quantite = parseFloat(inputQuantite.value) || 0;
+
+    // 1 mètre = 39.3701 pouces
+    const longueurEnPouces = longueurMetres * 39.3701;
+    const total = (longueurEnPouces / repetitionPouces) * quantite;
+
+    inputTotal.value = total > 0 ? Math.floor(total) : 0;
+    inputTotal.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  inputLongueur.addEventListener('input', calculerRepetitions);
+  inputRepetition.addEventListener('input', calculerRepetitions);
+  inputQuantite.addEventListener('input', calculerRepetitions);
+}
+
+// quantite / (nbPistes * ((longueur / longueurTape).floor())) = totalMateriauTape (FormTape)
+if (formTape) {
+  const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
+  const inputLongueur = formTape.querySelector('[name="longueur"]');
+  const inputLongueurTape = formTape.querySelector('[name="longueurTape"]');
+  const inputNbPistes = formTape.querySelector('[name="nbPistes"]');
+  const inputTotalMateriauTape = formTape.querySelector('[name="totalMateriauTape"]');
+
+  function calculerTotalMateriauTape() {
+      const quantite = parseFloat(inputQuantite.value) || 0;
+      const longueur = parseFloat(inputLongueur.value) || 0;
+      const longueurTape = parseFloat(inputLongueurTape.value) || 1;
+      const nbPistes = parseFloat(inputNbPistes.value) || 1;
+
+      const morceauxParRouleau = Math.floor(longueur / longueurTape);
+      const denominateur = nbPistes * morceauxParRouleau;
+      const total = denominateur > 0 ? Math.ceil(quantite / denominateur) : 0;
+
+      inputTotalMateriauTape.value = total;
+      inputTotalMateriauTape.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  inputQuantite.addEventListener("input", calculerTotalMateriauTape);
+  inputLongueur.addEventListener("change", calculerTotalMateriauTape);
+  inputLongueurTape.addEventListener("input", calculerTotalMateriauTape);
+  inputNbPistes.addEventListener("input", calculerTotalMateriauTape);
+}
+
+// (surface(num) / (largeur * repetitionsTape)) * 100 = couverture(num) (FormTape)
+if (formTape) {
+  const inputLargeur = formTape.querySelector('[name="largeur"]');
+  const inputRepetition = formTape.querySelector('[name="repetitionsTape"]');
+
+  function calculerCouverturesTape() {
+    const largeurMM = parseFloat(inputLargeur.value) || 0;
+    const repetitionsPouces = parseFloat(inputRepetition.value) || 0;
+
+    const largeurPouces = largeurMM / 25.4;
+    const surfaceTotale = largeurPouces * repetitionsPouces;
+
+    if (surfaceTotale === 0) return;
+
+    for (let i = 1; i <= 2; i++) {
+      const inputSurface = formTape.querySelector(`[name="surface${i}"]`);
+      const inputCouverture = formTape.querySelector(`[name="couverture${i}"]`);
+
+      if (inputSurface && inputCouverture) {
+        const surface = parseFloat(inputSurface.value) || 0;
+        const couverture = (surface / surfaceTotale) * 100;
+        inputCouverture.value = couverture.toFixed(2);
+        inputCouverture.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    }
+  }
+
+  // Écouteurs spécifiques au formulaire form-tape
+  inputLargeur.addEventListener("input", calculerCouverturesTape);
+  inputRepetition.addEventListener("input", calculerCouverturesTape);
+
+  for (let i = 1; i <= 2; i++) {
+    const input = formTape.querySelector(`[name="surface${i}"]`);
+    if (input) input.addEventListener("input", calculerCouverturesTape);
+  }
+}
+
+// (constante * ((largeur * repetitionsTape) (pouces)) * totalRepetitionsTape) * (couverture(num) / 100) = kg(num)
+if (formTape) {
+  const inputConstante = formTape.querySelector('[name="constante"]');
+  const inputLargeur = formTape.querySelector('[name="largeur"]');
+  const inputRepetition = formTape.querySelector('[name="repetitionsTape"]');
+  const inputTotalRepetitions = formTape.querySelector('[name="totalRepetitionsTape"]');
+
+  function calculerKgParSurface() {
+    const constante = parseFloat(inputConstante.value) || 0;
+    const largeurMM = parseFloat(inputLargeur.value) || 0;
+    const repetitionPouces = parseFloat(inputRepetition.value) || 0;
+    const totalReps = parseFloat(inputTotalRepetitions.value) || 0;
+
+    const largeurPouces = largeurMM / 25.4;
+    const surfaceEnPouces = largeurPouces * repetitionPouces;
+
+    for (let i = 1; i <= 2; i++) {
+      const inputCouverture = formTape.querySelector(`[name="couverture${i}"]`);
+      const inputKg = formTape.querySelector(`[name="kg${i}"]`);
+
+      if (inputCouverture && inputKg) {
+        const couverturePourcent = parseFloat(inputCouverture.value) || 0;
+        const kg = constante * surfaceEnPouces * totalReps * (couverturePourcent / 100);
+        inputKg.value = kg.toFixed(2);
+        inputKg.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    }
+  }
+
+  // Listeners
+  inputConstante.addEventListener("input", calculerKgParSurface);
+  inputLargeur.addEventListener("input", calculerKgParSurface);
+  inputRepetition.addEventListener("input", calculerKgParSurface);
+  inputTotalRepetitions.addEventListener("input", calculerKgParSurface);
+
+  for (let i = 1; i <= 2; i++) {
+    const input = formTape.querySelector(`[name="couverture${i}"]`);
+    if (input) input.addEventListener("input", calculerKgParSurface);
+  }
+}
+
+// (longueurTape * quantite) / metresParHeureTape = dureeTotaleImpression
+if (formTape) {
+  const inputLongueurTape = formTape.querySelector('[name="longueurTape"]');
+  const inputQuantite = document.getElementById("form-inputsCommunItem").querySelector('[name="quantite"]');
+  const inputMetresParHeure = formTape.querySelector('[name="metresParHeureTape"]');
+  const inputDureeTotale = formTape.querySelector('[name="dureeTotaleImpression"]');
+
+  function calculerDureeImpression() {
+    const longueur = parseFloat(inputLongueurTape.value) || 0;
+    const quantite = parseFloat(inputQuantite.value) || 0;
+    const mph = parseFloat(inputMetresParHeure.value) || 0;
+
+    if (longueur === 0 || quantite === 0 || mph === 0) {
+      inputDureeTotale.value = '';
+      return;
+    }
+
+    const duree = ((longueur * quantite) / mph) * 60;
+    inputDureeTotale.value = duree.toFixed(2); // durée en heures
+    inputDureeTotale.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  inputLongueurTape.addEventListener("input", calculerDureeImpression);
+  inputQuantite.addEventListener("input", calculerDureeImpression);
+  inputMetresParHeure.addEventListener("input", calculerDureeImpression);
+}
+
+// totalMateriauTape * 137 = prixMateriau
+if (formTape) {
+  const inputTotalMateriau = formTape.querySelector('[name="totalMateriauTape"]');
+  const inputPrixMateriau = formTape.querySelector('[name="prixMateriau"]');
+
+  function calculerPrixMateriau() {
+    const total = parseFloat(inputTotalMateriau.value) || 0;
+    const prix = total * 137;
+
+    inputPrixMateriau.value = prix.toFixed(2);
+    inputPrixMateriau.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  inputTotalMateriau.addEventListener("input", calculerPrixMateriau);
+}
+
+// prixMateriau = coutTotauxProductionMateriau
+if (formTape) {
+  const inputPrixMateriau = formTape.querySelector('[name="prixMateriau"]');
+  const inputCoutMateriau = formTape.querySelector('[name="coutTotauxProductionMateriau"]');
+
+  function copierPrixVersCoutMateriau() {
+    if (!inputPrixMateriau || !inputCoutMateriau) return;
+
+    inputCoutMateriau.value = inputPrixMateriau.value;
+    inputCoutMateriau.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  inputPrixMateriau?.addEventListener("input", copierPrixVersCoutMateriau);
+}
+
+////////////////////////// FIN TAPE ///////////////////////////////////
+
 

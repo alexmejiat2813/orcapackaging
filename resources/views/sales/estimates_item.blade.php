@@ -93,7 +93,9 @@
                     // Confirmation utilisateur
                     const confirmAction = confirm("Confirmez-vous que cet item est prêt ? Cette action est irréversible.");
                     if (!confirmAction) {
-                        event.cancel = true;
+                        setTimeout(() => {
+                            $('#jqxgrid').jqxGrid('setcellvalue', rowindex, 'isReady', false);
+                        }, 50);
                         return;
                     } 
 
