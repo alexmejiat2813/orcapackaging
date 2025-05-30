@@ -180,3 +180,13 @@ input[readonly]:hover {
 .hidden {
     display: none !important;
 }
+
+/* Texte affiché dans le champ sélectionné */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: black;
+}
+
+/* Texte des options dans le menu déroulant */
+.select2-container--default .select2-results__option {
+    color: black;
+}
