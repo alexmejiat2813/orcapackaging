@@ -57,7 +57,7 @@ $(document).ready(function () {
             const data = grid.jqxGrid('getrowdata', selectedRowIndex);
             
             envoyerDonneesVersLaravel('/sales/estimates/supprimer', data, function () {
-                window.location.reload();
+                $('#jqxgrid').jqxGrid('updatebounddata');
             });
         }
     });
@@ -67,7 +67,7 @@ $(document).ready(function () {
         const data = grid.jqxGrid('getrowdata', selectedRowIndex);
 
         envoyerDonneesVersLaravel('/sales/estimates/copier', data, function () {
-            window.location.reload();
+            $('#jqxgrid').jqxGrid('updatebounddata');
         });
     });
 

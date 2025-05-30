@@ -18,15 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ajouterChampsAuFormData(formData, formInputsCommun);
             ajouterChampsAuFormData(formData, formCommande);
+            formData.delete('_token');
 
             if (validerForm(formData)) {
                 try {
                     const response = await fetch('/sales/estimates_item/storeItem', {
                         method: 'POST',
-                        //headers: {
-                        //    'X-CSRF-TOKEN': csrfToken,
-                        //    'Accept': 'application/json'
-                        //},
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
                         body: formData,
                         credentials: 'same-origin'
                     });
@@ -68,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
 
             ajouterChampsAuFormData(formData, formSoumission);
-
             if (validerForm(formData)) {
                 try {
                     const response = await fetch('/sales/estimates/storeSoumission', {
@@ -150,8 +150,9 @@ function validerForm(formData) {
 // Fonction d’ajout des champs à FormData
 function ajouterChampsAuFormData(formData, form) {
     if (!form) return;
+    const inputsNonDesires = ['nvPrix','nvlQuantite','prixInformatif','quantiteInformative', 'constante'];
     Array.from(form.elements).forEach(element => {
-        if (element.name && element.value !== undefined) {
+        if (element.name && element.value !== undefined && !inputsNonDesires.includes(element.name)) {
             formData.append(element.name, element.value);
         }
     });

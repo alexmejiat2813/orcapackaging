@@ -124,6 +124,10 @@
                 <input name="totalLivresPlusTolerance" type="number" id="totalLivresPlusTolerance" required>
             </div>
             <div class="divParametres">
+                <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
+                <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
+            </div>
+            <div class="divParametres">
                 <label for="coutTotal">Cout Total (en $CAD)</label>
                 <input name="coutTotal" type="number" id="coutTotal" required>
             </div>
@@ -162,21 +166,14 @@
                 <option value="5"> 5 </option>
             </select>
         </div>
-        <div class="divParametres">
-            <label for="poucesCarresUnitaire">Pouces Carres unitaire</label>
-            <input name="poucesCarresUnitaire" type="number" id="poucesCarresUnitaire">
-        </div>
-        <div class="divParametres">
-            <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
-            <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
-        </div>
-        <div class="divParametres">
+        <div class="divParametres  hidden">
             <label for="constante"> Constante </label>
             <input name="constante" type="number" id="constante" value="0,00000331767">
         </div>
     </div>
 
     <h1> Couleurs de base </h1>
+    <!-- Couleurs ajoutees selon le nombre besoin dans le javascript item.js -->
     <div class="encresContainer">
     </div>   
 
@@ -512,32 +509,27 @@
     <h1>Variation prix selon quantite</h1>
     <div class="parametres">
         <div class="divParametres">
-            <label for="quantiteInformative1">Quantite initiale</label>
-            <input name="quantiteInformative1" type="number" id="quantiteInformative1" readonly>
+            <label for="quantiteInformative">Quantite initiale</label>
+            <input name="quantiteInformative" type="number" id="quantiteInformative" readonly>
         </div>
         <div class="divParametres">
-            <label for="prixInformatif1"> $CAD </label>
-            <input name="prixInformatif1" type="number" id="prixInformatif1" readonly>
+            <label for="prixInformatif"> Prix par mille ($CAD) </label>
+            <input name="prixInformatif" type="number" id="prixInformatif" readonly>
+        </div>
+    </div>
+    <div class="parametres">
+        <div class="divVerticale">
+            <label for="nvlQuantite"> Nouvelle quantite </label>
+            <input name="nvlQuantite" type="number" id="nvlQuantite" placeholder="ex : 1000, 50000 etc...">
+            <button type="button" name="calculAutreQuantite" id="calculAutreQuantite">
+              Estimer avec la nouvelle quantité
+            </button>
         </div>
     </div>
     <div class="parametres">
         <div class="divParametres">
-            <label for="quantiteInformative2">Quantite / 2</label>
-            <input name="quantiteInformative2" type="number" id="quantiteInformative2" readonly>
-        </div>
-        <div class="divParametres">
-            <label for="prixInformatif2"> $CAD </label>
-            <input name="prixInformatif2" type="number" id="prixInformatif2" readonly>
-        </div>
-    </div>
-    <div class="parametres">
-        <div class="divParametres">
-            <label for="quantiteInformative3">Quantite x 2</label>
-            <input name="quantiteInformative3" type="number" id="quantiteInformative3" readonly>
-        </div>
-        <div class="divParametres">
-            <label for="prixInformatif3"> $CAD </label>
-            <input name="prixInformatif3" type="number" id="prixInformatif3" readonly>
+            <label for="nvPrix"> Prix calculee avec la nouvelle quantite </label>
+            <input name="nvPrix" type="number" id="nvPrix" readonly>
         </div>
     </div>
 
