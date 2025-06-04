@@ -22,35 +22,34 @@
             </select>
         </div>
         <div class="divParametres">
+            <label for="prixUnitaireSacsPapier">Prix du sac a l'unite</label>
+            <input name="prixUnitaireSacsPapier" type="number" id="prixUnitaireSacsPapier" required>
+        </div>
+        <div class="divParametres">
             <label for="formatSacPapier">Format (en pouces)</label>
-            <input list="formatsSacPapier" name="formatSacPapier" id="formatSacPapier" required placeholder="ex : 12 x 6 x 12">
-            <datalist id="formatsSacPapier">
-                <option value="12 x 6 x 12">
-                <option value="8 x 4 x 10">
-                <option value="13 x 7 x 13">
-                <option value="12 x 7 x 12">
-                <option value="10 x 5 x 13">
-                <option value="10 x 6.75 x 12">
-                <option value="14 x 10 x 16">
-                <option value="16 x 6 x 19">
-                <option value="8 x 5 x 10">
-            </datalist>
+            <select name="formatSacPapier" id="formatSacPapier" required>
+                <option value="">-- Sélectionnez un format --</option>
+                <option value="12 x 6 x 12">12 x 6 x 12</option>
+                <option value="8 x 4 x 10">8 x 4 x 10</option>
+                <option value="13 x 7 x 13">13 x 7 x 13</option>
+                <option value="12 x 7 x 12">12 x 7 x 12</option>
+                <option value="10 x 5 x 13">10 x 5 x 13</option>
+                <option value="10 x 6.75 x 12">10 x 6.75 x 12</option>
+                <option value="14 x 10 x 16">14 x 10 x 16</option>
+                <option value="16 x 6 x 19">16 x 6 x 19</option>
+                <option value="8 x 5 x 10">8 x 5 x 10</option>
+            </select>
+        </div>
+    </div>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="prixSacsPapier">Prix finaux des sacs</label>
+            <input name="prixSacsPapier" type="number" id="prixSacsPapier" readonly>
         </div>
     </div>
 
     <h1> Encre et solvant </h1>
     <div class="parametres">
-        <div class="divParametres">
-            <label for="typeEncre"> Type d'encre </label>
-            <select name="typeEncre" id="typeEncre" required>
-                <option value="exterieur"> Exterieur </option>
-                <option value="surface"> Surface </option>
-                <option value="hercubone"> Hercubone </option>
-                <option value="thermoplast"> Thermoplast </option>
-                <option value="process"> Process </option>
-                <option value="xks"> XKS </option>
-            </select>
-        </div>
         <div class="divParametres">
             <label for="nbEncres"> Nombre d'encres </label>
             <select name="nbEncres" id="nbEncres" class="nbEncres" required>
@@ -61,10 +60,6 @@
         <div class="divParametres">
             <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
             <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
-        </div>
-        <div class="divParametres  hidden">
-            <label for="constante"> Constante </label>
-            <input name="constante" type="number" id="constante" value="0,00000331767">
         </div>
     </div>
 
@@ -93,7 +88,7 @@
             </div>
             <div class="divParametres">
                 <label for="coutKGSolvant"> Cout par KG ($CAD) </label>
-                <input name="coutKGSolvant" type="number" id="coutKGSolvant">
+                <input name="coutKGSolvant" type="number" id="coutKGSolvant" value="4.2">
             </div>
             <div class="divParametres">
                 <label for="coutTotalSolvant"> Cout total du solvant ($CAD) </label>
@@ -105,8 +100,8 @@
     <h1>Impression</h1>
     <div class="parametres">
         <div class="divParametres">
-            <label for="piedsParHeure"> Pieds par Heure </label>
-            <input name="piedsParHeure" type="number" id="piedsParHeure" required>
+            <label for="sacsParHeurePapier"> Sacs Par Heure </label>
+            <input name="sacsParHeurePapier" type="number" id="sacsParHeurePapier" required>
         </div>
         <div class="divParametres">
             <label for="salaireImpression"> Salaire ($CAD) </label>
@@ -117,23 +112,23 @@
     <h2>Temps de production</h2>
     <div class="parametres">
         <div class="divParametres">
-            <label for="dureeTotaleImpression"> Duree totale d'impression (en minutes) </label>
+            <label for="dureeTotaleImpression"> Duree totale d'impression  </label>
             <input name="dureeTotaleImpression" type="number" id="dureeTotaleImpression" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMontagePlaques"> Montage des plaques (en minutes) </label>
+            <label for="dureeMontagePlaques"> Montage des plaques  </label>
             <input name="dureeMontagePlaques" type="number" id="dureeMontagePlaques" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMiseEnTrain"> Mise en train (en minutes) </label>
+            <label for="dureeMiseEnTrain"> Mise en train  </label>
             <input name="dureeMiseEnTrain" type="number" id="dureeMiseEnTrain" required>
         </div>
         <div class="divParametres">
-            <label for="dureeLavage"> Lavage (en minutes) </label>
+            <label for="dureeLavage"> Lavage  </label>
             <input name="dureeLavage" type="number" id="dureeLavage" required>
         </div>
         <div class="divParametres">
-            <label for="tempsTotalProduction"> Temps total (en minutes) </label>
+            <label for="tempsTotalProduction"> Temps total  </label>
             <input name="tempsTotalProduction" type="number" id="tempsTotalProduction" required>
         </div>
     </div>
@@ -187,6 +182,10 @@
 
     <h1>Couts totaux de production</h1>
     <div class="parametres">
+        <div class="divParametres">
+            <label for="coutTotauxProductionMateriau"> Cout materiau ($CAD) </label>
+            <input name="coutTotauxProductionMateriau" type="number" id="coutTotauxProductionMateriau" required>
+        </div>
         <div class="divParametres">
             <label for="coutTotauxProductionPlaques">Cout plaques ($CAD)</label>
             <input name="coutTotauxProductionPlaques" type="number" id="coutTotauxProductionPlaques" required>

@@ -156,24 +156,20 @@
     <h2>Temps de production</h2>
     <div class="parametres">
         <div class="divParametres">
-            <label for="dureeTotaleImpression"> Duree totale d'impression (en minutes) </label>
-            <input name="dureeTotaleImpression" type="number" id="dureeTotaleImpression" required>
+            <label for="dureeTotaleConversion"> Duree Totale de Conversion  </label>
+            <input name="dureeTotaleConversion" type="number" id="dureeTotaleConversion" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMontagePlaques"> Montage des plaques (en minutes) </label>
-            <input name="dureeMontagePlaques" type="number" id="dureeMontagePlaques" required>
+            <label for="dureeMontageConversion"> Montage  </label>
+            <input name="dureeMontageConversion" type="number" id="dureeMontageConversion" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMiseEnTrain"> Mise en train (en minutes) </label>
-            <input name="dureeMiseEnTrain" type="number" id="dureeMiseEnTrain" required>
+            <label for="dureeMenageConversion"> Menage  </label>
+            <input name="dureeMenageConversion" type="number" id="dureeMenageConversion" required>
         </div>
         <div class="divParametres">
-            <label for="dureeLavage"> Lavage (en minutes) </label>
-            <input name="dureeLavage" type="number" id="dureeLavage" required>
-        </div>
-        <div class="divParametres">
-            <label for="tempsTotalProduction"> Temps total (en minutes) </label>
-            <input name="tempsTotalProduction" type="number" id="tempsTotalProduction" required>
+            <label for="tempsTotalConversion"> Temps Total  </label>
+            <input name="tempsTotalConversion" type="number" id="tempsTotalConversion" required>
         </div>
     </div>
 
@@ -250,24 +246,8 @@
         </div>
     </div>
 
-    <h1>Plaques</h1>
-    <div class="parametres">
-        <div class="divParametres">
-            <label for="prixPlaquesFournisseur">Prix des plaques fournisseurs ($CAD)</label>
-            <input name="prixPlaquesFournisseur" type="number" id="prixPlaquesFournisseur" required>
-        </div>
-        <div class="divParametres">
-            <label for="prixVenteClientPlaque"> Prix de vente au client ($CAD) </label>
-            <input name="prixVenteClientPlaque" type="number" id="prixVenteClientPlaque" required>
-        </div>
-    </div>
-
     <h1>Couts totaux de production</h1>
     <div class="parametres">
-        <div class="divParametres">
-            <label for="coutTotauxProductionPlaques">Cout plaques ($CAD)</label>
-            <input name="coutTotauxProductionPlaques" type="number" id="coutTotauxProductionPlaques" required>
-        </div>
         <div class="divParametres">
             <label for="coutTotauxProductionPellicule"> Cout pellicule ($CAD) </label>
             <input name="coutTotauxProductionPellicule" type="number" id="coutTotauxProductionPellicule" required>

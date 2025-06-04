@@ -14,7 +14,14 @@
         @include('sales.indexParts.paramsBaseCommande')
 
         <div class="divVerticale" style="margin-top: 40px;">
-            <button type="submit" name="soumettreSoumission" id="soumettreSoumission">Enregistrer la soumission</button>
+            <button type="submit" name="soumettreSoumission" id="soumettreSoumission" class="bouton-formulaire" style="display: flex;flex-direction: column;">
+                <div class="divVerticale">
+                    <p class="btn-text">Soumettre l'objet</p>
+                    <svg class="spinner d-none" width="20" height="20" viewBox="0 0 50 50">
+                      <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                    </svg>
+                </div>
+            </button>
         </div>
     </div>
 

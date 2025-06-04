@@ -81,15 +81,13 @@ $(document).ready(function () {
                         
                             // Essayer dans le formulaire spécifique d’abord
                             let input = activeForm ? activeForm.querySelector(`[name="${key}"]`) : null;
-                        
+
                             // Sinon dans le formulaire commun
                             if (!input && communForm) {
                                 input = communForm.querySelector(`[name="${key}"]`);
                             }
                         
                             if (input) {
-                                const type = input.getAttribute('type');
-                            
                                 if (input.tagName === 'SELECT') {
                                     input.value = value;
                                     input.dispatchEvent(new Event('change'));

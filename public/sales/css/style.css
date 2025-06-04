@@ -181,6 +181,10 @@ input[readonly]:hover {
     display: none !important;
 }
 
+
+
+/* Select Client */
+
 /* Texte affiché dans le champ sélectionné */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: black;
@@ -189,4 +193,86 @@ input[readonly]:hover {
 /* Texte des options dans le menu déroulant */
 .select2-container--default .select2-results__option {
     color: black;
+}
+
+/* Barre de chargement pour les boutons */
+.bouton-formulaire {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  position: relative;
+  min-height: 44px;
+}
+
+.bouton-formulaire:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.bouton-formulaire:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.bouton-formulaire svg.spinner {
+  vertical-align: middle;
+  margin-top: -2px; /* ou -1px selon rendu */
+}
+
+.spinner {
+  animation: rotate 1s linear infinite;
+}
+
+.path {
+  stroke: #fff;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+.d-none {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  visibility: hidden;
+}
+
+.bouton-formulaire p.btn-text {
+  margin: 0;
+  line-height: 1.2;
+  font-size: 1rem;
+  display: inline; 
+}
+
+/* Animation spinner */
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
 }

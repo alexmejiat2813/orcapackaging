@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const boutonItem = document.getElementById('soumettreItem');
     if (boutonItem) {
         boutonItem.addEventListener('click', async () => {
+            boutonItem.disabled = true;
+            const btnText = boutonItem.querySelector('.btn-text');
+            const spinner = boutonItem.querySelector('.spinner');
+            btnText.classList.add('d-none');
+            spinner.classList.remove('d-none');
+
             const commande = document.getElementById('commande')?.value;
             const formId = 'form-' + commande;
 
@@ -58,6 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Erreur AJAX (contacter un administrateur) :', error.message);
                 }
             }
+            boutonItem.disabled = false;
+            btnText.classList.remove('d-none');
+            spinner.classList.add('d-none');
         });
     }
 
@@ -65,6 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const boutonSoumission = document.getElementById('soumettreSoumission');
     if (boutonSoumission) {
         boutonSoumission.addEventListener('click', async () => {
+            boutonSoumission.disabled = true;
+            const btnText = boutonSoumission.querySelector('.btn-text');
+            const spinner = boutonSoumission.querySelector('.spinner');
+            btnText.classList.add('d-none');
+            spinner.classList.remove('d-none');
+
             const formSoumission = document.getElementById('form-ParamsBase');
             const formData = new FormData();
 
@@ -105,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Erreur AJAX (contacter un administrateur) :', error.message);
                 }
             }
+            boutonSoumission.disabled = false;
+            btnText.classList.remove('d-none');
+            spinner.classList.add('d-none');
         });
     }
 });
