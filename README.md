@@ -79,3 +79,6 @@ DB_PASSWORD=thomasbsc
 ```
 
 Le projet ne devrait plus donner d'erreur de certificat.
+
+# Deploiement Automatique
+
