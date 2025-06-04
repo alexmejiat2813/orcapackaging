@@ -3,7 +3,7 @@
 namespace App\Models\Purchasing;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Purchasing\Supplier;
+use App\Models\Supplier\Supplier;
 use App\Models\Purchasing\PODetail;
 use App\Models\Purchasing\Receiving;
 

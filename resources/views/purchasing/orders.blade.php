@@ -17,18 +17,15 @@
 
     <!-- Grid Section -->
     <div id="followUpGridSection">
-
         <!-- Alerta de selección -->
         <div id="messageBox" style="display: none; color: red; font-weight: bold; margin-top: 10px;"></div>
-
         <!-- Toolbar -->
         <div class="d-flex flex-column mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
-
                 <!-- Botones -->
                 <x-permission-users :allowed-roles="['Thomas Admin']">
                     <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
+                        <button type="button" id="btnNew" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
                             <i class="bi bi-file-earmark-plus"></i>
                         </button>
                         <button type="button" id="btnEdit" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Modifier commande (Edit Order)">
@@ -45,10 +42,8 @@
                         </button>
                     </div>
                 </x-permission-users>
-
                 <!-- Título del listado -->
                 <h4 class="mb-0 ms-3">List of unbilled purchase orders</h4>
-
                 <!-- Filtros -->
                 <div class="d-flex flex-wrap gap-3 align-items-center">
                     <div class="form-check">
@@ -70,37 +65,260 @@
                 </div>
             </div>
         </div>
-
         <!-- Grid principal -->
         <div id="gridFollowUp"></div>
     </div>
 
     <!-- Formulario oculto de seguimiento -->
     <div id="followUpFormSection" class="border rounded p-3 bg-white" style="display: none;">
-<div class="row g-4 align-items-stretch">
-  <div class="col-md-4 d-flex">
-    <div id="form1" class="flex-fill"></div>
+        <form id="purchaseOrderForm">
+
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Purchase Order Form</h5>
+                    <div class="mt-4 d-flex justify-content-end gap-2 mb-3">
+                        <button type="button" id="btnSave" class="btn btn-primary btn-sm rounded shadow-sm">  Save </button>
+                        <button type="button" id="btnCancel" class="btn btn-secondary btn-sm rounded shadow-sm"> <i class="bi bi-x-circle"></i> Cancel </button>
+                    </div>            
+                </div>
+
+                <div class="row gx-3">
+                    <!-- Columna 1: Proveedor -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="bg-light p-2 border rounded small">
+                            <div class="mb-2 row">
+                            <label for="supplier_id" class="col-sm-4 col-form-label col-form-label-sm"># Fournisseur *</label>
+                            <div class="col-sm-8">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" id="supplier_id" name="supplier_id" required readonly>
+                                    <button class="btn btn-outline-secondary" type="button" id="changeSupplierBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Changer de fournisseur">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                            <div class="mb-2 row">
+                                <label for="supplier_name" class="col-sm-4 col-form-label col-form-label-sm">Fournisseur *</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control form-control-sm" id="supplier_name" name="supplier_name" required>
+                                </div>
+                            </div>
+
+          <div class="mb-2 row">
+            <label for="contact_person" class="col-sm-4 col-form-label col-form-label-sm">A/s</label>
+            <div class="col-sm-8">
+              <select class="form-select form-select-sm" id="contact_person" name="contact_person">
+                <option value="Andre Begin">Andre Begin</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-2 row">
+            <label for="address1" class="col-sm-4 col-form-label col-form-label-sm">Adresse *</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control form-control-sm" id="address1" name="address1" required>
+            </div>
+          </div>
+
+          <div class="mb-2 row">
+            <label for="address2" class="col-sm-4 col-form-label col-form-label-sm">Adresse 2</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control form-control-sm" id="address2" name="address2">
+            </div>
+          </div>
+
+          <div class="mb-2 row">
+            <label for="city" class="col-sm-4 col-form-label col-form-label-sm">Ville *</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control form-control-sm" id="city" name="city" required>
+            </div>
+          </div>
+
+          <div class="mb-2 row">
+            <label for="postal_code" class="col-sm-4 col-form-label col-form-label-sm">Code postal *</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control form-control-sm" id="postal_code" name="postal_code" required>
+            </div>
+          </div>
+
+          <div class="mb-2 row">
+            <label for="phone" class="col-sm-4 col-form-label col-form-label-sm">Tél. *</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control form-control-sm" id="phone" name="phone" required>
+            </div>
+          </div>
+
+          <div class="mb-2 row">
+            <label for="fax" class="col-sm-4 col-form-label col-form-label-sm">Fax</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control form-control-sm" id="fax" name="fax">
+            </div>
+          </div>
+        </div>
+      </div>
+ <div class="col-lg-4 col-md-6">
+<div class="bg-light p-2 border rounded small">
+  <div class="mb-2 row">
+    <label for="buyer" class="col-sm-4 col-form-label col-form-label-sm">Acheteur</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="buyer" name="buyer">
+    </div>
   </div>
-  <div class="col-md-4 d-flex">
-    <div id="form2" class="flex-fill"></div>
+
+  <div class="mb-2 row">
+    <label for="type" class="col-sm-4 col-form-label col-form-label-sm">Type d'achat</label>
+    <div class="col-sm-8">
+      <select class="form-select form-select-sm" id="type" name="type">
+        <option value="Achat">Achat</option>
+        <option value="Achat peliculle">Achat peliculle</option>
+      </select>
+    </div>
   </div>
-  <div class="col-md-4 d-flex">
-    <div id="form3" class="flex-fill"></div>
+
+  <div class="mb-2 row">
+    <label for="warehouse" class="col-sm-4 col-form-label col-form-label-sm">Entrepôt</label>
+    <div class="col-sm-8">
+      <select class="form-select form-select-sm" id="warehouse" name="warehouse">
+        <option value="Orca Packaging">Orca Packaging</option>
+        <option value="Autre Entrepôt">Autre Entrepôt</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="dock" class="col-sm-4 col-form-label col-form-label-sm">Porte</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="dock" name="dock">
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="address1" class="col-sm-4 col-form-label col-form-label-sm">Adresse</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="address1" name="address1" readonly>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="city" class="col-sm-4 col-form-label col-form-label-sm">Ville</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="city" name="city" readonly>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="postal_code" class="col-sm-4 col-form-label col-form-label-sm">Code postal</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="postal_code" name="postal_code" readonly>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="phone" class="col-sm-4 col-form-label col-form-label-sm">Tél. *</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="phone" name="phone" required>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="fax" class="col-sm-4 col-form-label col-form-label-sm">Fax</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="fax" name="fax">
+    </div>
   </div>
 </div>
 
+  </div>
+  <div class="col-lg-4 col-md-12">
+   <div class="bg-light p-2 border rounded small">
+  <div class="mb-2 row">
+    <label for="order_number" class="col-sm-4 col-form-label col-form-label-sm"># Bon achat</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="order_number" name="order_number" readonly>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label class="col-sm-4 col-form-label col-form-label-sm">Transmettre</label>
+    <div class="col-sm-8">
+      <input class="form-check-input" type="checkbox" id="transmit" name="transmit">
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label class="col-sm-4 col-form-label col-form-label-sm">Complet</label>
+    <div class="col-sm-8">
+      <input class="form-check-input" type="checkbox" id="complete" name="complete">
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label class="col-sm-4 col-form-label col-form-label-sm">Annuler</label>
+    <div class="col-sm-8">
+      <input class="form-check-input" type="checkbox" id="cancel" name="cancel">
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="currency" class="col-sm-4 col-form-label col-form-label-sm">Devise</label>
+    <div class="col-sm-8">
+      <select class="form-select form-select-sm" id="currency" name="currency">
+        <option value="CDN">CDN</option>
+        <option value="USD">USD</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="payment_term" class="col-sm-4 col-form-label col-form-label-sm">Terme de paiement</label>
+    <div class="col-sm-8">
+      <select class="form-select form-select-sm" id="payment_term" name="payment_term">
+        <option value="Net 30 jours">Net 30 jours</option>
+        <option value="Net 60 jours">Net 60 jours</option>
+        <option value="Paiement comptant">Paiement comptant</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="order_date" class="col-sm-4 col-form-label col-form-label-sm">Date</label>
+    <div class="col-sm-8">
+      <input type="date" class="form-control form-control-sm" id="order_date" name="order_date">
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="required_date" class="col-sm-4 col-form-label col-form-label-sm">Date requise</label>
+    <div class="col-sm-8">
+      <input type="date" class="form-control form-control-sm" id="required_date" name="required_date">
+    </div>
+  </div>
+
+  <div class="mb-2 row">
+    <label for="carrier" class="col-sm-4 col-form-label col-form-label-sm">Transporteur</label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control form-control-sm" id="carrier" name="carrier">
+    </div>
+  </div>
+</div>
+
+  </div>
+
+
 <div class="mt-4">
   <label class="form-label fw-bold">Note</label>
-  <textarea class="form-control" rows="6" readonly style="white-space: pre-wrap;">CMD CLI 5035
-SAC MASTER 50 LB PATATES
-J-FILM 35" X 37"
-Sac imprimé par Orca
-Orca fournie les boîtes et les étiquettes</textarea>
+  <textarea class="form-control" rows="4" style="white-space: pre-wrap;"></textarea>
 </div>
 
 <div class="mt-4">
   <div id="productDetailGrid"></div>
 </div>
+
+
+</form>
+
     </div>
 
 @endsection
@@ -112,49 +330,145 @@ Orca fournie les boîtes et les étiquettes</textarea>
 <script>
     $(document).ready(function () {
 
-    // Función para obtener la fila seleccionada
-    function getSelectedRowData() {
-        const selectedRowIndex = $("#gridFollowUp").jqxGrid('getselectedrowindex');
-        if (selectedRowIndex === -1) {
-            // ⚠️ Alerta si no hay fila seleccionada
-            $("#messageBox").html("⚠️ Por favor, seleccione una fila primero.").fadeIn().delay(2000).fadeOut();
-            return null;
-        }
-        return $("#gridFollowUp").jqxGrid('getrowdata', selectedRowIndex);
-    }
+        let isFormDirty = false;
 
-    // Acción: Editar
-    $("#btnEdit").on('click', function () {
-        const rowData = getSelectedRowData();
-        if (rowData) {
-            alert("Editar fila:", rowData);
-             $("#followUpGridSection").hide();
-            $("#followUpFormSection").show();
-            // Aquí va tu lógica de edición
+        // Función para obtener la fila seleccionada
+        function getSelectedRowData() {
+            const selectedRowIndex = $("#gridFollowUp").jqxGrid('getselectedrowindex');
+            if (selectedRowIndex === -1) {
+                // ⚠️ Alerta si no hay fila seleccionada
+                $("#messageBox").html("⚠️ Por favor, seleccione una fila primero.").fadeIn().delay(2000).fadeOut();
+                return null;
+            }
+            return $("#gridFollowUp").jqxGrid('getrowdata', selectedRowIndex);
         }
-    });
 
-    // Acción: Duplicar
-    $("#btnDuplicate").on('click', function () {
-        const rowData = getSelectedRowData();
-        if (rowData) {
-            alert("Duplicar fila:", rowData);
-             $("#followUpGridSection").hide();
+        $("#btnNew").on('click', function () {
+            isFormDirty = false;
+            $("#followUpGridSection").hide();
             $("#followUpFormSection").show();
-            // Aquí va tu lógica de duplicación
-        }
-    });
 
-    // Acción: Buscar
-    $("#btnFollowUps").on('click', function () {
-        const rowData = getSelectedRowData();
-        if (rowData) {
-            alert("Buscar con datos:", rowData);
-             $("#followUpGridSection").hide();
+            // Limpiar todos los campos del formulario
+            $('#purchaseOrderForm')[0].reset();
+
+            // Establecer fechas por defecto (hoy)
+            const today = new Date().toISOString().split('T')[0];
+            $('#order_date').val(today);
+            $('#required_date').val(today);
+
+            // Limpiar el grid de productos
+            $("#productDetailGrid").jqxGrid("clear");
+        });
+
+        $("#btnEdit").on('click', function () {
+            const rowData = getSelectedRowData();
+            isFormDirty = false;
+            if (!rowData) return;
+
+            $("#followUpGridSection").hide();
             $("#followUpFormSection").show();
-            // Aquí va tu lógica de búsqueda
-        }
-    });
+
+            // Asignar datos al formulario
+            $('#supplier_id').val(rowData.Supplier_No);
+            $('#order_number').val(rowData.PO_No);
+            $('#transmit').prop('checked', rowData.PO_Transmit);
+            $('#complete').prop('checked', rowData.PO_Completed);
+            $('#cancel').prop('checked', rowData.PO_Cancel);
+
+            const orderDate = rowData.PO_Date ? new Date(rowData.PO_Date).toISOString().split('T')[0] : '';
+            const requiredDate = rowData.PO_Date_Reception ? new Date(rowData.PO_Date_Reception).toISOString().split('T')[0] : '';
+            $('#order_date').val(orderDate);
+            $('#required_date').val(requiredDate);
+
+            // Obtener información del proveedor
+            const supplierNo = rowData.Supplier_No;
+            if (!supplierNo) return;
+
+            $.get(`/purchasing/suppliers/${supplierNo}`, function (data) {
+                $('#supplier_id').val(data.supplier_id).prop('readonly', true);
+                $('#supplier_name').val(data.supplier_name).prop('disabled', true);
+                $('#contact_person').val(data.contact_person).prop('disabled', true);
+                $('#address1').val(data.address1).prop('readonly', true);
+                $('#address2').val(data.address2).prop('readonly', true);
+                $('#city').val(data.city).prop('readonly', true);
+                $('#postal_code').val(data.postal_code).prop('readonly', true);
+                $('#phone').val(data.phone).prop('readonly', true);
+                $('#fax').val(data.fax).prop('readonly', true);
+            }).fail(function () {
+                alert("Proveedor no encontrado.");
+            });
+
+            // Obtener contactos del proveedor
+            $.get(`/purchasing/suppliers/${supplierNo}/contacts`, function (data) {
+                const contactSelect = $('#contact_person');
+                contactSelect.empty();
+                if (data.contacts && data.contacts.length > 0) {
+                    data.contacts.forEach(function (contact) {
+                        const fullName = `${contact.Asset_FName} ${contact.Asset_Name}`;
+                        contactSelect.append(new Option(fullName, contact.Asset_ID));
+                    });
+                } else {
+                    contactSelect.append(new Option('Sin contactos disponibles', ''));
+                }
+            }).fail(function () {
+                alert("No se pudieron cargar los contactos del proveedor.");
+            });
+        });
+
+
+        // Acción: Duplicar
+        $("#btnDuplicate").on('click', function () {
+            const rowData = getSelectedRowData();
+            if (rowData) {
+                alert("Duplicar fila:", rowData);
+                 $("#followUpGridSection").hide();
+                $("#followUpFormSection").show();
+                // Aquí va tu lógica de duplicación
+            }
+        });
+
+        // Acción: Buscar
+        $("#btnFollowUps").on('click', function () {
+            const rowData = getSelectedRowData();
+            if (rowData) {
+                alert("Buscar con datos:", rowData);
+                 $("#followUpGridSection").hide();
+                $("#followUpFormSection").show();
+                // Aquí va tu lógica de búsqueda
+            }
+        });
+
+        $("#btnSave").on('click', function () {
+            const isForm1Valid = $('#form1').jqxForm('validate');
+            const isForm2Valid = $('#form2').jqxForm('validate');
+            const isForm3Valid = $('#form3').jqxForm('validate');
+
+            if (!isForm1Valid || !isForm2Valid || !isForm3Valid) {
+                alert("Por favor, completa todos los campos requeridos.");
+                return;
+            }
+
+        });
+
+        $("#btnCancel").on("click", function () {
+            if (isFormDirty) {
+                if (!confirm("Vous avez des modifications non sauvegardées. Voulez-vous vraiment quitter ce formulaire ?")) {
+                    return;
+                }
+            }
+
+            // Volver al grid
+            // Restaurar vista del grid
+            $("#followUpFormSection").hide();
+            $("#followUpGridSection").show();
+
+            // Resetear formulario y estado
+            $('#form1').jqxForm('val', {});
+            $('#form2').jqxForm('val', {});
+            $('#form3').jqxForm('val', {});
+            $("#productDetailGrid").jqxGrid("clear");
+            isFormDirty = false;
+        });
 
         let source = {
             datatype: "json",
@@ -247,258 +561,88 @@ Orca fournie les boîtes et les étiquettes</textarea>
 
 
 
+        // Detectar cambios en los campos
+        $("#form1 input, #form1 select, #form2 input, #form2 select, #form3 input, #form3 select").on("input change", function () {
+            isFormDirty = true;
+        });
 
-
-
-
-        const formData = {
-            supplier_id: '8367B',
-            supplier_name: 'Emballages Pro Innovation Inc',
-            contact_person: 'Andre Begin',
-            address1: '4001 Boul Industriel',
-            address2: '(Junise)',
-            city: 'Laval',
-            postal_code: 'H7L 4S3',
-            phone: '1(514)582-1670',
-            fax: ''
-        };
-
-        $('#form1').jqxForm({
-            template: [
-                { bind: 'supplier_id', type: 'text', label: '# Fournisseur', labelPosition: 'left', labelWidth: '120px', width: '100%', required: true },
-                {
-                    bind: 'supplier_name',
-                    type: 'option',
-                    component: 'jqxDropDownList',
-                    label: 'Fournisseur',
-                    labelPosition: 'left',
-                    labelWidth: '120px',
-                    width: '100%',
-                    required: true,
-                    options: [
-                        { label: 'Emballages Pro Innovation Inc', value: 'Emballages Pro Innovation Inc' },
-                        { label: 'Autre Fournisseur', value: 'Autre Fournisseur' }
-                    ]
-                },
-                {
-                    bind: 'contact_person',
-                    type: 'option',
-                    component: 'jqxDropDownList',
-                    label: 'A/s',
-                    labelPosition: 'left',
-                    labelWidth: '120px',
-                    width: '100%',
-                    options: [
-                        { label: 'Andre Begin', value: 'Andre Begin' },
-                        { label: 'Autre', value: 'Autre' }
-                    ]
-                },
-                { bind: 'address1', type: 'text', label: 'Adresse', labelPosition: 'left', labelWidth: '120px', width: '100%', required: true },
-                { bind: 'address2', type: 'text', label: 'Adresse 2', labelPosition: 'left', labelWidth: '120px', width: '100%' },
-                { bind: 'city', type: 'text', label: 'Ville', labelPosition: 'left', labelWidth: '120px', width: '100%', required: true },
-                { bind: 'postal_code', type: 'text', label: 'Code postal', labelPosition: 'left', labelWidth: '120px', width: '100%', required: true },
-                { bind: 'phone', type: 'text', label: 'Tél.', labelPosition: 'left', labelWidth: '120px', width: '100%', required: true },
-                { bind: 'fax', type: 'text', label: 'Fax', labelPosition: 'left', labelWidth: '120px', width: '100%' }
-            ],
-            value: formData
+        // Protección contra recarga (F5, cerrar pestaña)
+        window.addEventListener("beforeunload", function (e) {
+            if (isFormDirty) {
+                e.preventDefault();
+                e.returnValue = ""; // activa el diálogo del navegador
+            }
         });
 
 
-        const formData2 = {
-            buyer: 'Mejia Alexander',
-            type: 'Achat',
-            warehouse: 'Orca Packaging',
-            dock: 'Porte de derrière',
-            address1: '11810 Lucien-Grendon',
-            city: 'Montréal',
-            postal_code: 'H1E 7A8',
-            phone: '15143605625',
-            fax: ''
+
+
+
+
+        const productDetailData = [
+            {
+                product_id: 'PF5035SWMROUGE22358',
+                description: 'Sac Wicket Rondeau Master 50LB "Rouge"',
+                supplier: 'SacConversionWicket',
+                quantity: 1000,
+                unit: 'Sac',
+                price: 0.1
+            },
+            {
+                product_id: 'PF5035SWMVERT22358',
+                description: 'Sac Wicket Rondeau Master 50LB "Vert"',
+                supplier: 'SacWicketConversion',
+                quantity: 1000,
+                unit: 'Sac',
+                price: 0.1
+            },
+            {
+                product_id: 'PF5035SWMJAUNE22358',
+                description: 'Sac Wicket Rondeau Master 50LB "Jaune"',
+                supplier: 'SacWicketConversion',
+                quantity: 2000,
+                unit: 'Sac',
+                price: 0.1
+            }
+        ];
+
+        const productSource = {
+            localdata: productDetailData,
+            datatype: "array",
+            datafields: [
+                { name: 'product_id', type: 'string' },
+                { name: 'description', type: 'string' },
+                { name: 'supplier', type: 'string' },
+                { name: 'quantity', type: 'number' },
+                { name: 'unit', type: 'string' },
+                { name: 'price', type: 'number' }
+            ]
         };
 
-        $('#form2').jqxForm({
-            template: [
-                { bind: 'buyer', type: 'text', label: 'Acheteur', labelPosition: 'left', labelWidth: '120px', width: '100%' },
-                {
-                    bind: 'type',
-                    type: 'option',
-                    component: 'jqxDropDownList',
-                    label: "Type d'achat",
-                    labelPosition: 'left',
-                    labelWidth: '120px',
-                    width: '100%',
-                    options: [
-                        { label: 'Achat', value: 'Achat' },
-                        { label: 'Achat peliculle', value: 'Achat peliculle' }
-                        
-                    ]
-                },
-                {
-                    bind: 'warehouse',
-                    type: 'option',
-                    component: 'jqxDropDownList',
-                    label: 'Entrepôt',
-                    labelPosition: 'left',
-                    labelWidth: '120px',
-                    width: '100%',
-                    options: [
-                        { label: 'Orca Packaging', value: 'Orca Packaging' },
-                        { label: 'Autre Entrepôt', value: 'Autre Entrepôt' }
-                    ]
-                },
-                { bind: 'dock', type: 'text', label: 'Porte', labelPosition: 'left', labelWidth: '120px', width: '100%' },
-                { bind: 'address1', type: 'text', label: 'Adresse', labelPosition: 'left', labelWidth: '120px', width: '100%', readOnly: true },
-                { bind: 'city', type: 'text', label: 'Ville', labelPosition: 'left', labelWidth: '120px', width: '100%', readOnly: true },
-                { bind: 'postal_code', type: 'text', label: 'Code postal', labelPosition: 'left', labelWidth: '120px', width: '100%', readOnly: true },
-                { bind: 'phone', type: 'text', label: 'Tél.', labelPosition: 'left', labelWidth: '120px', width: '100%', required: true },
-                { bind: 'fax', type: 'text', label: 'Fax', labelPosition: 'left', labelWidth: '120px', width: '100%' }
-            ],
-            value: formData2
+        const productAdapter = new $.jqx.dataAdapter(productSource);
+
+        $("#productDetailGrid").jqxGrid({
+            source: productAdapter,
+            width: '100%',
+            autoheight: true,
+            columnsresize: true,
+            altrows: true,
+            columns: [
+                { text: "# Produit", datafield: "product_id", width: "20%" },
+                { text: "Description", datafield: "description", width: "30%" },
+                { text: "# Fournisseur", datafield: "supplier", width: "20%" },
+                { text: "Qte cmd", datafield: "quantity", width: "10%", cellsalign: 'right', align: 'right' },
+                { text: "Unité cmd", datafield: "unit", width: "10%" },
+                { text: "Prix", datafield: "price", width: "10%", cellsformat: 'f2', cellsalign: 'right', align: 'right' }
+            ]
         });
 
 
-        const formData3 = {
-    order_number: '15885',
-    transmit: true,
-    complete: false,
-    cancel: false,
-    currency: 'CDN',
-    payment_term: 'Net 30 jours',
-    order_date: new Date('2025-05-14'),
-    required_date: new Date('2025-05-26'),
-    carrier: 'Prépayé /Prepaid'
-};
-
-$('#form3').jqxForm({
-    template: [
-        { bind: 'order_number', type: 'text', label: '# Bon achat', labelPosition: 'left', labelWidth: '130px', width: '100%', readOnly: true },
-
-        { bind: 'transmit', type: 'boolean', label: 'Transmettre', labelPosition: 'left', labelWidth: '130px' },
-        { bind: 'complete', type: 'boolean', label: 'Complet', labelPosition: 'left', labelWidth: '130px' },
-        { bind: 'cancel', type: 'boolean', label: 'Annuler', labelPosition: 'left', labelWidth: '130px' },
-
-        {
-            bind: 'currency',
-            type: 'option',
-            component: 'jqxDropDownList',
-            label: 'Devise',
-            labelPosition: 'left',
-            labelWidth: '130px',
-            width: '100%',
-            options: [
-                { label: 'CDN', value: 'CDN' },
-                { label: 'USD', value: 'USD' }
-            ]
-        },
-        {
-            bind: 'payment_term',
-            type: 'option',
-            component: 'jqxDropDownList',
-            label: 'Terme de paiement',
-            labelPosition: 'left',
-            labelWidth: '130px',
-            width: '100%',
-            options: [
-                { label: 'Net 30 jours', value: 'Net 30 jours' },
-                { label: 'Net 60 jours', value: 'Net 60 jours' },
-                { label: 'Paiement comptant', value: 'Paiement comptant' }
-            ]
-        },
-        {
-            bind: 'order_date',
-            type: 'date',
-            label: 'Date',
-            labelPosition: 'left',
-            labelWidth: '130px',
-            width: '100%'
-        },
-        {
-            bind: 'required_date',
-            type: 'date',
-            label: 'Date requise',
-            labelPosition: 'left',
-            labelWidth: '130px',
-            width: '100%'
-        },
-        {
-            bind: 'carrier',
-            type: 'text',
-            label: 'Transporteur',
-            labelPosition: 'left',
-            labelWidth: '130px',
-            width: '100%'
-        }
-    ],
-    value: formData3
-});
-
-
-
-
-const productDetailData = [
-    {
-        product_id: 'PF5035SWMROUGE22358',
-        description: 'Sac Wicket Rondeau Master 50LB "Rouge"',
-        supplier: 'SacConversionWicket',
-        quantity: 1000,
-        unit: 'Sac',
-        price: 0.1
-    },
-    {
-        product_id: 'PF5035SWMVERT22358',
-        description: 'Sac Wicket Rondeau Master 50LB "Vert"',
-        supplier: 'SacWicketConversion',
-        quantity: 1000,
-        unit: 'Sac',
-        price: 0.1
-    },
-    {
-        product_id: 'PF5035SWMJAUNE22358',
-        description: 'Sac Wicket Rondeau Master 50LB "Jaune"',
-        supplier: 'SacWicketConversion',
-        quantity: 2000,
-        unit: 'Sac',
-        price: 0.1
-    }
-];
-
-const productSource = {
-    localdata: productDetailData,
-    datatype: "array",
-    datafields: [
-        { name: 'product_id', type: 'string' },
-        { name: 'description', type: 'string' },
-        { name: 'supplier', type: 'string' },
-        { name: 'quantity', type: 'number' },
-        { name: 'unit', type: 'string' },
-        { name: 'price', type: 'number' }
-    ]
-};
-
-const productAdapter = new $.jqx.dataAdapter(productSource);
-
-$("#productDetailGrid").jqxGrid({
-    source: productAdapter,
-    width: '100%',
-    autoheight: true,
-    columnsresize: true,
-    altrows: true,
-    columns: [
-        { text: "# Produit", datafield: "product_id", width: "20%" },
-        { text: "Description", datafield: "description", width: "30%" },
-        { text: "# Fournisseur", datafield: "supplier", width: "20%" },
-        { text: "Qte cmd", datafield: "quantity", width: "10%", cellsalign: 'right', align: 'right' },
-        { text: "Unité cmd", datafield: "unit", width: "10%" },
-        { text: "Prix", datafield: "price", width: "10%", cellsformat: 'f2', cellsalign: 'right', align: 'right' }
-    ]
-});
-
-
-const maxHeight = Math.max(
-    $('#form1 .jqx-form').outerHeight(),
-    $('#form2 .jqx-form').outerHeight(),
-    $('#form3 .jqx-form').outerHeight()
-);
+        const maxHeight = Math.max(
+            $('#form1 .jqx-form').outerHeight(),
+            $('#form2 .jqx-form').outerHeight(),
+            $('#form3 .jqx-form').outerHeight()
+        );
 
 $('#form1 .jqx-form, #form2 .jqx-form, #form3 .jqx-form').css('height', maxHeight + 'px');
 
@@ -511,8 +655,38 @@ setTimeout(() => {
     $('#form1 .jqx-form, #form2 .jqx-form, #form3 .jqx-form').css('height', maxHeight + 'px');
 }, 100);
 
+$(function () {
+    $('[data-bs-toggle="tooltip"]').each(function () {
+        new bootstrap.Tooltip(this);
     });
+});
+
+$('#changeSupplierBtn').on('click', function () {
+    $('#supplier_id').prop('readonly', false).focus();
+});
+
+    });
+
+    $(document).on('input', '#supplier_id', function () {
+    const supplierNo = $(this).val();
+    if (!supplierNo) return;
+
+    $.get(`/purchasing/suppliers/${supplierNo}`, function (data) {
+        $('#supplier_name').val(data.supplier_name);
+        $('#contact_person').val(data.contact_person);
+        $('#address1').val(data.address1);
+        $('#address2').val(data.address2);
+        $('#city').val(data.city);
+        $('#postal_code').val(data.postal_code);
+        $('#phone').val(data.phone);
+        $('#fax').val(data.fax);
+    }).fail(function () {
+        alert("Proveedor no encontrado.");
+    });
+});
+
 </script>
+
 @endpush
 
 

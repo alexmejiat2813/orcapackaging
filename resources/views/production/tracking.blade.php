@@ -14,30 +14,28 @@
     </div>
 
     <div class="row mb-3">
-    <x-permission-users :allowed-roles="['Thomas Admin']">
+    
     <div class="col-md-2">
         <label for="filterInput1">Code Client:</label>
-        <input id="filterInput1" type="text" class="form-control" placeholder="e.g. 5017" />
+        <input id="filterInput1" name="codeclient" type="text" class="form-control" placeholder="e.g. 5017" />
     </div>
     <div class="col-md-3">
         <label for="filterInput2">Name Client:</label>
-        <input id="filterInput2" type="text" class="form-control" placeholder="e.g. Vibac" />
+        <input id="filterInput2" name="client"type="text" class="form-control" placeholder="e.g. Vibac" />
     </div>
-     </x-permission-users>
+     
     <div class="col-md-2">
         <label for="filterInput">Order Number:</label>
-        <input id="filterInput" type="text" class="form-control" placeholder="e.g. 2830" />
+        <input id="filterInput" name="order" type="text" class="form-control" placeholder="e.g. 2830" />
     </div>
-    <x-permission-users :allowed-roles="['Thomas Admin']">
     <div class="col-md-2">
         <label for="filterInput4">Lot:</label>
-        <input id="filterInput4" type="text" class="form-control" placeholder="e.g. 20900" />
+        <input id="filterInput4" name="lot" type="text" class="form-control" placeholder="e.g. 20900" />
     </div>
      <div class="col-md-3">
         <label for="filterInput5">Name Product:</label>
-        <input id="filterInput5" type="text" class="form-control" placeholder="e.g. T15" />
+        <input id="filterInput5" name="product" type="text" class="form-control" placeholder="e.g. T15" />
     </div>
-    </x-permission-users>
 </div>
 
     <section class="section mt-4">
@@ -61,7 +59,7 @@
     import { TrackingKanban } from '/assets/js/trackingKanban.js';
 
     document.addEventListener('DOMContentLoaded', () => {
-        new TrackingKanban('kanban', 'filterInput', '{{ url("/production/tracking/kanban") }}');
+        new TrackingKanban('kanban', 'input[name="codeclient"], input[name="client"], input[name="order"], input[name="lot"], input[name="product"]', '{{ url("/production/tracking/kanban") }}');
     });
 
    /* $(document).ready(function () {

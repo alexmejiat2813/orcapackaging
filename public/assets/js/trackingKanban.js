@@ -1,9 +1,9 @@
 // trackingKanban.js
 
 export class TrackingKanban {
-    constructor(kanbanId, filterInputId, endpointUrl) {
+    constructor(kanbanId, filterInputSelectors, endpointUrl) {
         this.kanbanId = kanbanId;
-        this.filterInputId = filterInputId;
+        this.filterInputSelectors = filterInputSelectors;
         this.endpointUrl = endpointUrl;
         this.originalData = [];
 
@@ -13,10 +13,15 @@ export class TrackingKanban {
     initialize() {
         this.loadData();
 
-        document.getElementById(this.filterInputId).addEventListener('input', (e) => {
+        const filterInputs = document.querySelectorAll(this.filterInputSelectors);
+        filterInputs.forEach(input => {
+            input.addEventListener('input', () => this.collectAndApplyFilters());
+        });
+
+        /*document.getElementById(this.filterInputId).addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             this.applyFilter(query);
-        });
+        });*/
     }
 
     loadData() {
@@ -26,8 +31,8 @@ export class TrackingKanban {
                 this.originalData = json.map((item, index) => ({
                     id: `${item.Lot_Id}`,
                     kanban_status: this.mapStatus(item.KANBAN_STATUS),
-                    label: `Lot ${item.Lot_Id} (${item.PrNumber}) <br> ${item.PrDescription1.substring(0, 100)} <br> ${item.PrDescription2.substring(0, 100)} <br> ${item.PrDescription3.substring(0, 100)} `,
-                    tags: `${item.Customer_Code}, ${item.InInvoiceNumber}`,
+                    label: `<strong>Cmd :</strong> ${item.InInvoiceNumber} <br> <strong>Client :</strong> (${item.Customer_Code}) ${item.Customer_Name} <br> <strong>Lot :</strong> ${item.Lot_Id} <br> ${item.PrNumber} <br> ${item.PrDescription1.substring(0, 100)} ${item.PrDescription2.substring(0, 100)} ${item.PrDescription3.substring(0, 100)} <br> <strong>Qty Order :</strong> ${parseInt(item.Lots_Qty) || 0} <br> <strong>In Stock :</strong> ${parseInt(item.Qty_InStock) || 0} <br> <strong>Shipped :</strong> ${parseInt(item.Total_Shipped) || 0}`,
+                    tags: `Cli ${item.Customer_Code}, Cmd ${item.InInvoiceNumber}`,
                     color: this.getColor(item.KANBAN_STATUS),
                     invoice: item.InInvoiceNumber
                 }));
@@ -39,7 +44,7 @@ export class TrackingKanban {
             });
     }
 
-    applyFilter(query) {
+    /*applyFilter(query) {
         if (!query) {
             this.renderKanban(this.originalData);
             return;
@@ -49,6 +54,30 @@ export class TrackingKanban {
             item.invoice && item.invoice.toLowerCase().includes(query)
         );
         this.renderKanban(filtered);
+    }*/
+
+    applyFilter(filters) {
+        const filtered = this.originalData.filter(item => {
+            const codeclientMatch = !filters.codeclient || (item.label && item.label.toLowerCase().includes(filters.codeclient));
+            const clientMatch = !filters.client || (item.label && item.label.toLowerCase().includes(filters.client));
+            const orderMatch = !filters.order || (item.label && item.label.toLowerCase().includes(filters.order));
+            const lotMatch = !filters.lot || (item.label && item.label.toLowerCase().includes(filters.lot));
+            const productMatch = !filters.product || (item.label && item.label.toLowerCase().includes(filters.product));
+            // Agrega más condiciones si tienes más filtros
+
+            return codeclientMatch && clientMatch && orderMatch && lotMatch && productMatch;
+        });
+
+        this.renderKanban(filtered);
+    }
+
+    collectAndApplyFilters() {
+        const filters = {};
+        document.querySelectorAll(this.filterInputSelectors).forEach(input => {
+            filters[input.name] = input.value.trim().toLowerCase();
+        });
+
+        this.applyFilter(filters);
     }
 
     renderKanban(data) {

@@ -7,6 +7,8 @@ use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HR\TimeInputController;
 
+use App\Http\Controllers\Supplier\SupplierController;
+
 use App\Http\Controllers\Purchasing\POController;
 use App\Http\Controllers\Purchasing\RequestController;
 use App\Http\Controllers\Purchasing\JotformSuppliesController;
@@ -39,6 +41,38 @@ Route::get('/check-app-key', function () {
 Route::middleware(['web', 'auth'])->group(function () {
     AutoSettingsRouter::register();
 });
+
+
+Route::middleware(['auth'])->prefix('purchasing/suppliers')->group(function () {
+    Route::get('/', fn() => view('purchasing.supplier'));
+    Route::get('/data', [SupplierController::class, 'index']);                  // Listar proveedores
+    Route::get('/{supplierNo}', [SupplierController::class, 'show']);       // Ver proveedor por código
+    Route::post('/', [SupplierController::class, 'store']);                 // Crear proveedor
+    Route::put('/{id}', [SupplierController::class, 'update']);             // Actualizar proveedor
+    Route::delete('/{id}', [SupplierController::class, 'destroy']);         // Eliminar proveedor
+    Route::get('/{supplierNo}/contacts', [SupplierController::class, 'getContacts']); // Obtener contactos
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -94,7 +128,12 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('purchasing')->group(function () {
+
         Route::get('/index', fn() => view('purchasing.index'));
+
+
+        Route::get('/suppliers/{supplierNo}', [SupplierController::class, 'show']);
+		Route::get('/suppliers/{supplierNo}/contacts', [SupplierController::class, 'getContacts']);
 
         Route::get('/orders', fn() => view('purchasing.orders'));
         Route::get('/orders/data', [POController::class, 'index']);

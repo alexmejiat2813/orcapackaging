@@ -195,13 +195,13 @@
                 { text: "Product Name", datafield: "PrDescription1", columnGroup: 'product', width: '40%', align: 'center' },
                 { text: "PO Note", datafield: "PO_Note", width: '200%' }
             ],
-            /*columnGroups: [
+            columnGroups: [
                 { text: 'Order Info', name: 'order', align: 'center' },
                 { text: 'Supplier Info', name: 'supplier', align: 'center' },
                 { text: 'Receiving Info', name: 'receiving', align: 'center' },
                 { text: 'Invoice Info', name: 'invoice', align: 'center' },
                 { text: 'Product Info', name: 'product', align: 'center' }
-            ]*/
+            ]
         });
 
         var listSource = [
