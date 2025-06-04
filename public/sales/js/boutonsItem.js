@@ -51,7 +51,8 @@ $(document).ready(function () {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'same-origin'
             })
             .then(response => response.json())
             .then(data => {
@@ -68,34 +69,44 @@ $(document).ready(function () {
                     }
 
                     setTimeout(() => {
-                        const activeForm = document.querySelector(`#form-${item.commande}`);
+                        let activeForm = null;
+                        if (item.commande !== '- Aucun -') {
+                            activeForm = document.querySelector(`#form-${item.commande}`);
+                        }
                         const communForm = document.querySelector('#form-inputsCommunItem');
 
                         Object.entries(item).forEach(([key, value]) => {
+                            // Cas special pour le select
                             if (key === 'commande') return;
                         
                             // Essayer dans le formulaire spécifique d’abord
                             let input = activeForm ? activeForm.querySelector(`[name="${key}"]`) : null;
-                        
+
                             // Sinon dans le formulaire commun
                             if (!input && communForm) {
                                 input = communForm.querySelector(`[name="${key}"]`);
                             }
                         
                             if (input) {
-                                const type = input.getAttribute('type');
-                            
                                 if (input.tagName === 'SELECT') {
                                     input.value = value;
                                     input.dispatchEvent(new Event('change'));
                                 } else if (key === 'formatProduit') {
                                     const selectedValues = value.split(',').map(v => v.trim());
                                     document.querySelectorAll('.formatProduit-checkbox').forEach(checkbox => {
-                                        checkbox.checked = selectedValues.includes(checkbox.value);
+                                        const shouldBeChecked = selectedValues.includes(checkbox.value);
+                                        
+                                        if (checkbox.checked !== shouldBeChecked) {
+                                            checkbox.checked = shouldBeChecked;
+                                        
+                                            // 🔥 Simuler un vrai changement (comme si l’utilisateur avait cliqué)
+                                            const event = new Event('change', { bubbles: true });
+                                            checkbox.dispatchEvent(event);
+                                        }
                                     });
-                                    return;
                                 } else {
                                     input.value = value;
+                                    input.dispatchEvent(new Event("input", { bubbles: true }));
                                 }
                             }
                         });
@@ -119,7 +130,7 @@ $(document).ready(function () {
             const data = grid.jqxGrid('getrowdata', selectedRowIndex);
             
             envoyerDonneesVersLaravel('/sales/estimates_item/supprimer', data, function () {
-                window.location.reload();
+                $('#jqxgrid').jqxGrid('updatebounddata');
             });
         }
     });
@@ -130,7 +141,7 @@ $(document).ready(function () {
         const data = grid.jqxGrid('getrowdata', selectedRowIndex);
 
         envoyerDonneesVersLaravel('/sales/estimates_item/copier', data, function () {
-            window.location.reload();
+            $('#jqxgrid').jqxGrid('updatebounddata');
         });
     });
 });

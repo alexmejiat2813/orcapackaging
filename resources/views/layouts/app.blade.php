@@ -56,7 +56,7 @@
     <script src="/assets/jqwidgets/jqxinput.js"></script>
 
     <script src="/assets/jqwidgets/jqxsplitter.js"></script>
- <script src="/assets/jqwidgets/jqxgrid.grouping.js"></script>
+    <script src="/assets/jqwidgets/jqxgrid.grouping.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">

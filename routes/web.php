@@ -27,7 +27,7 @@ use App\Http\Controllers\Settings\Modules\General\DepartmentController;
 use App\Http\Controllers\Settings\Modules\General\EquipmentController;
 use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
 
-
+use App\Http\Middleware\CheckSoumissionID;
 
 use App\Routes\Helpers\AutoSettingsRouter;
 
@@ -109,7 +109,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/getSession', [EstimateController::class, 'getSession']);
         });
         Route::prefix('estimates_item')->group(function () {
-            Route::get('/', [EstimateItemController::class, 'index']);
+            Route::get('/', [EstimateItemController::class, 'index'])->middleware(CheckSoumissionID::class);
             Route::post('/storeItem', [EstimateItemController::class, 'storeItem']);
             Route::get('/gridData', [EstimateItemController::class, 'gridData']);
             Route::post('/modifier', [EstimateItemController::class, 'modifier']);

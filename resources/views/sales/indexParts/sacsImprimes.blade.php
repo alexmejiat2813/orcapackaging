@@ -124,6 +124,10 @@
                 <input name="totalLivresPlusTolerance" type="number" id="totalLivresPlusTolerance" required>
             </div>
             <div class="divParametres">
+                <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
+                <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
+            </div>
+            <div class="divParametres">
                 <label for="coutTotal">Cout Total (en $CAD)</label>
                 <input name="coutTotal" type="number" id="coutTotal" required>
             </div>
@@ -162,21 +166,10 @@
                 <option value="5"> 5 </option>
             </select>
         </div>
-        <div class="divParametres">
-            <label for="poucesCarresUnitaire">Pouces Carres unitaire</label>
-            <input name="poucesCarresUnitaire" type="number" id="poucesCarresUnitaire">
-        </div>
-        <div class="divParametres">
-            <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
-            <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
-        </div>
-        <div class="divParametres">
-            <label for="constante"> Constante </label>
-            <input name="constante" type="number" id="constante" value="0,00000331767">
-        </div>
     </div>
 
     <h1> Couleurs de base </h1>
+    <!-- Couleurs ajoutees selon le nombre besoin dans le javascript item.js -->
     <div class="encresContainer">
     </div>   
 
@@ -200,7 +193,7 @@
             </div>
             <div class="divParametres">
                 <label for="coutKGSolvant"> Cout par KG ($CAD) </label>
-                <input name="coutKGSolvant" type="number" id="coutKGSolvant">
+                <input name="coutKGSolvant" type="number" id="coutKGSolvant" value="4.2">
             </div>
             <div class="divParametres">
                 <label for="coutTotalSolvant"> Cout total du solvant ($CAD) </label>
@@ -232,23 +225,23 @@
     <h2>Temps de production</h2>
     <div class="parametres">
         <div class="divParametres">
-            <label for="dureeTotaleImpression"> Duree totale d'impression (en minutes) </label>
+            <label for="dureeTotaleImpression"> Duree totale d'impression  </label>
             <input name="dureeTotaleImpression" type="number" id="dureeTotaleImpression" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMontagePlaques"> Montage des plaques (en minutes) </label>
+            <label for="dureeMontagePlaques"> Montage des plaques  </label>
             <input name="dureeMontagePlaques" type="number" id="dureeMontagePlaques" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMiseEnTrain"> Mise en train (en minutes) </label>
+            <label for="dureeMiseEnTrain"> Mise en train  </label>
             <input name="dureeMiseEnTrain" type="number" id="dureeMiseEnTrain" required>
         </div>
         <div class="divParametres">
-            <label for="dureeLavage"> Lavage (en minutes) </label>
+            <label for="dureeLavage"> Lavage  </label>
             <input name="dureeLavage" type="number" id="dureeLavage" required>
         </div>
         <div class="divParametres">
-            <label for="tempsTotalProduction"> Temps total d'impression (en minutes) </label>
+            <label for="tempsTotalProduction"> Temps total d'impression  </label>
             <input name="tempsTotalProduction" type="number" id="tempsTotalProduction" required>
         </div>
     </div>
@@ -307,19 +300,19 @@
     <h2>Temps de production</h2>
     <div class="parametres">
         <div class="divParametres">
-            <label for="dureeTotaleConversion"> Duree Totale de Conversion (en minutes) </label>
+            <label for="dureeTotaleConversion"> Duree Totale de Conversion  </label>
             <input name="dureeTotaleConversion" type="number" id="dureeTotaleConversion" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMontageConversion"> Montage (en minutes) </label>
+            <label for="dureeMontageConversion"> Montage  </label>
             <input name="dureeMontageConversion" type="number" id="dureeMontageConversion" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMenageConversion"> Menage (en minutes) </label>
+            <label for="dureeMenageConversion"> Menage  </label>
             <input name="dureeMenageConversion" type="number" id="dureeMenageConversion" required>
         </div>
         <div class="divParametres">
-            <label for="tempsTotalConversion"> Temps Total (en minutes) </label>
+            <label for="tempsTotalConversion"> Temps Total  </label>
             <input name="tempsTotalConversion" type="number" id="tempsTotalConversion" required>
         </div>
     </div>
@@ -512,32 +505,27 @@
     <h1>Variation prix selon quantite</h1>
     <div class="parametres">
         <div class="divParametres">
-            <label for="quantiteInformative1">Quantite initiale</label>
-            <input name="quantiteInformative1" type="number" id="quantiteInformative1" readonly>
+            <label for="quantiteInformative">Quantite initiale</label>
+            <input name="quantiteInformative" type="number" id="quantiteInformative" readonly>
         </div>
         <div class="divParametres">
-            <label for="prixInformatif1"> $CAD </label>
-            <input name="prixInformatif1" type="number" id="prixInformatif1" readonly>
+            <label for="prixInformatif"> Prix par mille ($CAD) </label>
+            <input name="prixInformatif" type="number" id="prixInformatif" readonly>
+        </div>
+    </div>
+    <div class="parametres">
+        <div class="divVerticale">
+            <label for="nvlQuantite"> Nouvelle quantite </label>
+            <input name="nvlQuantite" type="number" id="nvlQuantite" placeholder="ex : 1000, 50000 etc...">
+            <button type="button" name="calculAutreQuantite" id="calculAutreQuantite">
+              Estimer avec la nouvelle quantité
+            </button>
         </div>
     </div>
     <div class="parametres">
         <div class="divParametres">
-            <label for="quantiteInformative2">Quantite / 2</label>
-            <input name="quantiteInformative2" type="number" id="quantiteInformative2" readonly>
-        </div>
-        <div class="divParametres">
-            <label for="prixInformatif2"> $CAD </label>
-            <input name="prixInformatif2" type="number" id="prixInformatif2" readonly>
-        </div>
-    </div>
-    <div class="parametres">
-        <div class="divParametres">
-            <label for="quantiteInformative3">Quantite x 2</label>
-            <input name="quantiteInformative3" type="number" id="quantiteInformative3" readonly>
-        </div>
-        <div class="divParametres">
-            <label for="prixInformatif3"> $CAD </label>
-            <input name="prixInformatif3" type="number" id="prixInformatif3" readonly>
+            <label for="nvPrix"> Prix calculee avec la nouvelle quantite </label>
+            <input name="nvPrix" type="number" id="nvPrix" readonly>
         </div>
     </div>
 

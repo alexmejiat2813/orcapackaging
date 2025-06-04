@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class RequisEstimation extends Model
 {
-{
     protected $table = 'Requis_Estimation';
     protected $primaryKey = 'Requis_Estimation_Id';
     public $timestamps = false;

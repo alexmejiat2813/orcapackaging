@@ -1,78 +1,73 @@
 <form id="form-tape" class="form-to-validate" action="traitement.php" method="POST">
 
-    <div class="parametres">
+    <div class="divVerticale">
+        <h2>Mesures du materiau</h2>
+        <div class="parametres">
+            <div class="divParametres">
+                <label for="largeur">Largeur (mm)</label>
+                <select name="largeur" id="largeur" required>
+                    <option value=""></option>
+                    <option value="96">96</option>
+                    <option value="144">144</option>
+                </select>
+            </div>
+            <div class="divParametres">
+                <label for="longueur">Longueur (m)</label>
+                <select name="longueur" id="longueur" required>
+                    <option value=""></option>
+                    <option value="914">914</option>
+                </select>
+            </div>
+        </div>
+
+        <h2>Mesures du produit fini</h2>
+        <div class="parametres">
+            <div class="divParametres">
+                <label for="largeurTape">Largeur (mm)</label>
+                <select name="largeurTape" id="largeurTape" required>
+                    <option value=""></option>
+                    <option value="48">48</option>
+                    <option value="72">72</option>
+                </select>
+            </div>
+            <div class="divParametres">
+            <label for="longueurTape">Longueur (m)</label>
+            <input list="longueurTape-list" name="longueurTape" id="longueurTape" required>
+            <datalist id="longueurTape-list">
+                <option value="100">
+            </datalist>
+        </div>
+
         <div class="divParametres">
-            <label for="typePellicule"> Type de pellicule </label>
-            <select name="typePellicule" id="typePellicule" required>
-                <option value="LDPE">Low-Density Polyethylene (LDPE)</option>
-                <option value="HDPE">High-Density Polyethylene (HDPE)</option>
-                <option value="PP">Polypropylene (PP)</option>
-            </select>
+            <label for="repetitionsTape">Repetitions (po)</label>
+            <input list="repetitionsTape-list" name="repetitionsTape" id="repetitionsTape" required>
+            <datalist id="repetitionsTape-list">
+                <option value="13.02">
+                <option value="13.76">
+                <option value="14.50">
+                <option value="15.24">
+                <option value="15.99">
+            </datalist>
         </div>
-        <div class="divParametres">
-            <label for="couleurPellicule"> Couleur de la pellicule </label>
-            <select name="couleurPellicule" id="couleurPellicule" required>
-                <option value="claire">Claire</option>
-                <option value="noir">Noir</option>
-                <option value="blanc">Blanche</option>
-            </select>
         </div>
-    </div>
 
-    <div class="divVerticale">
-        <h2>Mesures</h2>
+        <h2>Total</h2>
         <div class="parametres">
             <div class="divParametres">
-                <label for="largeur">Largeur</label>
-                <input name="largeur" type="number" id="largeur" required>
+                <label for="totalMateriauTape"> Total Rouleaux Materiau </label>
+                <input name="totalMateriauTape" type="number" id="totalMateriauTape" readonly>
             </div>
             <div class="divParametres">
-                <label for="hauteur">Hauteur</label>
-                <input name="hauteur" type="number" id="hauteur" required>
-            </div>
-        </div>
-    </div>
-
-    <div class="divVerticale">
-        <h2>Materiel</h2>
-        <div class="parametres">
-            <div class="divParametres">
-                <label for="web">Web</label>
-                <input name="web" type="number" id="web" required>
+                <label for="prixMateriau"> Prix Materiau </label>
+                <input name="prixMateriau" type="number" id="prixMateriau" readonly>
             </div>
             <div class="divParametres">
-                <label for="epaisseur">Epaisseur</label>
-                <input name="epaisseur" type="number" id="epaisseur" required>
+                <label for="totalRepetitionsTape"> Total de repetitions </label>
+                <input name="totalRepetitionsTape" type="number" id="totalRepetitionsTape" readonly>
             </div>
             <div class="divParametres">
-                <label for="coutParLivre">Cout par livre</label>
-                <input name="coutParLivre" type="number" id="coutParLivre" required>
-            </div>
-            <div class="divParametres">
-                <label for="totalPieds">Total de Pieds</label>
-                <input name="totalPieds" type="number" id="totalPieds" required>
-            </div>
-            <div class="divParametres">
-                <label for="totalLivres">Total de Livres</label>
-                <input name="totalLivres" type="number" id="totalLivres" required>
-            </div>
-        </div>
-    </div>
-
-    <div class="divVerticale">
-        <h2>Quantite totale finale</h2>
-        <div class="parametres">
-            <div class="divParametres">
-                <label for="totalPiedsPlusTolerance">Total de Pieds + Tolerance</label>
-                <input name="totalPiedsPlusTolerance" type="number" id="totalPiedsPlusTolerance" required>
-            </div>
-            <div class="divParametres">
-                <label for="totalLivresPlusTolerance">Total de Livres + Tolerance</label>
-                <input name="totalLivresPlusTolerance" type="number" id="totalLivresPlusTolerance" required>
-            </div>
-            <div class="divParametres">
-                <label for="coutTotal">Cout Total (en $CAD)</label>
-                <input name="coutTotal" type="number" id="coutTotal" required>
+                <label for="nbPistes"> Nombre de pistes </label>
+                <input name="nbPistes" type="number" id="nbPistes" readonly>
             </div>
         </div>
     </div>
@@ -81,42 +76,16 @@
 
     <div class="parametres">
         <div class="divParametres">
-            <label for="typeEncre"> Type d'encre </label>
-            <select name="typeEncre" id="typeEncre" required>
-                <option value="exterieur"> Exterieur </option>
-                <option value="surface"> Surface </option>
-                <option value="hercubone"> Hercubone </option>
-                <option value="thermoplast"> Thermoplast </option>
-                <option value="process"> Process </option>
-                <option value="xks"> XKS </option>
-            </select>
-        </div>
-        <div class="divParametres">
-            <label for="nbCotes"> Nombre de cotes </label>
-            <input name="nbCotes" type="number" id="nbCotes" required>
-        </div>
-        <div class="divParametres">
             <label for="nbEncres"> Nombre d'encres </label>
             <select name="nbEncres" id="nbEncres" class="nbEncres" required>
                 <option value="1"> 1 </option>
                 <option value="2"> 2 </option>
             </select>
         </div>
-        <div class="divParametres">
-            <label for="poucesCarresUnitaire">Pouces Carres unitaire</label>
-            <input name="poucesCarresUnitaire" type="number" id="poucesCarresUnitaire">
-        </div>
-        <div class="divParametres">
-            <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
-            <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
-        </div>
-        <div class="divParametres">
-            <label for="constante"> Constante </label>
-            <input name="constante" type="number" id="constante" value="0,00000331767">
-        </div>
     </div>
 
     <h1> Couleurs de base </h1>
+    <!-- Couleurs ajoutees selon le nombre besoin dans le javascript item.js -->
     <div class="encresContainer">
     </div>   
 
@@ -140,7 +109,7 @@
             </div>
             <div class="divParametres">
                 <label for="coutKGSolvant"> Cout par KG ($CAD) </label>
-                <input name="coutKGSolvant" type="number" id="coutKGSolvant">
+                <input name="coutKGSolvant" type="number" id="coutKGSolvant" value="4.2">
             </div>
             <div class="divParametres">
                 <label for="coutTotalSolvant"> Cout total du solvant ($CAD) </label>
@@ -152,8 +121,8 @@
     <h1>Impression</h1>
     <div class="parametres">
         <div class="divParametres">
-            <label for="piedsParHeure"> Pieds par Heure </label>
-            <input name="piedsParHeure" type="number" id="piedsParHeure" required>
+            <label for="metresParHeureTape"> Metres par Heure </label>
+            <input name="metresParHeureTape" type="number" id="metresParHeureTape" required>
         </div>
         <div class="divParametres">
             <label for="salaireImpression"> Salaire ($CAD) </label>
@@ -164,23 +133,23 @@
     <h2>Temps de production</h2>
     <div class="parametres">
         <div class="divParametres">
-            <label for="dureeTotaleImpression"> Duree totale d'impression (en minutes) </label>
+            <label for="dureeTotaleImpression"> Duree totale d'impression  </label>
             <input name="dureeTotaleImpression" type="number" id="dureeTotaleImpression" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMontagePlaques"> Montage des plaques (en minutes) </label>
+            <label for="dureeMontagePlaques"> Montage des plaques  </label>
             <input name="dureeMontagePlaques" type="number" id="dureeMontagePlaques" required>
         </div>
         <div class="divParametres">
-            <label for="dureeMiseEnTrain"> Mise en train (en minutes) </label>
+            <label for="dureeMiseEnTrain"> Mise en train  </label>
             <input name="dureeMiseEnTrain" type="number" id="dureeMiseEnTrain" required>
         </div>
         <div class="divParametres">
-            <label for="dureeLavage"> Lavage (en minutes) </label>
+            <label for="dureeLavage"> Lavage  </label>
             <input name="dureeLavage" type="number" id="dureeLavage" required>
         </div>
         <div class="divParametres">
-            <label for="tempsTotalProduction"> Temps total (en minutes) </label>
+            <label for="tempsTotalProduction"> Temps total  </label>
             <input name="tempsTotalProduction" type="number" id="tempsTotalProduction" required>
         </div>
     </div>
@@ -199,8 +168,8 @@
 
     <div class="parametres">
         <div class="divParametres">
-            <label for="sacsParBoite">Tape par Boite</label>
-            <input name="sacsParBoite" type="number" id="sacsParBoite" required>
+            <label for="tapeParBoite">Tape par Boite</label>
+            <input name="tapeParBoite" type="number" id="tapeParBoite" required>
         </div>
         <div class="divParametres">
             <label for="nbBoites"> Nombre de Boites </label>
@@ -223,8 +192,8 @@
     <h1>Couts totaux de production</h1>
     <div class="parametres">
         <div class="divParametres">
-            <label for="coutTotauxProductionPellicule"> Cout pellicule ($CAD) </label>
-            <input name="coutTotauxProductionPellicule" type="number" id="coutTotauxProductionPellicule" required>
+            <label for="coutTotauxProductionMateriau"> Cout materiau ($CAD) </label>
+            <input name="coutTotauxProductionMateriau" type="number" id="coutTotauxProductionMateriau" required>
         </div>
         <div class="divParametres">
             <label for="coutTotauxProductionEncre"> Cout encre ($CAD) </label>
@@ -315,32 +284,27 @@
     <h1>Variation prix selon quantite</h1>
     <div class="parametres">
         <div class="divParametres">
-            <label for="quantiteInformative1">Quantite</label>
-            <input name="quantiteInformative1" type="number" id="quantiteInformative1" readonly>
+            <label for="quantiteInformative">Quantite initiale</label>
+            <input name="quantiteInformative" type="number" id="quantiteInformative" readonly>
         </div>
         <div class="divParametres">
-            <label for="prixInformatif1"> $CAD </label>
-            <input name="prixInformatif1" type="number" id="prixInformatif1" readonly>
+            <label for="prixInformatif"> Prix par mille ($CAD) </label>
+            <input name="prixInformatif" type="number" id="prixInformatif" readonly>
+        </div>
+    </div>
+    <div class="parametres">
+        <div class="divVerticale">
+            <label for="nvlQuantite"> Nouvelle quantite </label>
+            <input name="nvlQuantite" type="number" id="nvlQuantite" placeholder="ex : 1000, 50000 etc...">
+            <button type="button" name="calculAutreQuantite" id="calculAutreQuantite">
+              Estimer avec la nouvelle quantité
+            </button>
         </div>
     </div>
     <div class="parametres">
         <div class="divParametres">
-            <label for="quantiteInformative2">Quantite</label>
-            <input name="quantiteInformative2" type="number" id="quantiteInformative2" readonly>
-        </div>
-        <div class="divParametres">
-            <label for="prixInformatif2"> $CAD </label>
-            <input name="prixInformatif2" type="number" id="prixInformatif2" readonly>
-        </div>
-    </div>
-    <div class="parametres">
-        <div class="divParametres">
-            <label for="quantiteInformative3">Quantite</label>
-            <input name="quantiteInformative3" type="number" id="quantiteInformative3" readonly>
-        </div>
-        <div class="divParametres">
-            <label for="prixInformatif3"> $CAD </label>
-            <input name="prixInformatif3" type="number" id="prixInformatif3" readonly>
+            <label for="nvPrix"> Prix calculee avec la nouvelle quantite </label>
+            <input name="nvPrix" type="number" id="nvPrix" readonly>
         </div>
     </div>
 

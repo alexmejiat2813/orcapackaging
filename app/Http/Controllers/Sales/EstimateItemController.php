@@ -118,6 +118,8 @@ class EstimateItemController extends Controller
             
             $data = (array) $item;
             unset($data['ID']); // très important
+            // Changement de la colonne isReady
+            $data['IsReady'] = 0;
 
             $newId = DB::table('ItemsSynology')->insertGetId($data);
             DB::table('ItemsSoumissionsSynology')->insert([

@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const boutonItem = document.getElementById('soumettreItem');
     if (boutonItem) {
         boutonItem.addEventListener('click', async () => {
+            boutonItem.disabled = true;
+            const btnText = boutonItem.querySelector('.btn-text');
+            const spinner = boutonItem.querySelector('.spinner');
+            btnText.classList.add('d-none');
+            spinner.classList.remove('d-none');
+
             const commande = document.getElementById('commande')?.value;
             const formId = 'form-' + commande;
 
@@ -18,15 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ajouterChampsAuFormData(formData, formInputsCommun);
             ajouterChampsAuFormData(formData, formCommande);
+            formData.delete('_token');
 
             if (validerForm(formData)) {
                 try {
                     const response = await fetch('/sales/estimates_item/storeItem', {
                         method: 'POST',
-                        //headers: {
-                        //    'X-CSRF-TOKEN': csrfToken,
-                        //    'Accept': 'application/json'
-                        //},
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
                         body: formData,
                         credentials: 'same-origin'
                     });
@@ -57,6 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Erreur AJAX (contacter un administrateur) :', error.message);
                 }
             }
+            boutonItem.disabled = false;
+            btnText.classList.remove('d-none');
+            spinner.classList.add('d-none');
         });
     }
 
@@ -64,11 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const boutonSoumission = document.getElementById('soumettreSoumission');
     if (boutonSoumission) {
         boutonSoumission.addEventListener('click', async () => {
+            boutonSoumission.disabled = true;
+            const btnText = boutonSoumission.querySelector('.btn-text');
+            const spinner = boutonSoumission.querySelector('.spinner');
+            btnText.classList.add('d-none');
+            spinner.classList.remove('d-none');
+
             const formSoumission = document.getElementById('form-ParamsBase');
             const formData = new FormData();
 
             ajouterChampsAuFormData(formData, formSoumission);
-
             if (validerForm(formData)) {
                 try {
                     const response = await fetch('/sales/estimates/storeSoumission', {
@@ -105,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Erreur AJAX (contacter un administrateur) :', error.message);
                 }
             }
+            boutonSoumission.disabled = false;
+            btnText.classList.remove('d-none');
+            spinner.classList.add('d-none');
         });
     }
 });
@@ -150,8 +168,9 @@ function validerForm(formData) {
 // Fonction d’ajout des champs à FormData
 function ajouterChampsAuFormData(formData, form) {
     if (!form) return;
+    const inputsNonDesires = ['nvPrix','nvlQuantite','prixInformatif','quantiteInformative', 'constante'];
     Array.from(form.elements).forEach(element => {
-        if (element.name && element.value !== undefined) {
+        if (element.name && element.value !== undefined && !inputsNonDesires.includes(element.name)) {
             formData.append(element.name, element.value);
         }
     });

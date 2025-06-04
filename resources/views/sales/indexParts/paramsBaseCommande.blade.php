@@ -25,7 +25,7 @@
             <label for="inputEmailClient">Email</label>
             <div class="divHorizontale">
                 <input name="emailClient" type="email" id="inputEmailClient" placeholder="john.doe@email.ca" required>
-                <span id="validationIconEmail" class="validationIcon"></span>
+                <label id="validationIconEmail" class="validationIcon"></label>
             </div>
         </div>
         <div class="divParametres">
@@ -34,7 +34,7 @@
                 <input name="telephoneClient" type="tel" id="inputTelephoneClient" 
                        pattern="[0-9]{10}" title="0123456789" 
                        placeholder="0123456789" maxlength="10" required>
-                <span id="validationIconTel" class="validationIcon"></span>
+                <label id="validationIconTel" class="validationIcon"></label>
             </div>
         </div>
     </div>
