@@ -22,20 +22,24 @@ class OrdersModule {
                 { name: 'Date_Expedition', type: 'date' },
                 { name: 'Po_Client', type: 'string' },
                 { name: 'Acheteur', type: 'string' },
-                { name: 'Transmit', type: 'string' },
-                { name: 'isReady_Production', type: 'boolean' },
                 { name: 'Lot_Id', type: 'int' },
                 { name: 'Product_Id', type: 'int' },
                 { name: 'PrNumber', type: 'string' },
                 { name: 'PrDescription1', type: 'string' },
-                { name: 'Lots_Qty', type: 'int' },
+                { name: 'Lots_Qty', type: 'float' },
+                { name: 'Qty_InStock', type: 'float' },
                 { name: 'Lots_Price', type: 'float' },
                 { name: 'Shipping_Qty', type: 'float' },
                 { name: 'Commentaire', type: 'string' },
-                { name: 'Lots_Complet', type: 'string' },
+                
                 { name: 'SubTotal', type: 'float' },
                 { name: 'Total', type: 'float' },
                 { name: 'Qty_Finish', type: 'float' },
+                { name: 'Transmit', type: 'boolean' },
+                { name: 'Credit_Autorise', type: 'boolean' },
+                { name: 'isReady_Production', type: 'boolean' },
+                { name: 'IsCompletedLogic', type: 'boolean' },
+                { name: 'IsCancelledLogic', type: 'boolean' },
             ],
             id: 'Commande_Id',
             url: urlGetOrders
@@ -130,11 +134,51 @@ class OrdersModule {
                 { text: '# Product', datafield: 'PrNumber', width: 180, align: 'center', editable: false },
                 { text: 'Product', datafield: 'PrDescription1', width: 500, align: 'center', editable: false },
                 { text: 'Order Quantity', datafield: 'Lots_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Stock Quantity', datafield: 'Qty_InStock', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Shipping Quantity', datafield: 'Shipping_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Finish Quantity', datafield: 'Qty_Finish', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Sub-Total', datafield: 'SubTotal', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
                 { text: 'Total', datafield: 'Total', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
-            ]
+                { text: "Transmit", datafield: "Transmit", hidden: true },
+                { text: "Credit Autorise", datafield: "Credit_Autorise", hidden: true },
+                { text: "isReady Production", datafield: "isReady_Production", hidden: true },
+                { text: "Complet", datafield: "IsCompletedLogic", hidden: true },
+                { text: "Cancel", datafield: "IsCancelledLogic", hidden: true },
+            ],
+            ready: function () {
+                // Aplicar filtros por defecto al cargar el grid
+                const filters = [
+                    { field: "Transmit", value: true },
+                    { field: "Credit_Autorise", value: true },
+                    { field: "isReady_Production", value: true },
+                    { field: "IsCompletedLogic", value: false },
+                    { field: "IsCancelledLogic", value: false }
+                ];
+                filters.forEach(filter => {
+                    let filterGroup = new $.jqx.filter();
+                    let value = filter.value;
+                    let filterCondition = filterGroup.createfilter('booleanfilter', value, 'equal');
+                    filterGroup.addfilter(1, filterCondition);
+                    $("#commandesGrid").jqxGrid('addfilter', filter.field, filterGroup);
+                });
+                $("#commandesGrid").jqxGrid('applyfilters');
+            }
+        });
+
+        // Filtros dinámicos al cambiar los checkboxes
+        $(".status-filter").on("change", function () {
+            const field = $(this).data("field");
+            const isChecked = $(this).is(":checked");
+
+            $("#commandesGrid").jqxGrid('removefilter', field);
+
+            let filterGroup = new $.jqx.filter();
+            let value = isChecked ? true : false;
+            let filter = filterGroup.createfilter('booleanfilter', value, 'equal');
+            filterGroup.addfilter(1, filter);
+            $("#commandesGrid").jqxGrid('addfilter', field, filterGroup);
+
+            $("#commandesGrid").jqxGrid('applyfilters');
         });
 
     }

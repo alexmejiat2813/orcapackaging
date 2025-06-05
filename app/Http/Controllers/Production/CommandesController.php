@@ -23,7 +23,7 @@ public function index()
     public function getCommandes()
     {
         // Obtener los datos usando el modelo
-        $commandes = Commande::getCommandeData();
+        $commandes = Commande::orderByDesc('Commande_Id')->get();
 
         // Retornar los resultados en formato JSON
         return response()->json($commandes);

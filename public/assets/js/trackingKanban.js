@@ -102,11 +102,10 @@ export class TrackingKanban {
             width: '100%',
             height: 625,
             columns: [
-                { text: "Backlog", dataField: "new" },
+                { text: "Task list", dataField: "new" },
                 { text: "In Progress", dataField: "work" },
                 { text: "Stock", dataField: "stock" },
-                { text: "Partial", dataField: "partial" },
-                { text: "Done", dataField: "done" }
+                { text: "Partial", dataField: "partial" }//,                { text: "Done", dataField: "done" }
             ]
         });
     }
@@ -117,7 +116,7 @@ export class TrackingKanban {
             case 'in progress': return 'work';
             case 'stock': return 'stock';
             case 'partial': return 'partial';
-            case 'done': return 'done';
+            //case 'done': return 'done';
             default: return 'new';
         }
     }
@@ -128,7 +127,7 @@ export class TrackingKanban {
             case 'in progress': return '#f19b60';
             case 'stock': return '#17a2b8';
             case 'partial': return '#ffc107';
-            case 'done': return '#6bbd49';
+            //case 'done': return '#6bbd49';
             default: return '#cccccc';
         }
     }

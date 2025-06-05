@@ -172,7 +172,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/planning/delete-appointment', [PlanningController::class, 'deleteAppointment']);
 
         Route::get('/tracking', [TrackingController::class, 'index']);
-        Route::get('/tracking/kanban', [TrackingController::class, 'getKanbanData']);
+        Route::get('/tracking/get-commandes', [TrackingController::class, 'getCommandes']);
 
         Route::get('/workorders/uteco', fn() => view('production.workorders.uteco'));
         // Other optional purchasing modules:

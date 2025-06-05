@@ -59,7 +59,7 @@
     import { TrackingKanban } from '/assets/js/trackingKanban.js';
 
     document.addEventListener('DOMContentLoaded', () => {
-        new TrackingKanban('kanban', 'input[name="codeclient"], input[name="client"], input[name="order"], input[name="lot"], input[name="product"]', '{{ url("/production/tracking/kanban") }}');
+        new TrackingKanban('kanban', 'input[name="codeclient"], input[name="client"], input[name="order"], input[name="lot"], input[name="product"]', '{{ url("/production/tracking/get-commandes") }}');
     });
 
    /* $(document).ready(function () {

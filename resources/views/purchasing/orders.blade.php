@@ -34,7 +34,7 @@
                         <button type="button" id="btnDuplicate" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Dupliquer commande (Duplicate)">
                             <i class="bi bi-files"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Actualiser la liste (Refresh)">
+                        <button type="button" id="btnRefresh" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Actualiser la liste (Refresh)">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                         <button type="button" id="btnFollowUps" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Consulter les suivis (Check Follow-Ups)">
@@ -574,9 +574,10 @@
             }
         });
 
-
-
-
+        $("#btnRefresh").click(function () {
+            $("#gridFollowUp").jqxGrid({ source: getAdapter() });
+            $("#gridFollowUp").jqxGrid('updatebounddata', 'cells');
+        });
 
 
         const productDetailData = [

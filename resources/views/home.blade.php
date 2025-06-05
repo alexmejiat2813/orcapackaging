@@ -27,7 +27,7 @@
 
                     <div class="mb-3">
                         <label for="barcode" class="form-label">Scan Your Badge</label>
-                        <input type="password" name="barcode" id="barcode" class="form-control" autofocus required>
+                        <input type="password" name="barcode" id="barcode" class="form-control" autocomplete="off" autofocus required>
                     </div>
 
                     <div class="mb-3">
@@ -123,6 +123,10 @@
                 type: 'POST',
                 data: formData,
 
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+
                 success: function (response) {
                     if (response.success) {
                         $repMsg.html('<div class="alert alert-success">' + response.message + '</div>');
@@ -144,6 +148,14 @@
             });
         });
     }
+
+    let buffer = "";
+let timer;
+
+
+    setInterval(() => {
+    $('#barcode').focus();
+}, 10000); // Cada 1s intenta enfocarse
 
     function startAutoRefresh() {
         setInterval(reloadTimeInputGrid, 10000);
