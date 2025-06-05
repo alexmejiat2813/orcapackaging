@@ -79,3 +79,35 @@ DB_PASSWORD=thomasbsc
 ```
 
 Le projet ne devrait plus donner d'erreur de certificat.
+
+# Deploiement Automatique
+
+Nous avons mis en place sur la machine 192.168.0.97 un webhook avec un tunnel ngrok afin de permettre a GitHub d'acceder a la machine local lors d'un push afin de pull main sur la machine pour mettre a jour automatiquement.
+
+Le probleme est que cette methode de CD est pas mal bricole, et rien ne redemarre automatiquement si la machine est eteinte.
+
+Voici la demarche a suivre si la machine doit redemarrer.
+
+## Python
+
+Ouvrez dans la machine 192.168.0.97 le repertoire Bazar avec VS Code afin d'acceder au fichier .py contenant le Flask
+```
+C:\Users\Server-PHP\Documents\Bazar
+```
+Ouvrez ensuite un terminal **GIT BASH (important)** et tapez cette suite de commande :
+```
+eval $(ssh-agent)
+ssh-add ~/.ssh/id_rsa
+py webhook-server.py
+```
+Votre webhook est pret a l'utilisation
+
+## Ngrok
+
+Dans le meme repertoire Bazar, lancer l'executable ngrok.exe et ecrivez dans l'invite de commande de l'application :
+```
+ngrok http 5000
+```
+Vous allez ensuite copier la nouvelle URL que ngrok a genere dans le champ ```Forwarding```.
+Vous allez ensuite ouvrir le repertoire GitHub et faire Settings > Webhook (disponible uniquement pour les administrateurs)
+Dans cet onglet, cliquer sur Modifier pour le webhook existant et changer la valeur ```Payload URL``` par la nouvelle URL de ngrok
