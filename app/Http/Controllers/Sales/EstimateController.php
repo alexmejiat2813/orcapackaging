@@ -19,7 +19,8 @@ class EstimateController extends Controller
     public function index()
     {
         $clients = DB::table('Customer')->select('Customer_No', 'Customer_Name')->get();
-        return view('sales.estimates', compact('clients')); 
+        $assets = DB::table('Asset')->select('Asset_ID' ,'Asset_FName', 'Asset_Name', 'SRPhoneNumber1', 'SREMail')->get();
+        return view('sales.estimates', compact('clients', 'assets')); 
     }
 
     public function gerer(Request $request) {
@@ -139,20 +140,23 @@ class EstimateController extends Controller
 
         $validated = $request->validate([
             'clients' => 'required|string|max:255',
-            'nomClient' => 'required|string|max:255',
-            'prenomClient' => 'required|string|max:255',
-            'emailClient' => 'required|email|max:255',
-            'telephoneClient' => 'required|string|max:50',
+            'assets' => 'required|string|max:255',
+            'nomClient' => 'nullable|string|max:255',
+            'prenomClient' => 'nullable|string|max:255',
+            'emailClient' => 'nullable|email|max:255',
+            'telephoneClient' => 'nullable|string|max:50',
             'nomTravail' => 'required|string|max:255',
             'dateLivraisonSouhaitee' => 'required|date',
         ]);
+
         // Mapping vers les colonnes de la base de données
         $dataToInsert = [
             'Client' => $validated['clients'],
-            'Nom' => $validated['nomClient'],
-            'Prenom' => $validated['prenomClient'],
-            'Email' => $validated['emailClient'],
-            'Telephone' => $validated['telephoneClient'],
+            'Asset_ID' => $validated['assets'],
+            'Nom' => $validated['nomClient'] ?? null,
+            'Prenom' => $validated['prenomClient'] ?? null,
+            'Email' => $validated['emailClient'] ?? null,
+            'Telephone' => $validated['telephoneClient'] ?? null,
             'Nom_Travail' => $validated['nomTravail'],
             'Date_Livraison' => $validated['dateLivraisonSouhaitee'],
         ];
@@ -193,10 +197,10 @@ class EstimateController extends Controller
     }
 
     public function gridData(): JsonResponse {
-        $soumissions = DB::table('SoumissionsSynology')
-            ->orderByDesc('ID')
+        $soumissions = DB::table('SoumissionsSynology as s')
+            ->leftJoin('Asset as a', 's.Asset_ID', '=', 'a.Asset_ID')
+            ->orderByDesc('s.ID')
             ->get();
-
         return response()->json($soumissions);
     }
 

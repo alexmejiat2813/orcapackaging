@@ -51,6 +51,17 @@
             <input name="quantite" type="number" id="quantite" value="{{ old('quantite') }}" required>
             @error('quantite') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
+        <div class="divParametres">
+            <label for="typeFacturation">Type de facturation</label>
+            <select name="typeFacturation" id="typeFacturation" required>
+                <option value="mille">Par Mille</option>
+                <option value="unite">A l'unite</option>
+            </select>
+        </div>
+        <div class="divParametres">
+            <label for="dossierPrecedent">Dossier Precedent</label>
+            <input name="dossierPrecedent" type="text" maxlength="10" id="dossierPrecedent">
+        </div>
     </div>
 
     <div class="parametres">
