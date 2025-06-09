@@ -22,10 +22,15 @@ class TimeInputController extends Controller
     }
 
     /**
+     * Get the current local time in Montreal timezone.
+     */
+    private function nowLocal()
+    {
+        return now()->setTimezone('America/Toronto');
+    }
+
+    /**
      * Handle the clock-in / clock-out process.
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function processClock(Request $request)
     {
@@ -40,9 +45,10 @@ class TimeInputController extends Controller
             return back()->with('error', 'Employee not found with the provided barcode.');
         }
 
-        $currentDate = now();
-        $period = PeriodWeek::where('Period_Week_StartDate', '<=', $currentDate)
-            ->where('Period_Week_EndDate', '>=', $currentDate)
+        $now = $this->nowLocal();
+
+        $period = PeriodWeek::where('Period_Week_StartDate', '<=', $now)
+            ->where('Period_Week_EndDate', '>=', $now)
             ->first();
 
         if (!$period) {
@@ -56,14 +62,13 @@ class TimeInputController extends Controller
             ->get();
 
         foreach ($openEntries as $entry) {
-            $start = Carbon::parse($entry->TimeInput_StartTime);
-            $now = Carbon::now();
-            $minutes = (int) $start->diffInMinutes($now);
+            $start = Carbon::parse($entry->TimeInput_StartTime)->setTimezone('America/Toronto');
+            $minutes = max(0, $start->diffInMinutes($now));
 
             $entry->update([
-                'TimeInput_EndTime'    => Carbon::parse(now())->addHours(-4)->toISOString(),
-                'TimeInput_Comment'    => ($entry->TimeInput_Comment ?? '') . 'Automatically closed before new clock-in.',
-                'TimeInput_Time'       => $minutes,
+                'TimeInput_EndTime'    => $now->toDateTimeString(),
+                'TimeInput_Comment'    => ($entry->TimeInput_Comment ?? '') . ' Automatically closed before new clock-in.',
+                'TimeInput_Time'       => (int) round($minutes),
                 'TimeInput_Approved'   => 0,
                 'TimeInput_TimeInHour' => round($minutes / 60, 2),
                 'TimeInput_IsStart'    => 0,
@@ -71,7 +76,6 @@ class TimeInputController extends Controller
         }
 
         if ($openEntries->count() > 0) {
-            //return back()->with('error', 'Previous open sessions were automatically closed. Please scan again to clock-in.');
             return response()->json([
                 'success' => false,
                 'message' => 'Clock-out registered for ' . $user->Users_Name
@@ -83,25 +87,23 @@ class TimeInputController extends Controller
             ->orderByDesc('TimeInput_EndTime')
             ->first();
 
-        $now = Carbon::now()->addHours(-4); // Hora ajustada
-        $lastEndTime = $lastEntry ? Carbon::parse($lastEntry->TimeInput_EndTime) : null;
-        $delayMinutes =$delayMinutes = $lastEndTime ? (int) $lastEndTime->diffInMinutes($now) : null;
+        $lastEndTime = $lastEntry ? Carbon::parse($lastEntry->TimeInput_EndTime)->setTimezone('America/Toronto') : null;
+        $delayMinutes = $lastEndTime ? (int) $lastEndTime->diffInMinutes($now) : null;
 
         // 2. Create a new clock-in entry
         TimeInput::create([
-            'Users_ID'            => $user->Users_ID,
-            'Activity_ID'         => 7,
-            'TimeInput_IsStart'   => 1,
-            'TimeInput_StartTime'        => $now->toISOString(),
-            'TimeInput_TimeStamp'        => $now->toISOString(),
+            'Users_ID'                    => $user->Users_ID,
+            'Activity_ID'                 => 7,
+            'TimeInput_IsStart'          => 1,
+            'TimeInput_StartTime'        => $now->toDateTimeString(),
+            'TimeInput_TimeStamp'        => $now->toDateTimeString(),
             'TimeInput_Comment'          => $request->note,
             'Period_Week_Id'             => $period->Period_Week_Id,
             'is_Punch_Clock'             => 1,
-            'TimeInput_Last_EndTime'     => $lastEndTime ? $lastEndTime->toISOString() : null,
+            'TimeInput_Last_EndTime'     => $lastEndTime ? $lastEndTime->toDateTimeString() : null,
             'TimeInput_Last_Delay_EndTime' => $delayMinutes,
         ]);
 
-        //return back()->with('success', 'Clock-in registered for ' . $user->Users_Name);
         return response()->json([
             'success' => true,
             'message' => 'Clock-in registered for ' . $user->Users_Name
@@ -109,48 +111,26 @@ class TimeInputController extends Controller
     }
 
     /**
-     * Return current active clock-in entries (without weekly totals).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getClockData_old()
-    {
-        $entries = TimeInput::with('user')
-            ->whereNull('TimeInput_EndTime')
-            ->where('TimeInput_IsStart', 1)
-            ->orderByDesc('TimeInput_StartTime')
-            ->limit(100)
-            ->get()
-            ->map(function ($entry) {
-                return [
-                    'id'           => $entry->TimeInput_ID,
-                    'user'         => $entry->user->Users_Name ?? 'N/A',
-                    'start_time'   => $entry->TimeInput_StartTime,
-                    'end_time'     => $entry->TimeInput_EndTime,
-                    'comment'      => $entry->TimeInput_Comment,
-                    'time_minutes' => $entry->TimeInput_Time,
-                    'time_hours'   => $entry->TimeInput_TimeInHour,
-                    'approved'     => $entry->TimeInput_Approved ? 'Yes' : 'No',
-                ];
-            });
-
-        return response()->json($entries);
-    }
-
-    /**
-     * Return current open clock-in entries with total hours for the current week.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Return current active clock-in entries with total hours for the current week.
      */
     public function getClockData()
     {
-        $week = PeriodWeek::where('Period_Week_StartDate', '<=', now())
-            ->where('Period_Week_EndDate', '>=', now())
+        $today = $this->nowLocal()->toDateString();
+
+        $week = PeriodWeek::whereDate('Period_Week_StartDate', '<=', $today)
+            ->whereDate('Period_Week_EndDate', '>=', $today)
             ->first();
+
+        if (!$week) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active week found for today.'
+            ], 404);
+        }
 
         $entries = TimeInput::with('user')
             ->where('TimeInput_IsStart', 1)
-             ->where('Activity_ID', 7)
+            ->where('Activity_ID', 7)
             ->whereNull('TimeInput_EndTime')
             ->where('Period_Week_Id', $week->Period_Week_Id)
             ->orderByDesc('TimeInput_StartTime')
@@ -166,7 +146,7 @@ class TimeInputController extends Controller
                 return [
                     'id'           => $entry->TimeInput_ID,
                     'user'         => $entry->user->Users_Name ?? 'N/A',
-                    'start_time'   => Carbon::parse($entry->TimeInput_StartTime)->addHours(4)->toISOString(),
+                    'start_time'   => Carbon::parse($entry->TimeInput_StartTime)->setTimezone('America/Toronto')->toDateTimeString(),
                     'end_time'     => $entry->TimeInput_EndTime,
                     'comment'      => $entry->TimeInput_Comment,
                     'time_minutes' => $entry->TimeInput_Time,
@@ -179,5 +159,3 @@ class TimeInputController extends Controller
         return response()->json($entries);
     }
 }
-
-?>

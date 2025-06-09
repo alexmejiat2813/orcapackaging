@@ -126,7 +126,14 @@
           <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="production-menu" class="nav-content collapse {{ Request::is('production/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-           <li>
+
+            <li>
+                <a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}">
+                    <i class="bi bi-circle"></i>BOM (Bill of Materials)
+                </a>
+             </li>
+
+            <li>
             <a href="{{ url('/production/tracking') }}" class="{{ Request::is('production/tracking') ? 'active' : '' }}">
               <i class="bi bi-circle"></i>Order Tracking
             </a>
@@ -137,11 +144,7 @@
             </a>
           </li>
           <x-permission-users :allowed-roles="['Thomas Admin']">
-          <li>
-            <a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}">
-              <i class="bi bi-circle"></i>BOM (Bill of Materials)
-            </a>
-          </li>
+          
 
           <li>
             <a href="{{ url('/production/planning') }}" class="{{ Request::is('production/planning') ? 'active' : '' }}">

@@ -162,6 +162,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/bom/get-commandes', [CommandesController::class, 'getCommandes']);
         Route::get('/bom/get-details/{lotId}', [BomController::class, 'getDetails']);
 
+        Route::post('/bom/save-recipe', [BomController::class, 'saveRecipe']);
+		Route::post('/bom/delete-recipe', [BomController::class, 'deleteRecipe']);
+
         Route::post('/bom/detail/store', [BomController::class, 'storeDetail']);
         Route::put('/bom/detail/update/{id}', [BomController::class, 'updateDetail']);
         Route::delete('/bom/detail/delete/{id}', [BomController::class, 'deleteDetail']);

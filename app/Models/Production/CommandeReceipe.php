@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommandeReceipe extends Model
 {
-    protected $table = 'Commande_Receipe'; // Nombre exacto de la tabla
-
+    protected $table = 'Commande_Receipe'; // <<--- Esta es la tabla real
     protected $primaryKey = 'Commande_Receipe_Id';
-
-    public $timestamps = false; // Ya tienes campos personalizados de timestamps
+    public $incrementing = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'Commande_Id',
@@ -18,16 +17,19 @@ class CommandeReceipe extends Model
         'Product_Id',
         'Department_Id',
         'Value',
-        'TimeStamps',
-        'Create_By',
-        'Modified_TimeStamps',
-        'Modified_By',
-        'Cancel_TimeStamp',
-        'Cancel_By',
         'Actif',
         'Quotation_Receipe_Id',
+        'Create_By',
+        'TimeStamps',
+        'Modified_By',
+        'Modified_TimeStamps',
+        'Cancel_By',
+        'Cancel_TimeStamp',
         'Commande_Receipe_Changed',
         'Modified_Equipment_Id',
         'Modified_Product_Id'
     ];
 }
+
+
+

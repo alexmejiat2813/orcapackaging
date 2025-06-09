@@ -31,7 +31,7 @@ export class TrackingKanban {
                 this.originalData = json.map((item, index) => ({
                     id: `${item.Lot_Id}`,
                     kanban_status: this.mapStatus(item.KANBAN_STATUS),
-                    label: `<strong>Cmd :</strong> ${item.InInvoiceNumber} <br> <strong>Client :</strong> (${item.Customer_Code}) ${item.Customer_Name} <br> <strong>Lot :</strong> ${item.Lot_Id} <br> ${item.PrNumber} <br> ${item.PrDescription1.substring(0, 100)} ${item.PrDescription2.substring(0, 100)} ${item.PrDescription3.substring(0, 100)} <br> <strong>Qty Order :</strong> ${parseInt(item.Lots_Qty) || 0} <br> <strong>In Stock :</strong> ${parseInt(item.Qty_InStock) || 0} <br> <strong>Shipped :</strong> ${parseInt(item.Total_Shipped) || 0}`,
+                    label: `<strong>Cmd :</strong> ${item.InInvoiceNumber} <br> <strong>Client :</strong> (${item.Customer_Code}) ${item.Customer_Name} <br> <strong>Lot :</strong> ${item.Lot_Id} <br> ${item.PrNumber} <br> ${item.PrDescription1.substring(0, 100)} <br> <strong>Qty Order :</strong> ${parseInt(item.Lots_Qty) || 0} <br> <strong>In Stock :</strong> ${parseInt(item.Qty_InStock) || 0} <br> <strong>Shipped :</strong> ${parseInt(item.Total_Shipped) || 0}`,
                     tags: `Cli ${item.Customer_Code}, Cmd ${item.InInvoiceNumber}`,
                     color: this.getColor(item.KANBAN_STATUS),
                     invoice: item.InInvoiceNumber
