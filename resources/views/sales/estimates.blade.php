@@ -52,10 +52,25 @@
                 allowClear: true
             });
         });
+        $(document).ready(function () {
+            $('#assets').select2({
+                placeholder: "Tape pour chercher...",
+                allowClear: true
+            });
+
+            $('#assets').on('change', function () {
+                const value = parseFloat($(this).val());
+
+                if (value === -1) {
+                    $('#client-inconnu').show();
+                } else {
+                    $('#client-inconnu').hide();
+                }
+            });
+        });
     </script>
 
-    <script src="{{ asset('sales/js/validationInputs.js') }}"></script>
-    <script src="{{ asset('sales/js/setupDate.js') }}"></script>
+    <script src="{{ asset('sales/js/index.js') }}"></script>
     <script src="{{ asset('sales/js/boutonsIndex.js') }}"></script>
     <script src="{{ asset('sales/js/gestionBouton.js') }}"></script>
 
@@ -76,8 +91,7 @@
                     { name: 'Client', type: 'string' },
                     { name: 'Nom', type: 'string' },
                     { name: 'Prenom', type: 'string' },
-                    { name: 'Email', type: 'string' },
-                    { name: 'Telephone', type: 'string' },
+                    { name: 'SRSortKey', type: 'string' },
                     { name: 'Nom_Travail', type: 'string' },
                     { name: 'Date_Livraison', type: 'date' }
                 ],
@@ -99,10 +113,22 @@
                 columns: [
                     { text: 'ID', datafield: 'ID', width: 60, cellsalign: 'center' },
                     { text: 'N° Client', datafield: 'Client', width: 100, cellsalign: 'center' },
-                    { text: 'Nom', datafield: 'Nom', width: 200 },
-                    { text: 'Prenom', datafield: 'Prenom', width: 200 },
-                    { text: 'Email', datafield: 'Email', width: 200 },
-                    { text: 'Telephone', datafield: 'Telephone', width: 150 },
+                    {
+                        text: 'Nom du client',
+                        datafield: 'NomPrenomOuAsset',
+                        width: 300,
+                        cellsrenderer: function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
+                            const nom = rowdata.Nom;
+                            const prenom = rowdata.Prenom;
+                            if (nom && prenom) {
+                                return `<div style="padding: 4px;">${prenom} ${nom}</div>`;
+                            } else if (rowdata.SRSortKey) {
+                                return `<div style="padding: 4px;">${rowdata.SRSortKey}</div>`;
+                            } else {
+                                return `<div style="padding: 4px;">Inconnu</div>`;
+                            }
+                        }
+                    },
                     { text: 'Nom Travail', datafield: 'Nom_Travail'},
                     { text: 'Date de Livraison', datafield: 'Date_Livraison', width: 150, cellsalign: 'center', cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', filtertype: 'date' }
                 ]

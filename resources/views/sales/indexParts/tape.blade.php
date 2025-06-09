@@ -189,6 +189,22 @@
         </div>
     </div>
 
+    <h1>Livraison</h1>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="quiVaLivrer"> Qui va livrer ? </label>
+            <select name="quiVaLivrer" id="quiVaLivrer" required>
+                <option value="Orca">Orca</option>
+                <option value="Client">Client</option>
+                <option value="Pick Up">Pick-Up</option>
+            </select>
+        </div>
+        <div class="divParametres">
+            <label for="prixLivraison"> Prix de vente au client ($CAD) </label>
+            <input name="prixLivraison" type="number" id="prixLivraison" required>
+        </div>
+    </div>
+
     <h1>Couts totaux de production</h1>
     <div class="parametres">
         <div class="divParametres">

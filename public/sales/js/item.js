@@ -204,8 +204,6 @@ document.querySelectorAll("form").forEach(form => {
 
 ///////////////////////// GESTION DES NOMBRES (Modification automatique des inputs) //////////////////////////////////////
 
-// 62-66 ??  91 ?? 
-
 // prixVenteClientPlaque vers coutTotauxProductionPlaques 12
 document.querySelectorAll(".prixVenteClientPlaque").forEach(element =>
 {
@@ -1336,6 +1334,19 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
   });
 });
 
+// prixLivraison = coutTotauxProductionLivraison
+document.querySelectorAll("form").forEach(form => {
+    const inputPrixLivraison = form.querySelector('[name="prixLivraison"]');
+    const inputCoutLivraison = form.querySelector('[name="coutTotauxProductionLivraison"]');
+
+    if (inputPrixLivraison && inputCoutLivraison) {
+      inputPrixLivraison.addEventListener("input", () => {
+        const prix = parseFloat(inputPrixLivraison.value) || 0;
+        inputCoutLivraison.value = prix.toFixed(2);
+        inputCoutLivraison.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    }
+  });
 
 ///////////////////////////// TAPE //////////////////////////////// 
 const formTape = document.getElementById('form-tape');
