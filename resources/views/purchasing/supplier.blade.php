@@ -22,6 +22,20 @@
         <!-- Toolbar -->
         <div class="d-flex flex-column mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
+            <!-- Título del listado -->
+                <h4 class="mb-0 ms-3">List of suppliers</h4>
+
+                <!-- Filtros -->
+                <div class="d-flex flex-wrap gap-3 align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input status-filter" type="checkbox" id="is_actived" data-field="Supplier_Active" value="actived" checked>
+                        <label class="form-check-label" for="is_actived">Active</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input status-filter" type="checkbox" id="is_blocked" data-field="Supplier_Lock" value="barred">
+                        <label class="form-check-label" for="is_blocked">Barré</label>
+                    </div>
+                </div>
                 <!-- Botones -->
                 <x-permission-users :allowed-roles="['Thomas Admin']">
                     <div class="d-flex gap-2">
@@ -46,20 +60,7 @@
                     </div>
                 </x-permission-users>
 
-                <!-- Título del listado -->
-                <h4 class="mb-0 ms-3">List of suppliers</h4>
-
-                <!-- Filtros -->
-                <div class="d-flex flex-wrap gap-3 align-items-center">
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" id="is_actived" data-field="Supplier_Active" value="actived" checked>
-                        <label class="form-check-label" for="is_actived">Active</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" id="is_blocked" data-field="Supplier_Lock" value="barred">
-                        <label class="form-check-label" for="is_blocked">Barré</label>
-                    </div>
-                </div>
+                
             </div>
         </div>
 
@@ -152,16 +153,18 @@
 
         $("#gridSuppliers").jqxGrid({
             width: '100%',
-            autoheight: true,
-            pageable: true,
+            height : 650,
+            //autoheight: true,
+            //pageable: true,
             sortable: true,
             filterable: true,
             showfilterrow: true,
             source: dataAdapter,
             columnsresize: true,
             columnsreorder: true,
-            pageSize: 17,
-            pagermode: "simple",
+            groupable: true, showgroupsheader: true,
+            //pageSize: 17,
+            //pagermode: "simple",
             columns: [
                 { text: "Supplier Code", datafield: "Supplier_No", width: '6%', align: 'center', cellsalign: 'center' },
                 { text: "Supplier", datafield: "Supplier_Name", width: '15%', align: 'center' },
