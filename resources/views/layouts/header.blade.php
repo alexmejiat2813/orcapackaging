@@ -65,6 +65,24 @@
         </li>
     </x-permission-users>
 
+            <!-- CRM -->
+    <x-permission-users :allowed-roles="['Thomas Admin']">
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('crm/*') ? '' : 'collapsed' }}" data-bs-target="#crm-menu" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-people"></i><span>CRM</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="crm-menu" class="nav-content collapse {{ Request::is('crm/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+        <li><a href="{{ url('/crm/clients') }}" class="{{ Request::is('crm/clients') ? 'active' : '' }}"><i class="bi bi-circle"></i>Clients</a></li>
+        <li><a href="{{ url('/crm/contacts') }}" class="{{ Request::is('crm/contacts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contacts</a></li>
+        <li><a href="{{ url('/crm/activities') }}" class="{{ Request::is('crm/activities') ? 'active' : '' }}"><i class="bi bi-circle"></i>Activities</a></li>
+        <li><a href="{{ url('/crm/opportunities') }}" class="{{ Request::is('crm/opportunities') ? 'active' : '' }}"><i class="bi bi-circle"></i>Opportunities</a></li>
+        <li><a href="{{ url('/crm/leads') }}" class="{{ Request::is('crm/leads') ? 'active' : '' }}"><i class="bi bi-circle"></i>Leads</a></li>
+        <li><a href="{{ url('/crm/campaigns') }}" class="{{ Request::is('crm/campaigns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Campaigns</a></li>
+        <li><a href="{{ url('/crm/segments') }}" class="{{ Request::is('crm/segments') ? 'active' : '' }}"><i class="bi bi-circle"></i>Segmentation</a></li>
+      </ul>
+    </li>
+   </x-permission-users>
+
     <!-- SALES -->
     <x-permission-users :allowed-roles="['Thomas Admin']">
         <li class="nav-item">
@@ -84,7 +102,26 @@
         </li>
     </x-permission-users>
 
-    <!-- PURCHASING -->
+    <!-- ACCOUNTING -->
+   <x-permission-users :allowed-roles="['Thomas Admin']">
+    <li class="nav-item">
+      <a class="nav-link {{ Request::is('accounting/*') ? '' : 'collapsed' }}" data-bs-target="#accounting-menu" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-cash-coin"></i><span>Accounting</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="accounting-menu" class="nav-content collapse {{ Request::is('accounting/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+      <li><a href="{{ url('/accounting/credit-check') }}" class="{{ Request::is('accounting/credit-check') ? 'active' : '' }}"><i class="bi bi-circle"></i>Credit Check</a></li>
+        <li><a href="{{ url('/accounting/invoices') }}" class="{{ Request::is('accounting/invoices') ? 'active' : '' }}"><i class="bi bi-circle"></i>Invoices</a></li>
+        <li><a href="{{ url('/accounting/payments') }}" class="{{ Request::is('accounting/payments') ? 'active' : '' }}"><i class="bi bi-circle"></i>Payments</a></li>
+        <li><a href="{{ url('/accounting/expenses') }}" class="{{ Request::is('accounting/expenses') ? 'active' : '' }}"><i class="bi bi-circle"></i>Expenses</a></li>
+        <li><a href="{{ url('/accounting/journals') }}" class="{{ Request::is('accounting/journals') ? 'active' : '' }}"><i class="bi bi-circle"></i>Journals</a></li>
+        <li><a href="{{ url('/accounting/taxes') }}" class="{{ Request::is('accounting/taxes') ? 'active' : '' }}"><i class="bi bi-circle"></i>Taxes</a></li>
+        <li><a href="{{ url('/accounting/reconciliation') }}" class="{{ Request::is('accounting/reconciliation') ? 'active' : '' }}"><i class="bi bi-circle"></i>Reconciliation</a></li>
+        <li><a href="{{ url('/accounting/balance') }}" class="{{ Request::is('accounting/balance') ? 'active' : '' }}"><i class="bi bi-circle"></i>Balance Sheet</a></li>
+      </ul>
+    </li>
+   </x-permission-users>
+
+       <!-- PURCHASING -->
      <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('purchasing/*') ? '' : 'collapsed' }}" data-bs-target="#purchasing-menu" data-bs-toggle="collapse" href="#">
@@ -117,9 +154,8 @@
 
       </ul>
     </li>
-    
 
-    <!-- PRODUCTION -->
+       <!-- PRODUCTION -->
     <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
       <li class="nav-item">
         <a class="nav-link {{ Request::is('production/*') ? '' : 'collapsed' }}" data-bs-target="#production-menu" data-bs-toggle="collapse" href="#">
@@ -133,11 +169,13 @@
                 </a>
              </li>
 
-            <li>
-            <a href="{{ url('/production/tracking') }}" class="{{ Request::is('production/tracking') ? 'active' : '' }}">
-              <i class="bi bi-circle"></i>Order Tracking
-            </a>
-          </li>
+             <li>
+                <a href="{{ url('/production/material-readiness') }}" class="{{ Request::is('production/material-readiness') ? 'active' : '' }}">
+                    <i class="bi bi-circle"></i>Material Readiness
+                </a>
+             </li>
+
+            
           <li>
             <a href="{{ url('/production/orders') }}" class="{{ Request::is('production/orders') ? 'active' : '' }}">
               <i class="bi bi-circle"></i>Production Jobs
@@ -200,6 +238,12 @@
             </ul>
           </li>
 
+          <li>
+            <a href="{{ url('/production/tracking') }}" class="{{ Request::is('production/tracking') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Order Tracking
+            </a>
+          </li>
+
           
           <li>
             <a href="{{ url('/production/downtime') }}" class="{{ Request::is('production/downtime') ? 'active' : '' }}">
@@ -217,6 +261,8 @@
     </x-permission-users>
 
 
+    
+
     <!-- INVENTORY -->
    <x-permission-users :allowed-roles="['Thomas Admin']">
     <li class="nav-item">
@@ -230,42 +276,6 @@
         <li><a href="{{ url('/inventory/barcodes') }}" class="{{ Request::is('inventory/barcodes') ? 'active' : '' }}"><i class="bi bi-circle"></i>Barcodes</a></li>
         <li><a href="{{ url('/inventory/lots') }}" class="{{ Request::is('inventory/lots') ? 'active' : '' }}"><i class="bi bi-circle"></i>Lots</a></li>
         <li><a href="{{ url('/inventory/alerts') }}" class="{{ Request::is('inventory/alerts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Alerts</a></li>
-      </ul>
-    </li>
-   </x-permission-users>
-
-    <!-- CRM -->
-    <x-permission-users :allowed-roles="['Thomas Admin']">
-    <li class="nav-item">
-      <a class="nav-link {{ Request::is('crm/*') ? '' : 'collapsed' }}" data-bs-target="#crm-menu" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-people"></i><span>CRM</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="crm-menu" class="nav-content collapse {{ Request::is('crm/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-        <li><a href="{{ url('/crm/clients') }}" class="{{ Request::is('crm/clients') ? 'active' : '' }}"><i class="bi bi-circle"></i>Clients</a></li>
-        <li><a href="{{ url('/crm/contacts') }}" class="{{ Request::is('crm/contacts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contacts</a></li>
-        <li><a href="{{ url('/crm/activities') }}" class="{{ Request::is('crm/activities') ? 'active' : '' }}"><i class="bi bi-circle"></i>Activities</a></li>
-        <li><a href="{{ url('/crm/opportunities') }}" class="{{ Request::is('crm/opportunities') ? 'active' : '' }}"><i class="bi bi-circle"></i>Opportunities</a></li>
-        <li><a href="{{ url('/crm/leads') }}" class="{{ Request::is('crm/leads') ? 'active' : '' }}"><i class="bi bi-circle"></i>Leads</a></li>
-        <li><a href="{{ url('/crm/campaigns') }}" class="{{ Request::is('crm/campaigns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Campaigns</a></li>
-        <li><a href="{{ url('/crm/segments') }}" class="{{ Request::is('crm/segments') ? 'active' : '' }}"><i class="bi bi-circle"></i>Segmentation</a></li>
-      </ul>
-    </li>
-   </x-permission-users>
-
-    <!-- ACCOUNTING -->
-   <x-permission-users :allowed-roles="['Thomas Admin']">
-    <li class="nav-item">
-      <a class="nav-link {{ Request::is('accounting/*') ? '' : 'collapsed' }}" data-bs-target="#accounting-menu" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-cash-coin"></i><span>Accounting</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="accounting-menu" class="nav-content collapse {{ Request::is('accounting/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-        <li><a href="{{ url('/accounting/invoices') }}" class="{{ Request::is('accounting/invoices') ? 'active' : '' }}"><i class="bi bi-circle"></i>Invoices</a></li>
-        <li><a href="{{ url('/accounting/payments') }}" class="{{ Request::is('accounting/payments') ? 'active' : '' }}"><i class="bi bi-circle"></i>Payments</a></li>
-        <li><a href="{{ url('/accounting/expenses') }}" class="{{ Request::is('accounting/expenses') ? 'active' : '' }}"><i class="bi bi-circle"></i>Expenses</a></li>
-        <li><a href="{{ url('/accounting/journals') }}" class="{{ Request::is('accounting/journals') ? 'active' : '' }}"><i class="bi bi-circle"></i>Journals</a></li>
-        <li><a href="{{ url('/accounting/taxes') }}" class="{{ Request::is('accounting/taxes') ? 'active' : '' }}"><i class="bi bi-circle"></i>Taxes</a></li>
-        <li><a href="{{ url('/accounting/reconciliation') }}" class="{{ Request::is('accounting/reconciliation') ? 'active' : '' }}"><i class="bi bi-circle"></i>Reconciliation</a></li>
-        <li><a href="{{ url('/accounting/balance') }}" class="{{ Request::is('accounting/balance') ? 'active' : '' }}"><i class="bi bi-circle"></i>Balance Sheet</a></li>
       </ul>
     </li>
    </x-permission-users>

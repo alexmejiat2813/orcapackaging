@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Orca Packaging')
+@section('title', 'Orca Packaging)')
 
 @section('content')
     <div class="pagetitle">
-        <h1>Sales Orders</h1>
+        <h1>Credit Check</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Sales Orders</li>
+                <li class="breadcrumb-item active">Credit Check</li>
             </ol>
         </nav>
     </div>
@@ -166,8 +166,8 @@ $(document).ready(function () {
         ready: function () {
             // Filtros por defecto al cargar
             const filters = [
-                { field: "Commande_Transmit_First", value: false },
-                { field: "Transmit", value: false },
+                { field: "Commande_Transmit_First", value: true },
+                { field: "Transmit", value: true },
                 { field: "Credit_Autorise", value: false },
                 { field: "isReady_Production", value: false },
                 { field: "IsCompletedLogic", value: false },

@@ -40,7 +40,8 @@ class OrdersModule {
                 { name: 'Credit_Autorise', type: 'boolean' },
                 { name: 'isReady_Production', type: 'boolean' },
                 { name: 'IsCompletedLogic', type: 'boolean' },
-                { name: 'IsCancelledLogic', type: 'boolean' },
+                { name: 'IsCanceledLogic', type: 'boolean' },
+                { name: 'Commande_Transmit_First', type: 'boolean' },
             ],
             id: 'Commande_Id',
             url: urlGetOrders
@@ -52,16 +53,17 @@ class OrdersModule {
         $("#commandesGrid").jqxGrid({
             width: '100%',
             source: this.adapter,
-            pagermode: "simple",
-            pageable: true,
-            autoheight: true,
+            //pagermode: "simple",
+            //pageable: true,
+            //autoheight: true,
+            height : 600,
             sortable: true,
             filterable: true,
             columnsresize: true,
             showfilterrow: true,
-            pageSize: 17,
+            //pageSize: 15,
             editable: true, 
-            showtoolbar: true, groupable: true, showgroupsheader: true,
+            showtoolbar: false, groupable: true, showgroupsheader: true,
             /*rendertoolbar: function (toolbar) {
                 const container = $("<div style='margin: 5px;'></div>");
                 toolbar.append(container);
@@ -138,24 +140,26 @@ class OrdersModule {
                 { text: 'Stock Qty', datafield: 'Qty_InStock', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Shipping Qty', datafield: 'Shipping_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Finish Qty', datafield: 'Qty_Finish', width: 100, align: 'center', cellsalign: 'center', editable: false },               
-                { text: 'Lot Price', datafield: 'Lots_Price', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
+                { text: 'Lot Price', datafield: 'Lots_Price', width: 100, cellsformat: 'c4', align: 'center', cellsalign: 'right', editable: false },
                 { text: 'Unit Price', datafield: 'Unit_Price', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Sub-Total', datafield: 'SubTotal', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
                 { text: 'Total', datafield: 'Total', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
-                { text: "Transmit", datafield: "Transmit", hidden: true },
-                { text: "Credit Autorise", datafield: "Credit_Autorise", hidden: true },
-                { text: "isReady Production", datafield: "isReady_Production", hidden: true },
-                { text: "Complet", datafield: "IsCompletedLogic", hidden: true },
-                { text: "Cancel", datafield: "IsCancelledLogic", hidden: true },
+                { text: "Commande_Transmit_First", datafield: "Commande_Transmit_First", width: '5%', hidden: true },
+                { text: "Transmit", datafield: "Transmit", width: '5%', hidden: true },
+                { text: "Credit Autorise", datafield: "Credit_Autorise", width: '5%', hidden: true },
+                { text: "isReady Production", datafield: "isReady_Production", width: '5%', hidden: true },
+                { text: "Complet", datafield: "IsCompletedLogic", width: '5%', hidden: true },
+                { text: "Cancel", datafield: "IsCanceledLogic", width: '5%', hidden: true },
             ],
             ready: function () {
                 // Aplicar filtros por defecto al cargar el grid
                 const filters = [
+                    { field: "Commande_Transmit_First", value: true },
                     { field: "Transmit", value: true },
                     { field: "Credit_Autorise", value: true },
                     { field: "isReady_Production", value: true },
                     { field: "IsCompletedLogic", value: false },
-                    { field: "IsCancelledLogic", value: false }
+                    { field: "IsCanceledLogic", value: false }
                 ];
                 filters.forEach(filter => {
                     let filterGroup = new $.jqx.filter();

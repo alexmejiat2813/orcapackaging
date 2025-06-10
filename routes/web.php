@@ -86,6 +86,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/chart/', [DashboardController::class, 'getInvoiceData']);
     Route::get('/dashboard/chart/top-clients', [DashboardController::class, 'getTopClientsByYear']);
 
+
+    Route::prefix('accounting')->group(function () {
+        Route::get('/credit-check', fn() => view('accounting.check'));
+        //Route::get('/credit-check', [SalesOrderController::class, 'index'])->name('accounting.check');
+        
+    });
+
     /*
     |--------------------------------------------------------------------------
     | Sales Module Routes

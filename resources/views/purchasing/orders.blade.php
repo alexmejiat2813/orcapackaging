@@ -22,26 +22,6 @@
         <!-- Toolbar -->
         <div class="d-flex flex-column mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <!-- Botones -->
-                <x-permission-users :allowed-roles="['Thomas Admin']">
-                    <div class="d-flex gap-2">
-                        <button type="button" id="btnNew" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
-                            <i class="bi bi-file-earmark-plus"></i>
-                        </button>
-                        <button type="button" id="btnEdit" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Modifier commande (Edit Order)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button type="button" id="btnDuplicate" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Dupliquer commande (Duplicate)">
-                            <i class="bi bi-files"></i>
-                        </button>
-                        <button type="button" id="btnRefresh" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Actualiser la liste (Refresh)">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                        <button type="button" id="btnFollowUps" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Consulter les suivis (Check Follow-Ups)">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </x-permission-users>
                 <!-- Título del listado -->
                 <h4 class="mb-0 ms-3">List of unbilled purchase orders</h4>
                 <!-- Filtros -->
@@ -63,6 +43,28 @@
                         <label class="form-check-label" for="is_blocked">Barré</label>
                     </div>
                 </div>
+                <!-- Botones -->
+                <x-permission-users :allowed-roles="['Thomas Admin']">
+                    <div class="d-flex gap-2">
+                        <button type="button" id="btnNew" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
+                            <i class="bi bi-file-earmark-plus"></i>
+                        </button>
+                        <button type="button" id="btnEdit" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Modifier commande (Edit Order)">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button type="button" id="btnDuplicate" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Dupliquer commande (Duplicate)">
+                            <i class="bi bi-files"></i>
+                        </button>
+                        <button type="button" id="btnRefresh" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Actualiser la liste (Refresh)">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                        <button type="button" id="btnFollowUps" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Consulter les suivis (Check Follow-Ups)">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </x-permission-users>
+                
+                
             </div>
         </div>
         <!-- Grid principal -->
@@ -495,16 +497,18 @@
 
         $("#gridFollowUp").jqxGrid({
             width: '100%',
-            autoheight: true,
-            pageable: true,
+            //autoheight: true,
+            height : 650,
+            //pageable: true,
             sortable: true,
             filterable: true,
             showfilterrow: true,
             source: dataAdapter,
             columnsresize: true,
             columnsreorder: true,
-            pageSize: 17,
-            pagermode: "simple",
+            groupable: true, showgroupsheader: true,
+            //pageSize: 17,
+            //pagermode: "simple",
             columns: [
                 { text: "Supplier Code", datafield: "Supplier_No", width: '8%', align: 'center', cellsalign: 'center' },
                 { text: "Supplier", datafield: "Supplier_Name", width: '20%', align: 'center' },
