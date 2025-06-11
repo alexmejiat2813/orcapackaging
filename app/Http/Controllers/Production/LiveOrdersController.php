@@ -9,18 +9,110 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Settings\Modules\General\Equipment;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Production\ProductionActivityStatus;
 
 
-class PlanningController extends Controller
+class LiveOrdersController extends Controller
 {
-    
     /**
      * Render the planning view with available machines
      */
     public function index()
     {
         $machines = Equipment::getSchedulerResources();
-        return view('production.planning', compact('machines'));
+        return view('production.live', compact('machines'));
+    }
+
+    /**
+     * Get the current local time in Montreal timezone.
+     */
+    private function nowLocal()
+    {
+        return now()->setTimezone('America/Toronto');
+    }
+
+    public function getDataByDate(Request $request)
+{
+    $now = $this->nowLocal();
+    $date = $request->input('date', now()->toDateString());
+    $records = collect(ProductionActivityStatus::getByDate($date));
+    $appointments = collect();
+
+    foreach ($records as $item) {
+        if (is_null($item->Equipment_ID)) {
+            continue;
+        }
+
+        $equipmentIds = is_numeric($item->Equipment_ID)
+            ? [$item->Equipment_ID]
+            : explode(',', $item->Equipment_ID);
+
+        foreach ($equipmentIds as $equipId) {
+            $equipmentDescription = Equipment::getDescriptionById((int) $equipId);
+            //$duration = is_numeric($item->TimeInput_TimeInHour) ? (float) $now;
+
+            // SIN timezone si los datos ya están en hora local
+            $start = Carbon::parse($item->TimeInput_StartTime);
+            $end = $item->TimeInput_EndTime
+                ? Carbon::parse($item->TimeInput_EndTime)
+                : $now;
+
+            $appointments->push([
+                'id' => $item->TimeInput_ID,
+                'location' => $item->Equipment_Description,
+                'description' => 'Client: ' . $item->Customer_Name . ' | Qty: ' . $item->TimeInput_QtyProduced . ' ' . $item->Unit_Measurement_Description,
+                'subject' => 'Cmd ' . $item->TimeInput_CmdNo . ' - Client: ' . $item->Customer_Name . ' - ' . $item->Users_Name . ' | Qty: ' . number_format(round($item->TimeInput_QtyProduced), 0, '', ' ') . ' ' . $item->Unit_Measurement_Description,
+                'calendar' => $equipmentDescription,
+                'start' => $start->toDateTimeString(), // "2025-06-11 07:00:00"
+                'end' => $end->toDateTimeString()
+            ]);
+        }
+    }
+
+    return response()->json($appointments);
+}
+
+    public function getData()
+    {
+        //$data = ProductionActivityStatus::all();
+        //return response()->json($data);
+
+        $records = ProductionActivityStatus::all();
+        $appointments = collect();
+
+        foreach ($records as $item) {
+            if (is_null($item->Equipment_ID)) {
+                continue;
+            }
+
+            $equipmentIds = is_numeric($item->Equipment_ID)
+                ? [$item->Equipment_ID]
+                : explode(',', $item->Equipment_ID);
+
+            foreach ($equipmentIds as $equipId) {
+                $equipmentDescription = Equipment::getDescriptionById((int) $equipId);
+                $duration = is_numeric($item->TimeInput_TimeInHour) ? (float) $item->TimeInput_TimeInHour : 2;
+
+                $start = Carbon::parse($item->TimeInput_StartTime)->setTimezone('America/Toronto');
+        
+                // Si TimeInput_EndTime es null, estimamos el end
+                $end = $item->TimeInput_EndTime
+                    ? Carbon::parse($item->TimeInput_EndTime)->setTimezone('America/Toronto')
+                    : $start->copy()->addHours($duration);
+
+                $appointments->push([
+                    'id' => $item->TimeInput_ID,
+                    'location' => $item->Equipment_Description,
+                    'description' => 'Client: ' . $item->Customer_Name . ' | Qty: ' . $item->TimeInput_QtyProduced,
+                    'subject' => 'Cmd ' . $item->TimeInput_CmdNo . ' - ' . $item->Users_Name,
+                    'calendar' => $equipmentDescription,
+                    'start' => $start->toDateTimeString(), // o toISOString() si prefieres
+                    'end' => $end->toDateTimeString(),
+                ]);
+            }
+        }
+
+        return response()->json($appointments);
     }
 
     /**

@@ -18,10 +18,11 @@ public function index()
     {
         // Obtener los datos usando el modelo
         $commandes = Commande::where('Transmit', true)
+         ->where('Commande_Transmit_First', true)
         ->where('Credit_Autorise', true)
         ->where('isReady_Production', true)
         ->where('IsCompletedLogic', false)
-        ->where('IsCancelledLogic', false)
+        ->where('IsCanceledLogic', false)
         ->orderByDesc('Commande_Id')
         ->get();
 

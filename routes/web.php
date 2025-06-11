@@ -16,10 +16,15 @@ use App\Http\Controllers\Purchasing\FollowUp\PurchaseOrderFollowUpController;
 
 
 use App\Http\Controllers\Sales\SalesOrderController;
+use App\Http\Controllers\Sales\SalesValidationOrderController;
+
 use App\Http\Controllers\Production\CommandesController;
 use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
+use App\Http\Controllers\Production\LiveOrdersController;
 use App\Http\Controllers\Production\TrackingController;
+
+
 use App\Http\Controllers\Sales\EstimateController;
 use App\Http\Controllers\Sales\EstimateItemController;
 use App\Http\Controllers\Settings\SettingsController;
@@ -99,7 +104,8 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('sales')->group(function () {
-        Route::get('/orders', [SalesOrderController::class, 'index'])->name('sales.orders');
+        Route::get('/draft', [SalesOrderController::class, 'index'])->name('sales.draft');
+        Route::get('/validation', [SalesValidationOrderController::class, 'index'])->name('sales.validation');
         // Route::get('/quotations', [QuotationController::class, 'index']);
         // Route::get('/invoices', [InvoiceController::class, 'index']);
         // Route::get('/clients', [ClientController::class, 'index']);
@@ -180,6 +186,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/planning/get-appointments', [PlanningController::class, 'getAppointments']);
         Route::post('/planning/save-appointment', [PlanningController::class, 'saveAppointment']);
         Route::post('/planning/delete-appointment', [PlanningController::class, 'deleteAppointment']);
+
+        Route::get('/live-orders', [LiveOrdersController::class, 'index']);
+        Route::get('/live-orders/data', [LiveOrdersController::class, 'getDataByDate']);
 
         Route::get('/tracking', [TrackingController::class, 'index']);
         Route::get('/tracking/get-commandes', [TrackingController::class, 'getCommandes']);

@@ -1,4 +1,4 @@
-import { urlGetAppointments, urlSaveAppointments, urlDeleteAppointments } from './config.js';
+import { urlGetDataLiveOrders, urlSaveAppointments, urlDeleteAppointments } from './config.js';
 
 class SchedulerModule {
     constructor() {
@@ -9,52 +9,29 @@ class SchedulerModule {
     }
 
     initialize() {
-        this.source = {
-            dataType: "json",
-            dataFields: [
-                { name: 'id', type: 'string' },
-                { name: 'location', type: 'string' },
-                { name: 'description', type: 'string' },
-                { name: 'subject', type: 'string' },
-                { name: 'calendar', type: 'string' },
-                { name: 'start', type: 'date' },
-                { name: 'end', type: 'date' },
-            ],
-            id: 'id',
-            url: urlGetAppointments
-        };
+        this.reloadSchedulerData(); // Llama al cargar la página
 
-        this.adapter = new $.jqx.dataAdapter(this.source, {
-            beforeLoadComplete: (records) => {
-                this.existingAppointments.clear();
-                records.forEach(rec => this.existingAppointments.add(rec.id));
-                return records.map(rec => {
-                    rec.start = new Date(rec.start + 'Z');
-                    rec.end = new Date(rec.end + 'Z');
-                    return rec;
-                });
-            }
-        });
+        // Cuando se cambia la vista (day/week/month)
+        $('#scheduler').on('viewChange', () => this.reloadSchedulerData());
+
+        // 🟢 Cuando se cambia la fecha con las flechas o el calendario
+        $('#scheduler').on('dateChange', () => this.reloadSchedulerData());
 
         $('#scheduler').jqxScheduler({
             date: new $.jqx.date(new Date()),
             width: '100%',
             height: 700,
             source: this.adapter,
-            view: 'timelineWeekView',
+            view: 'timelineDayView',
             dayNameFormat: "abbr",
             showLegend: true,
             localization: { firstDay: 1 },
-
             contextMenu: false,
-            editDialog: false, // ❌ Desactiva completamente el popup de creación/edición
-            ready: function () {
-                $("#scheduler").jqxScheduler('ensureVisible', new $.jqx.date(new Date().setHours(7, 0, 0, 0)));
-            },
+            editDialog: false,
+
             resources: {
                 colorScheme: "scheme17",
                 dataField: "calendar",
-                //orientation: "horizontal",
                 source: new $.jqx.dataAdapter({
                     dataType: "array",
                     dataFields: [
@@ -81,13 +58,13 @@ class SchedulerModule {
                     workTime: {
                         fromDayOfWeek: 1,
                         toDayOfWeek: 5,
-                        fromHour: 7,
-                        toHour: 20
+                        fromHour: 6,
+                        toHour: 22
                     },
                     timeSlotWidth: '64.8',
-                    timeRuler: { formatString: "HH:mm", scale: "hour" }
-                },
-                {                    
+                    timeRuler: { formatString: "HH:mm", scale: "quarterHour" }
+                }/*,
+                {
                     type: "timelineWeekView",
                     text: "Week",
                     showWeekends: true,
@@ -102,43 +79,84 @@ class SchedulerModule {
                     timeRuler: { formatString: "HH", scale: "hour" }
                 },
                 { type: 'monthView', text: "Month", showWeekNumbers: true },
-                'agendaView'
+                'agendaView'*/
             ]
         });
 
-        //$('#scheduler').on('appointmentAdd', (event) => this.saveAppointment(event.args.appointment));
         $('#scheduler').on('appointmentChange', (event) => this.saveAppointment(event.args.appointment));
-        //$('#scheduler').on('appointmentDelete', (event) => this.deleteAppointment(event.args.appointment.id));
         $('#scheduler').on('appointmentAdd', function (event) {
-            event.preventDefault(); // ❌ Cancela la creación
+            event.preventDefault();
             Swal.fire('Acción bloqueada', 'No se permite crear nuevas citas.', 'warning');
         });
 
+        $('#scheduler').on('appointmentChange', function (event) {
+            event.preventDefault();
+            Swal.fire('Solo lectura', 'No puedes modificar esta cita.', 'info');
+        });
 
+        setInterval(() => {
+            this.reloadSchedulerData();
+            console.log("🔄 Live Orders actualizados automáticamente.");
+        }, 15 * 60 * 1000); // 15 minutos
     }
 
-    refreshScheduler() {
-        // Save current view and date before refresh
-        const currentView = $('#scheduler').jqxScheduler('view');
-        const currentDate = $('#scheduler').jqxScheduler('date');
+    getSchedulerDate() {
+        const schedulerDate = $("#scheduler").jqxScheduler('date');
+        if (!schedulerDate || typeof schedulerDate.toDate !== 'function') {
+            //console.warn("⚠️ No valid scheduler date found, using today's date.");
+            return new Date().toLocaleDateString('en-CA'); // fallback a hoy
+        }
 
-        const newAdapter = new $.jqx.dataAdapter(this.source, {
+        return schedulerDate.toDate().toLocaleDateString('en-CA');
+    }
+
+    reloadSchedulerData() {
+        const selectedDate = this.getSchedulerDate();
+
+        const source = {
+            datatype: "json",
+            datafields: [
+                { name: 'id', type: 'string' },
+                { name: 'location', type: 'string' },
+                { name: 'description', type: 'string' },
+                { name: 'subject', type: 'string' },
+                { name: 'calendar', type: 'string' },
+                { name: 'start', type: 'date' },
+                { name: 'end', type: 'date' }
+            ],
+            url: urlGetDataLiveOrders + '?date=' + selectedDate
+        };
+
+        this.adapter = new $.jqx.dataAdapter(source, {
             beforeLoadComplete: (records) => {
                 this.existingAppointments.clear();
-                records.forEach(rec => this.existingAppointments.add(rec.id));
+
+                const toLocalDate = (input) => {
+                    if (input instanceof Date) return input;
+                    if (typeof input === 'string') return new Date(input.replace(' ', 'T'));
+                    return null;
+                };
+
                 return records.map(rec => {
-                    rec.start = new Date(rec.start + 'Z');
-                    rec.end = new Date(rec.end + 'Z');
+                    rec.start = toLocalDate(rec.start);
+                    rec.end = toLocalDate(rec.end);
+                    this.existingAppointments.add(rec.id);
                     return rec;
                 });
             }
+
+
         });
 
-        this.adapter = newAdapter;
-
-        // Set new data source and restore view + date
         $('#scheduler').jqxScheduler('source', this.adapter);
-        //$('#scheduler').jqxScheduler('render');
+    }
+
+    refreshScheduler() {
+        const currentView = $('#scheduler').jqxScheduler('view');
+        const currentDate = $('#scheduler').jqxScheduler('date');
+
+        this.reloadSchedulerData();
+
         $('#scheduler').jqxScheduler('view', currentView);
         $('#scheduler').jqxScheduler('date', currentDate);
     }
@@ -165,7 +183,6 @@ class SchedulerModule {
             data: data,
             success: (response) => {
                 this.refreshScheduler();
-                //Swal.fire(titleMessage, successMessage, 'success');
             },
             error: (err) => {
                 const messageBox = document.getElementById('messageBox');
@@ -179,8 +196,6 @@ class SchedulerModule {
 
     saveAppointment(appointment) {
         const payload = this.buildAppointmentPayload(appointment);
-
-        // Prevent duplicate insert if ID already exists
         if (!this.existingAppointments.has(payload.id)) {
             this.handleAjax(urlSaveAppointments, payload, "Saved!", "Appointment created successfully!");
         } else {
@@ -193,5 +208,5 @@ class SchedulerModule {
     }
 }
 
-// Initialize the module
+// Inicializar módulo
 const scheduler = new SchedulerModule();

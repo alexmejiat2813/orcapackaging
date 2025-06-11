@@ -92,7 +92,8 @@
           <ul id="sales-menu" class="nav-content collapse {{ Request::is('sales/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
             <li><a href="{{ url('/sales/estimates') }}" class="{{ Request::is('sales/estimates') ? 'active' : '' }}"><i class="bi bi-circle"></i>Estimates</a></li>
             <li><a href="{{ url('/sales/quotations') }}" class="{{ Request::is('sales/quotations') ? 'active' : '' }}"><i class="bi bi-circle"></i>Quotations</a></li>
-            <li><a href="{{ url('/sales/orders') }}" class="{{ Request::is('sales/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Sales Orders</a></li>
+            <li><a href="{{ url('/sales/draft') }}" class="{{ Request::is('sales/draft') ? 'active' : '' }}"><i class="bi bi-circle"></i>Draft Orders</a></li>
+            <li><a href="{{ url('/sales/validation') }}" class="{{ Request::is('sales/validation') ? 'active' : '' }}"><i class="bi bi-circle"></i>Order Validation</a></li>
             <li><a href="{{ url('/sales/invoices') }}" class="{{ Request::is('sales/invoices') ? 'active' : '' }}"><i class="bi bi-circle"></i>Invoices</a></li>
             <li><a href="{{ url('/sales/returns') }}" class="{{ Request::is('sales/returns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Returns</a></li>
             <li><a href="{{ url('/sales/contracts') }}" class="{{ Request::is('sales/contracts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contracts</a></li>
@@ -244,6 +245,11 @@
             </a>
           </li>
 
+          <li>
+            <a href="{{ url('/production/live-orders') }}" class="{{ Request::is('production/live-orders') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Live Orders
+            </a>
+          </li>
           
           <li>
             <a href="{{ url('/production/downtime') }}" class="{{ Request::is('production/downtime') ? 'active' : '' }}">

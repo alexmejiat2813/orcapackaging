@@ -126,7 +126,7 @@ class OrdersModule {
 
             columns: [
                 //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
-                //{ text: 'ID', datafield: 'Commande_Id', align: 'center', cellsalign: 'center', width: 60 },
+                { text: 'ID', datafield: 'Commande_Id', align: 'center', cellsalign: 'center', width: 60 },
                 { text: '# Customer', datafield: 'Customer_Code', width: 95, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Customer', datafield: 'Customer_Name', width: 255, align: 'center', editable: false },
                 { text: '# Order', datafield: 'InInvoiceNumber', width: 75, align: 'center', cellsalign: 'center', editable: false },
@@ -186,6 +186,10 @@ class OrdersModule {
             $("#commandesGrid").jqxGrid('addfilter', field, filterGroup);
 
             $("#commandesGrid").jqxGrid('applyfilters');
+        });
+
+        $("#btnRefresh").on("click", function () {
+            alert("Refreshing data...");
         });
 
     }
