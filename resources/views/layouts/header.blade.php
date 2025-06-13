@@ -157,7 +157,7 @@
     </li>
 
        <!-- PRODUCTION -->
-    <x-permission-users :allowed-roles="['Thomas Admin']">
+    <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
       <li class="nav-item">
         <a class="nav-link {{ Request::is('production/*') ? '' : 'collapsed' }}" data-bs-target="#production-menu" data-bs-toggle="collapse" href="#">
           <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -249,7 +249,7 @@
     
 
     <!-- INVENTORY -->
-   <x-permission-users :allowed-roles="['Thomas Admin']">
+   <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
     <li class="nav-item">
       <a class="nav-link {{ Request::is('inventory/*') ? '' : 'collapsed' }}" data-bs-target="#inventory-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-boxes"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
