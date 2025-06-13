@@ -18,13 +18,38 @@ class DashboardController extends Controller
     {
          // Optional: redirect based on role (stored in session or via Auth)
         $fonctionId = Auth::user()?->Fonction_ID;
+        $activeOrders = DB::table('Commande')
+    ->where('Complet', 0)
+    ->where('Cancel', 0)
+    ->where('isReady_Production', 1)
+    ->count();
+
+$lowStock = DB::table('Product')
+    ->leftJoin('Stock', 'Product.product_id', '=', 'Stock.product_id')
+    ->whereRaw('(Stock.Stock_Initial_Qty - Stock.Stock_Qty_Used) < Product.PrMinQty')
+    ->where('Product.PrActif', 1)
+    ->count();
+
+$formules = DB::table('ink_formules')->count();
+
+$completedToday = DB::table('Commande')
+    ->leftJoin('Shipping', 'Commande.InInvoiceNumber', '=', 'Shipping.InInvoiceNumber')
+    ->where('Commande.Complet', 1)
+    ->whereDate(DB::raw('CAST(Shipping.Shipping_Date AS DATE)'), '=', now()->toDateString())
+    ->count();
+
+$view = view('dashboard.admin', [
+    'activeOrders' => $activeOrders,
+    'lowStock' => $lowStock,
+    'formules' => $formules,
+    'completedToday' => $completedToday,
+]);
+
 
         switch ($fonctionId) {
             case 1: // Administrative Assistant
-        $view = view('dashboard.admin');
         return Response::noCache(response($view));
          case 14: // Administrative Assistant
-         $view = view('dashboard.admin');
         return Response::noCache(response($view));
          default:
                 return view('home');
