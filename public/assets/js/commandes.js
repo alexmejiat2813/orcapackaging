@@ -60,7 +60,8 @@ class OrdersModule {
             sortable: true,
             filterable: true,
             columnsresize: true,
-            showfilterrow: true,
+            showfilterrow: true, selectionmode: 'singlecell', enablebrowserselection: true,
+
             //pageSize: 15,
             editable: true, 
             showtoolbar: false, groupable: true, showgroupsheader: true,

@@ -24,9 +24,9 @@
                 <h4 class="mb-0 ms-3">List of orders</h4>
                 <!-- Filtros -->
                 <div class="d-flex flex-wrap gap-3 align-items-center">
-                    <!--div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_transmitted" id="is_transmitted" data-field="Commande_Transmit_First" value="transmitted">
-                        <label class="form-check-label" for="is_transmitted">Transmit</label>
+                    <div class="form-check">
+                        <input class="form-check-input status-filter" type="checkbox" name="is_transmittedFirst" id="is_transmittedFirst" data-field="Commande_Transmit_First" value="transmittedFirst" checked>
+                        <label class="form-check-label" for="is_transmittedFirst">Commande Transmit First</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_transmitted" id="is_transmitted" data-field="Transmit" value="transmitted" checked>
@@ -39,7 +39,7 @@
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_canceled" id="is_canceled" data-field="isReady_Production" value="cancelled" checked>
                         <label class="form-check-label" for="is_canceled">Ready to produce</label>
-                    </div-->
+                    </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_blocked" id="is_blocked" data-field="IsCompletedLogic" value="barred">
                         <label class="form-check-label" for="is_blocked">Complet</label>
