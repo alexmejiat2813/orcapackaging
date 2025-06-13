@@ -16,16 +16,26 @@ use App\Http\Controllers\Purchasing\FollowUp\PurchaseOrderFollowUpController;
 
 
 use App\Http\Controllers\Sales\SalesOrderController;
+use App\Http\Controllers\Sales\SalesValidationOrderController;
+
 use App\Http\Controllers\Production\CommandesController;
 use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
+use App\Http\Controllers\Production\LiveOrdersController;
 use App\Http\Controllers\Production\TrackingController;
+
+
 use App\Http\Controllers\Sales\EstimateController;
 use App\Http\Controllers\Sales\EstimateItemController;
 use App\Http\Controllers\Settings\SettingsController;
 use App\Http\Controllers\Settings\Modules\General\DepartmentController;
 use App\Http\Controllers\Settings\Modules\General\EquipmentController;
 use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
+
+    use App\Http\Controllers\Inventory\InkFormuleController;
+    use App\Http\Controllers\Inventory\InkFormuleComponentController;
+
+     use App\Http\Controllers\Product\ProductController;
 
 use App\Http\Middleware\CheckSoumissionID;
 
@@ -93,13 +103,19 @@ Route::middleware(['auth'])->group(function () {
         
     });
 
+   
+
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
     /*
     |--------------------------------------------------------------------------
     | Sales Module Routes
     |--------------------------------------------------------------------------
     */
     Route::prefix('sales')->group(function () {
-        Route::get('/orders', [SalesOrderController::class, 'index'])->name('sales.orders');
+        Route::get('/draft', [SalesOrderController::class, 'index'])->name('sales.draft');
+        Route::get('/validation', [SalesValidationOrderController::class, 'index'])->name('sales.validation');
         // Route::get('/quotations', [QuotationController::class, 'index']);
         // Route::get('/invoices', [InvoiceController::class, 'index']);
         // Route::get('/clients', [ClientController::class, 'index']);
@@ -181,6 +197,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/planning/save-appointment', [PlanningController::class, 'saveAppointment']);
         Route::post('/planning/delete-appointment', [PlanningController::class, 'deleteAppointment']);
 
+        Route::get('/live-orders', [LiveOrdersController::class, 'index']);
+        Route::get('/live-orders/data', [LiveOrdersController::class, 'getDataByDate']);
+
         Route::get('/tracking', [TrackingController::class, 'index']);
         Route::get('/tracking/get-commandes', [TrackingController::class, 'getCommandes']);
 
@@ -190,6 +209,35 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/reception', fn() => view('purchasing.reception'));
         // Route::get('/facture', fn() => view('purchasing.facture'));
     });
+
+    Route::prefix('inventory')->group(function () {
+        Route::get('/formule-inks', [InkFormuleController::class, 'create'])->name('create');
+        Route::post('/formule-inks/save', [InkFormuleController::class, 'store'])->name('store');
+        Route::get('/formule-inks/list', [InkFormuleController::class, 'list']);
+    });
+
+
+
+    Route::prefix('ink-formulas')->name('ink-formulas.')->group(function () {
+        Route::get('/', [InkFormuleController::class, 'index'])->name('index');
+        Route::get('/create', [InkFormuleController::class, 'create'])->name('create');
+        Route::post('/', [InkFormuleController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [InkFormuleController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [InkFormuleController::class, 'update'])->name('update');
+        Route::delete('/{id}', [InkFormuleController::class, 'destroy'])->name('destroy');
+    });
+
+
+    
+    Route::prefix('ink-formulas/{formulaId}/components')->name('ink-components.')->group(function () {
+        Route::get('/', [InkFormuleComponentController::class, 'index'])->name('index');
+        Route::get('/create', [InkFormuleComponentController::class, 'create'])->name('create');
+        Route::post('/', [InkFormuleComponentController::class, 'store'])->name('store');
+        Route::get('/{componentId}/edit', [InkFormuleComponentController::class, 'edit'])->name('edit');
+        Route::put('/{componentId}', [InkFormuleComponentController::class, 'update'])->name('update');
+        Route::delete('/{componentId}', [InkFormuleComponentController::class, 'destroy'])->name('destroy');
+    });
+
 
     Route::prefix('settings')->group(function () {
 

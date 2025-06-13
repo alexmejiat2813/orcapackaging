@@ -92,7 +92,8 @@
           <ul id="sales-menu" class="nav-content collapse {{ Request::is('sales/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
             <li><a href="{{ url('/sales/estimates') }}" class="{{ Request::is('sales/estimates') ? 'active' : '' }}"><i class="bi bi-circle"></i>Estimates</a></li>
             <li><a href="{{ url('/sales/quotations') }}" class="{{ Request::is('sales/quotations') ? 'active' : '' }}"><i class="bi bi-circle"></i>Quotations</a></li>
-            <li><a href="{{ url('/sales/orders') }}" class="{{ Request::is('sales/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Sales Orders</a></li>
+            <li><a href="{{ url('/sales/draft') }}" class="{{ Request::is('sales/draft') ? 'active' : '' }}"><i class="bi bi-circle"></i>Draft Orders</a></li>
+            <li><a href="{{ url('/sales/validation') }}" class="{{ Request::is('sales/validation') ? 'active' : '' }}"><i class="bi bi-circle"></i>Order Validation</a></li>
             <li><a href="{{ url('/sales/invoices') }}" class="{{ Request::is('sales/invoices') ? 'active' : '' }}"><i class="bi bi-circle"></i>Invoices</a></li>
             <li><a href="{{ url('/sales/returns') }}" class="{{ Request::is('sales/returns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Returns</a></li>
             <li><a href="{{ url('/sales/contracts') }}" class="{{ Request::is('sales/contracts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contracts</a></li>
@@ -156,55 +157,32 @@
     </li>
 
        <!-- PRODUCTION -->
-    <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
+    
       <li class="nav-item">
         <a class="nav-link {{ Request::is('production/*') ? '' : 'collapsed' }}" data-bs-target="#production-menu" data-bs-toggle="collapse" href="#">
           <i class="bi bi-gear-wide-connected"></i><span>Production</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="production-menu" class="nav-content collapse {{ Request::is('production/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
 
-            <li>
-                <a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}">
-                    <i class="bi bi-circle"></i>BOM (Bill of Materials)
-                </a>
-             </li>
-
-             <li>
-                <a href="{{ url('/production/material-readiness') }}" class="{{ Request::is('production/material-readiness') ? 'active' : '' }}">
-                    <i class="bi bi-circle"></i>Material Readiness
-                </a>
-             </li>
-
-            
-          <li>
-            <a href="{{ url('/production/orders') }}" class="{{ Request::is('production/orders') ? 'active' : '' }}">
-              <i class="bi bi-circle"></i>Production Jobs
-            </a>
-          </li>
+            <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
+            <li><a href="{{ url('/production/bom') }}" class="{{ Request::is('production/bom') ? 'active' : '' }}"> <i class="bi bi-circle"></i>BOM (Bill of Materials)</a></li>
+            </x-permission-users>
+             <x-permission-users :allowed-roles="['Thomas Admin']">
+            <li> <a href="{{ url('/production/material-readiness') }}" class="{{ Request::is('production/material-readiness') ? 'active' : '' }}"><i class="bi bi-circle"></i>Material Readiness</a></li>
+            </x-permission-users>
+            <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
+          <li><a href="{{ url('/production/orders') }}" class="{{ Request::is('production/orders') ? 'active' : '' }}"><i class="bi bi-circle"></i>Production Jobs</a></li>
+          </x-permission-users>
           <x-permission-users :allowed-roles="['Thomas Admin']">
-          
-
-          <li>
-            <a href="{{ url('/production/planning') }}" class="{{ Request::is('production/planning') ? 'active' : '' }}">
-              <i class="bi bi-circle"></i>Planning
-            </a>
-          </li>
-
-          <li>
-            <a class="{{ Request::is('production/workorders*') ? '' : 'collapsed' }}"
-               data-bs-target="#workorders-menu" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-circle"></i><span>Work Orders</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
+          <li> <a href="{{ url('/production/planning') }}" class="{{ Request::is('production/planning') ? 'active' : '' }}"><i class="bi bi-circle"></i>Planning</a></li>
+          </x-permission-users>
+          <x-permission-users :allowed-roles="['Thomas Admin']">
+          <li><a class="{{ Request::is('production/workorders*') ? '' : 'collapsed' }}"data-bs-target="#workorders-menu" data-bs-toggle="collapse" href="#"><i class="bi bi-circle"></i><span>Work Orders</span><i class="bi bi-chevron-down ms-auto"></i></a>
             <ul id="workorders-menu"
                 class="nav-content collapse {{ Request::is('production/workorders*') ? 'show' : '' }}"
                 data-bs-parent="#production-menu">
 
-              <li>
-                <a href="{{ url('/production/workorders') }}"
-                   class="{{ Request::is('production/workorders') ? 'active' : '' }}">
-                  <i class="bi bi-circle"></i>All Orders
-                </a>
-              </li>
+              <li> <a href="{{ url('/production/workorders') }}"class="{{ Request::is('production/workorders') ? 'active' : '' }}"><i class="bi bi-circle"></i>All Orders</a></li>
               <li>
                 <a href="{{ url('/production/workorders/uteco') }}"
                    class="{{ Request::is('production/workorders/uteco') ? 'active' : '' }}">
@@ -237,14 +215,21 @@
               </li>
             </ul>
           </li>
-
+          </x-permission-users>
+          <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
           <li>
             <a href="{{ url('/production/tracking') }}" class="{{ Request::is('production/tracking') ? 'active' : '' }}">
               <i class="bi bi-circle"></i>Order Tracking
             </a>
           </li>
 
-          
+          <li>
+            <a href="{{ url('/production/live-orders') }}" class="{{ Request::is('production/live-orders') ? 'active' : '' }}">
+              <i class="bi bi-circle"></i>Live Orders
+            </a>
+          </li>
+          </x-permission-users>
+          <x-permission-users :allowed-roles="['Thomas Admin']">
           <li>
             <a href="{{ url('/production/downtime') }}" class="{{ Request::is('production/downtime') ? 'active' : '' }}">
               <i class="bi bi-circle"></i>Machine Downtime
@@ -255,30 +240,35 @@
               <i class="bi bi-circle"></i>Efficiency
             </a>
           </li>
-          </x-permission-users>
+           </x-permission-users>
         </ul>
       </li>
-    </x-permission-users>
+
 
 
     
 
     <!-- INVENTORY -->
-   <x-permission-users :allowed-roles="['Thomas Admin']">
+   
     <li class="nav-item">
       <a class="nav-link {{ Request::is('inventory/*') ? '' : 'collapsed' }}" data-bs-target="#inventory-menu" data-bs-toggle="collapse" href="#">
         <i class="bi bi-boxes"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="inventory-menu" class="nav-content collapse {{ Request::is('inventory/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+      <x-permission-users :allowed-roles="['Thomas Admin', 'Adjoin administratif']">
+      <li><a href="{{ url('/inventory/formule-inks') }}" class="{{ Request::is('inventory/formule-inks') ? 'active' : '' }}"><i class="bi bi-circle"></i>Formule Inks</a></li>
+      </x-permission-users>
+      <x-permission-users :allowed-roles="['Thomas Admin']">
         <li><a href="{{ url('/inventory/items') }}" class="{{ Request::is('inventory/items') ? 'active' : '' }}"><i class="bi bi-circle"></i>Items</a></li>
         <li><a href="{{ url('/inventory/movements') }}" class="{{ Request::is('inventory/movements') ? 'active' : '' }}"><i class="bi bi-circle"></i>Movements</a></li>
         <li><a href="{{ url('/inventory/warehouses') }}" class="{{ Request::is('inventory/warehouses') ? 'active' : '' }}"><i class="bi bi-circle"></i>Warehouses</a></li>
         <li><a href="{{ url('/inventory/barcodes') }}" class="{{ Request::is('inventory/barcodes') ? 'active' : '' }}"><i class="bi bi-circle"></i>Barcodes</a></li>
         <li><a href="{{ url('/inventory/lots') }}" class="{{ Request::is('inventory/lots') ? 'active' : '' }}"><i class="bi bi-circle"></i>Lots</a></li>
         <li><a href="{{ url('/inventory/alerts') }}" class="{{ Request::is('inventory/alerts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Alerts</a></li>
+         </x-permission-users>
       </ul>
     </li>
-   </x-permission-users>
+   
 
     <!-- HR -->
     <!-- HR MODULE -->
