@@ -104,45 +104,41 @@
             const backButton = $('#backButton');
 
             const ordersData = new $.jqx.dataAdapter({
-                dataType: 'array',
+                dataType: 'json',
                 dataFields: [
-                    { name: 'orderCode', type: 'number' },
-                    { name: 'customerCode', type: 'number' },
-                    { name: 'customerName', type: 'string' },
-                    { name: 'orderDate', type: 'date' },
-                    { name: 'requestedDate', type: 'date' },
-                    { name: 'clientPO', type: 'string' },
-                    { name: 'lotId', type: 'number' },
-                    { name: 'productNumber', type: 'string' },
-                    { name: 'description', type: 'string' },
-                    { name: 'quantity', type: 'number' }
-                ],
-                localData: [
-                    {
-                        orderCode: 3285,
-                        customerCode: 5017,
-                        customerName: 'Vibac Canada Inc',
-                        orderDate: '2025-03-11',
-                        requestedDate: '2025-04-07',
-                        clientPO: '126568/i16/40x4',
-                        lotId: 23156,
-                        productNumber: 'PF5017RPi16',
-                        description: 'Reverse Print - Bleu Reflex',
-                        quantity: 34844
-                    },
-                    {
-                        orderCode: 3279,
-                        customerCode: 5818,
-                        customerName: 'Dominion & Grimm',
-                        orderDate: '2025-03-12',
-                        requestedDate: '2025-04-08',
-                        clientPO: 'OC Tzinia #10',
-                        lotId: 23165,
-                        productNumber: 'PF5818SPK7413',
-                        description: 'Sac en papier kraft 7x4x13"',
-                        quantity: 12000
-                    }
-                ]
+                    { name: 'Scheduled_Date', type: 'date' },
+                { name: 'Commande_Id', type: 'int' },
+                { name: 'Customer_Code', type: 'string' },
+                { name: 'Customer_Name', type: 'string' },
+                { name: 'InInvoiceNumber', type: 'string' },
+                { name: 'Date_Commande', type: 'date' },
+                { name: 'Date_Demander', type: 'date' },
+                { name: 'Date_Expedition', type: 'date' },
+                { name: 'Po_Client', type: 'string' },
+                { name: 'Acheteur', type: 'string' },
+                { name: 'Lot_Id', type: 'int' },
+                { name: 'Product_Id', type: 'int' },
+                { name: 'PrNumber', type: 'string' },
+                { name: 'PrDescription1', type: 'string' },
+                { name: 'Lots_Qty', type: 'float' },
+                { name: 'Qty_InStock', type: 'float' },
+                { name: 'Lots_Price', type: 'float' },
+                { name: 'Shipping_Qty', type: 'float' },
+                { name: 'Commentaire', type: 'string' },
+                { name: 'Unit_Qty', type: 'string' },
+                { name: 'Unit_Price', type: 'string' },
+                { name: 'SubTotal', type: 'float' },
+                { name: 'Total', type: 'float' },
+                { name: 'Qty_Finish', type: 'float' },
+                { name: 'Transmit', type: 'boolean' },
+                { name: 'Credit_Autorise', type: 'boolean' },
+                { name: 'isReady_Production', type: 'boolean' },
+                { name: 'IsCompletedLogic', type: 'boolean' },
+                { name: 'IsCanceledLogic', type: 'boolean' },
+                { name: 'Commande_Transmit_First', type: 'boolean' },
+                ], id: 'Commande_Id',
+                url: '/production/production/get-commandes'
+                
             });
 
             $('#ordersGrid').jqxGrid({
@@ -153,17 +149,18 @@
                 autoheight: true,
                 sortable: true,
                 columns: [
-                    { text: 'Order Code', datafield: 'orderCode', width: 90 },
-                    { text: 'Customer Code', datafield: 'customerCode', width: 100 },
-                    { text: 'Customer Name', datafield: 'customerName', width: 200 },
-                    { text: 'Order Date', datafield: 'orderDate', width: 100, cellsformat: 'yyyy-MM-dd' },
-                    { text: 'Requested Date', datafield: 'requestedDate', width: 100, cellsformat: 'yyyy-MM-dd' },
+                    { text: 'Order Code', datafield: 'InInvoiceNumber', width: 90 },
+                    { text: 'Customer Code', datafield: 'Customer_Code', width: 100 },
+                    { text: 'Customer Name', datafield: 'Customer_Name', width: 200 },
+                    { text: 'Order Date', datafield: 'Date_Commande', width: 100, cellsformat: 'yyyy-MM-dd' },
+                    { text: 'Requested Date', datafield: 'Date_Demander', width: 100, cellsformat: 'yyyy-MM-dd' },
                     { text: 'Client PO', datafield: 'clientPO', width: 120 },
-                    { text: 'Lot ID', datafield: 'lotId', width: 80 },
-                    { text: 'Product Number', datafield: 'productNumber', width: 120 },
-                    { text: 'Product Description', datafield: 'description', width: 250 },
-                    { text: 'Quantity', datafield: 'quantity', width: 80 }
-                ]
+                    { text: 'Lot ID', datafield: 'Lot_Id', width: 80 },
+                    { text: 'Product Number', datafield: 'PrNumber', width: 120 },
+                    { text: 'Product Description', datafield: 'PrDescription1', width: 250 },
+                    { text: 'Quantity', datafield: 'Lots_Qty', width: 80 }
+                ],
+                
             });
 
             $('#ordersGrid').on('rowdoubleclick', function () {

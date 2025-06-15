@@ -35,11 +35,11 @@
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_complete" id="is_complete" data-field="Credit_Autorise" value="completed" checked>
                         <label class="form-check-label" for="is_complete">Credit Autorise</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_canceled" id="is_canceled" data-field="isReady_Production" value="cancelled" checked>
-                        <label class="form-check-label" for="is_canceled">Ready to produce</label>
                     </div-->
+                    <div class="form-check">
+                        <input class="form-check-input status-filter" type="checkbox" name="is_canceled" id="is_canceled" data-field="isReady_Production" value="cancelled" >
+                        <label class="form-check-label" for="is_canceled">Ready to produce</label>
+                    </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_blocked" id="is_blocked" data-field="IsCompletedLogic" value="barred">
                         <label class="form-check-label" for="is_blocked">Complet</label>

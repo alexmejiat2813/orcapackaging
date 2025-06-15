@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\Production\Commande;
+use App\Models\Production\CommandeSchedule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,43 @@ public function index()
         $requests = Commande::all(); // Retrieve all supply requests
         return view('production.orders', compact('requests'));
     }
+
+    public static function getCommandesWithSchedule()
+{
+    return DB::table('ThomasOrca.dbo.Commande')
+        ->leftJoin('ThomasOrca.dbo.Customer', 'Customer.Customer_ID', '=', 'Commande.Customer_Id')
+        ->leftJoin('ThomasOrca.dbo.Commande_Receipe', 'Commande.Commande_Id', '=', 'Commande_Receipe.Commande_Id')
+        ->leftJoin('ThomasOrca.dbo.Lots', 'Commande.Commande_Id', '=', 'Lots.Commande_Id')
+        ->leftJoin('ThomasOrca.dbo.Product', 'Product.Product_ID', '=', 'Lots.Product_Id')
+        ->leftJoin('ThomasOrca.dbo.Equipment', 'Equipment.Equipment_ID', '=', 'Commande_Receipe.Equipment_Id')
+        ->leftJoin('ThomasOrca.dbo.CommandeSchedule', function ($join) {
+            $join->on('Commande_Receipe.Equipment_Id', '=', 'CommandeSchedule.Equipment_ID')
+                 ->on('Lots.Lot_Id', '=', 'CommandeSchedule.Lot_ID');
+        })
+        ->select(
+            'Commande.Commande_Id',
+            'Commande.InInvoiceNumber',
+            'Customer.Customer_No',
+            'Customer.Customer_Name',
+            'Lots.Lot_Id',
+            'Product.PrNumber',
+            'Product.PrDescription1',
+            'Commande_Receipe.Equipment_Id',
+            'Equipment.Equipment_Description',
+            'Commande_Receipe.Value as qtyHeures',
+            'CommandeSchedule.Scheduled_Date'
+        )
+        ->where('Commande.Complet', 0)
+        ->where('Commande.Cancel', 0)
+        ->where('Commande.isReady_Production', 1)
+        ->where('Lots.Lots_Complet', 0)
+        ->where('Lots.Lots_Cancel', 0)
+        ->where('Product.ProductType_ID', 1)
+        ->whereNotNull('Commande_Receipe.Equipment_Id')
+        ->orderBy('Lots.Lot_Id')
+        ->orderBy('Commande_Receipe.Equipment_Id')
+        ->get();
+}
 
 
     public function getCommandes()
@@ -116,6 +154,14 @@ public function index()
 
     return response()->json(['success' => true, 'updated' => $updates]);
 }
+
+public function getSchedulesWithEquipment()
+{
+    $data = CommandeSchedule::getScheduleWithReceipe();
+
+    return response()->json($data);
+}
+
 }
 
 ?>
