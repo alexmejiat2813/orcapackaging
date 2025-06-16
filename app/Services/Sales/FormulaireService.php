@@ -69,7 +69,8 @@ class FormulaireService
             DB::table($this->table)->where('ID', $idItem)->update($data);
             return [
                 'success' => true,
-                'message' => 'Les données ont été modifiées avec succès !'
+                'message' => 'Les données ont été modifiées avec succès !',
+                'item_id' => session('ID_Item') 
             ];
         } catch (\Throwable $e) {
             Log::error("Erreur de modification: " . $e->getMessage());
