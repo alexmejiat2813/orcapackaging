@@ -67,7 +67,7 @@ public function index()
         return response()->json($commandes);
     }
 
-    public function syncSchedule(Request $request)
+    public function syncSchedule_old(Request $request)
 {
     $lots = $request->input('lots');
     $updates = 0;
@@ -154,6 +154,104 @@ public function index()
 
     return response()->json(['success' => true, 'updated' => $updates]);
 }
+
+public function syncSchedule(Request $request)
+{
+    $updates = 0;
+    $userId = Auth::id();
+
+    // Extraer todos los datos del request JSON
+    $payload = $request->json()->all();
+
+    // Caso A: viene como array de lots
+    if (isset($payload['lots']) && is_array($payload['lots'])) {
+        $lots = $payload['lots'];
+    }
+    // Caso B: viene un solo objeto plano con los campos necesarios
+    elseif (isset($payload['lot_id'], $payload['commande_id'], $payload['Scheduled_Date'])) {
+        $lots = [$payload];
+    }
+    // Caso inválido
+    else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid payload received.',
+            'payload_received' => $payload
+        ], 400);
+    }
+
+    foreach ($lots as $lot) {
+        try {
+            Log::info('lot_id = ' . $lot['lot_id'] . ' commande_id = ' . $lot['commande_id']  . ' Scheduled_Date = ' . $lot['Scheduled_Date']);
+            if (!isset($lot['lot_id']) || !isset($lot['commande_id']) || !isset($lot['Scheduled_Date'])) {
+                continue; // skip invalid rows
+            }
+
+            Log::info('lot_id = ' . $lot['lot_id'] . ' commande_id = ' . $lot['commande_id']  . ' Scheduled_Date = ' . $lot['Scheduled_Date']);
+
+            $commandeId = $lot['commande_id'];
+            $date = Carbon::parse($lot['Scheduled_Date'])
+                ->setTimezone('America/Toronto')
+                ->format('Y-m-d H:i:s');
+
+            if (!is_numeric($commandeId)) continue;
+
+            // Get all lots for the given Commande_Id
+            $lotIds = DB::table('Lots')
+                ->where('Commande_Id', $commandeId)
+                ->where('Lots_Cancel', 0)
+                ->where('Lots_Complet', 0)
+                ->pluck('Lot_Id');
+
+            // Get active Equipment_IDs associated with the Commande
+            $equipmentIds = DB::table('Commande_Receipe')
+                ->where('Commande_Id', $commandeId)
+                ->where('Actif', 1)
+                ->whereNotNull('Equipment_Id')
+                ->pluck('Equipment_Id')
+                ->unique();
+
+            foreach ($lotIds as $lotId) {
+                foreach ($equipmentIds as $equipmentId) {
+                    $exists = DB::table('CommandeSchedule')
+                        ->where('Lot_ID', $lotId)
+                        ->where('Equipment_ID', $equipmentId)
+                        ->exists();
+
+                    if (!$exists) {
+                        DB::table('CommandeSchedule')->insert([
+                            'Lot_ID' => $lotId,
+                            'Equipment_ID' => $equipmentId,
+                            'Scheduled_Date' => $date,
+                            'Checked' => 1,
+                            'Created_At' => now(),
+                            'Users_ID' => $userId
+                        ]);
+                        $updates++;
+                    } else {
+                        DB::table('CommandeSchedule')
+                            ->where('Lot_ID', $lotId)
+                            ->where('Equipment_ID', $equipmentId)
+                            ->update([
+                                'Scheduled_Date' => $date,
+                                'Checked' => 1,
+                                'Updated_At' => now(),
+                                'Users_ID' => $userId
+                            ]);
+                        $updates++;
+                    }
+                }
+            }
+
+        } catch (\Throwable $e) {
+            Log::error("Error syncing schedule: " . $e->getMessage());
+            continue;
+        }
+    }
+
+    return response()->json(['success' => true, 'updated' => $updates]);
+}
+
 
 public function getSchedulesWithEquipment()
 {

@@ -24,6 +24,17 @@
             <h1 class="h1-main" id="titre-item">Nouvel Item</h1>
         
             @include('sales.indexParts.paramsBaseItem')
+
+            <div id="formulaireModificationSection" class="mt-4 d-none">
+                <h1> Commentaire de modification</h1>
+
+                <div id="modificationGrid" style="height: 300px;"></div>
+
+                <div class="mt-3">
+                    <label for="modificationCommentaire" class="form-label">Commentaire</label>
+                    <textarea id="modificationCommentaire" name="modificationCommentaire" rows="4" class="form-control" placeholder="Ajoutez un commentaire sur cette modification..."></textarea>
+                </div>
+            </div>
         
             <div class="divVerticale mt-4">
                 <button type="submit" name="soumettreItem" id="soumettreItem" class="btn btn-primary bouton-formulaire">

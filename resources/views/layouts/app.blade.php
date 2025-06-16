@@ -65,6 +65,18 @@
 
     <script src="/assets/jqwidgets/jqxsplitter.js"></script>
     <script src="/assets/jqwidgets/jqxgrid.grouping.js"></script>
+
+    <script src="/assets/jqwidgets/jqxdate.js"></script>
+    <script src="/assets/jqwidgets/jqxscheduler.js"></script>
+    <script src="/assets/jqwidgets/jqxscheduler.api.js"></script>
+    <script src="/assets/jqwidgets/jqxtooltip.js"></script>
+    <script src="/assets/jqwidgets/jqxnumberinput.js"></script>
+    <script src="/assets/jqwidgets/jqxradiobutton.js"></script>
+    <script src="/assets/jqwidgets/jqxdatatable.js"></script>
+
+    <!-- SweetAlert for alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
