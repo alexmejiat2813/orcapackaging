@@ -117,6 +117,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/copier', [EstimateItemController::class, 'copier']);
             Route::post('/itemReady', [EstimateItemController::class, 'itemReady']);
             Route::get('/getSession', [EstimateItemController::class, 'getSession']);
+            Route::get('/modification', [EstimateItemController::class, 'modification']);
+            Route::post('/ajouterCommentaire', [EstimateItemController::class, 'ajouterCommentaire']);
         });
         
         ///////////////////////////////////////////////////////////////////

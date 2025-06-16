@@ -51,6 +51,59 @@ $(document).ready(function () {
         });
     }
 
+    // Fonction permettant de recuperer les donnees des ItemsSynologyodificationLog
+    function afficherHistoriqueModifications(itemId) {
+        const sectionModif = document.getElementById("formulaireModificationSection");
+        sectionModif.classList.remove("d-none")
+        // Appel au contrôleur Laravel avec fetch()
+        fetch(`/sales/estimates_item/modification?item_id=${itemId}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Erreur de récupération des modifications');
+            return response.json();
+        })
+        .then(response => {
+            if (!response.success) throw new Error('Réponse serveur invalide');
+        
+            const source = {
+                datatype: "json",
+                localdata: response.data,
+                datafields: [
+                    { name: 'utilisateur', type: 'string' },
+                    { name: 'date', type: 'date' },
+                    { name: 'commentaire', type: 'string' }
+                ]
+            };
+        
+            const dataAdapter = new $.jqx.dataAdapter(source);
+        
+            if (!$("#modificationGrid").hasClass("jqx-widget")) {
+                $("#modificationGrid").jqxGrid({
+                    width: '100%',
+                    height: 300,
+                    source: dataAdapter,
+                    pageable: true,
+                    columnsresize: true,
+                    columns: [
+                        { text: 'Utilisateur', datafield: 'utilisateur', width: 150 },
+                        { text: 'Date', datafield: 'date', cellsformat: 'yyyy-MM-dd HH:mm' },
+                        { text: 'Commentaire', datafield: 'commentaire' }
+                    ]
+                });
+            } else {
+                $("#modificationGrid").jqxGrid('source', dataAdapter);
+            }
+        })
+        .catch(error => {
+            console.error("Erreur lors du chargement des modifications :", error);
+            alert("Impossible de charger l'historique des modifications.");
+        });
+    }
+
     // ⚙️ Bouton "Gérer"
     $modifier.on("click", function () {
         if (confirm("Vous perdrez la completion de l'item actuel. Etes-vous sur de vouloir modifier cet item ?")) {
@@ -71,6 +124,8 @@ $(document).ready(function () {
             .then(data => {
                 if (data.success) {
                     const item = data.data;
+
+                    afficherHistoriqueModifications(item.ID);
 
                     // 1️⃣ Appliquer d'abord la valeur du SELECT "commande"
                     if ('commande' in item) {
