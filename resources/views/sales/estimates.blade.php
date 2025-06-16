@@ -8,33 +8,35 @@
 @endpush
 
 @section('content')
-    <div id="soumission">
-        <h1 id="titre-soumission"> Nouvelle Soumission </h1>
-
-        @include('sales.indexParts.paramsBaseCommande')
-
-        <div class="divVerticale" style="margin-top: 40px;">
-            <button type="submit" name="soumettreSoumission" id="soumettreSoumission" class="bouton-formulaire" style="display: flex;flex-direction: column;">
-                <div class="divVerticale">
-                    <p class="btn-text">Soumettre l'objet</p>
-                    <svg class="spinner d-none" width="20" height="20" viewBox="0 0 50 50">
-                      <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                    </svg>
-                </div>
-            </button>
+    <div class="page-estimate-create container-fluid py-4">
+        <div id="soumission">
+            <h1 class="h1-main" id="titre-soumission"> Nouvelle Soumission </h1>
+    
+            @include('sales.indexParts.paramsBaseCommande')
+    
+            <div class="divVerticale" style="margin-top: 40px;">
+                <button type="submit" name="soumettreSoumission" id="soumettreSoumission" class="bouton-formulaire" style="display: flex;flex-direction: column;">
+                    <div class="divVerticale">
+                        <p class="btn-text">Soumettre l'objet</p>
+                        <svg class="spinner d-none" width="20" height="20" viewBox="0 0 50 50">
+                          <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                        </svg>
+                    </div>
+                </button>
+            </div>
         </div>
-    </div>
-
-    <div id="centergrid">
-        <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left; width: 80%;">
-            <div id="jqxgrid"></div>
-        </div>
-
-        <div class="align-content">
-            <input type="button" id="gererBouton" value="Ajouter des objets">
-            <input type="button" id="supprimerBouton" value="Supprimer">
-            <input type="button" id="copierBouton" value="Dupliquer">
-            <input type="button" id="modifierBouton" value="Modifier">
+    
+        <div class="divVerticale jqxDiv">
+            <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left; width: 80%;">
+                <div id="jqxgrid"></div>
+            </div>
+    
+            <div class="action-buttons">
+                <input type="button" id="gererBouton" value="Ajouter des objets" class="btn btn-outline-primary">
+                <input type="button" id="supprimerBouton" value="Supprimer" class="btn btn-outline-danger">
+                <input type="button" id="copierBouton" value="Dupliquer" class="btn btn-outline-secondary">
+                <input type="button" id="modifierBouton" value="Modifier" class="btn btn-outline-secondary">
+            </div>
         </div>
     </div>
 @endsection
@@ -50,6 +52,16 @@
             $('#clients').select2({
                 placeholder: "Tape pour chercher...",
                 allowClear: true
+            });
+
+            $('#clients').on('change', function () {
+                const value = parseFloat($(this).val());
+
+                if (value === -1) {
+                    $('#client-inconnu').show();
+                } else {
+                    $('#client-inconnu').hide();
+                }
             });
         });
         $(document).ready(function () {

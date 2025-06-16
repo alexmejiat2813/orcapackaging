@@ -560,7 +560,7 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
 });
 
 // (coutTotauxProductionPlaques + coutTotauxProductionPellicule + coutTotauxProductionEncre + coutTotauxProductionSolvant + coutTotauxProductionImpression +
-// coutTotauxProductionConversion + coutTotauxProductionEmballage + coutTotauxProductionLivraison + coutTotauxProductionEntrepot) * (1 + (frais_admin / 100)) = coutsFinaux  36
+// coutTotauxProductionConversion + coutTotauxProductionEmballage + coutTotauxProductionLivraison + coutTotauxProductionEntrepot) + frais_admin = coutsFinaux  36
 document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputCoutsFinaux = form.querySelector('[name="coutsFinaux"]');
   const inputFraisAdmin = document.getElementById("form-inputsCommunItem").querySelector('[name="frais_admin"]');
@@ -585,9 +585,9 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
       const input = form.querySelector(`[name="${nom}"]`);
       return somme + (input ? parseFloat(input.value) || 0 : 0);
     }, 0);
-    const frais_admin = (100 + parseFloat(inputFraisAdmin.value)) / 100;
+    const frais_admin = parseFloat(inputFraisAdmin.value);
 
-    inputCoutsFinaux.value = (total * frais_admin).toFixed(2);
+    inputCoutsFinaux.value = (total + frais_admin).toFixed(2);
     inputCoutsFinaux.dispatchEvent(new Event("input", { bubbles: true }));
   }
 

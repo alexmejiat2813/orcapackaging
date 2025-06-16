@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Sales\EstimateItemController;
 
 class EstimateController extends Controller
 {
@@ -55,8 +56,13 @@ class EstimateController extends Controller
         DB::table('SoumissionsSynology')
             ->where('ID', $id)
             ->delete();
+
+        // 4. Supprimer les items dans les request
+        foreach ($itemIds as $id) {
+            EstimateItemController::deleteRequest($id);
+        }    
         
-        // 4. Supprimer les items liés
+        // 5. Supprimer les items liés
         if (!empty($itemIds)) {
             DB::table('ItemsSynology')
                 ->whereIn('ID', $itemIds)
@@ -73,46 +79,65 @@ class EstimateController extends Controller
     public function copier(Request $request) {
         $idSoumission = $request->input('ID'); // ID de la soumission à dupliquer
 
-        // 1. Valider les nouvelles infos de la soumission dupliquée
-        $validated = $request->validate([
-            'Client' => 'required|string|max:255',
-            'Nom' => 'required|string|max:255',
-            'Prenom' => 'required|string|max:255',
-            'Email' => 'required|email',
-            'Telephone' => 'nullable|string|max:50',
-            'Nom_Travail' => 'nullable|string|max:255',
-            'Date_Livraison' => 'required|date',
-        ]);
-
         DB::beginTransaction();
 
         try {
-            // 2. Créer la nouvelle soumission
-            $idNouvelleSoumission = DB::table('SoumissionsSynology')->insertGetId($validated);
+            // 1. Récupérer les données de la soumission existante
+            $soumissionOriginale = DB::table('SoumissionsSynology')->where('ID', $idSoumission)->first();
 
-            // 3. Trouver tous les ItemID liés à l’ancienne soumission
+            if (!$soumissionOriginale) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Soumission introuvable avec l'ID $idSoumission"
+                ], 404);
+            }
+
+            // 2. Préparer les données à insérer
+            $dataToInsert = [
+                'Client' => $soumissionOriginale->Client,
+                'Asset_ID' => $soumissionOriginale->Asset_ID,
+                'Nom' => $soumissionOriginale->Nom,
+                'Prenom' => $soumissionOriginale->Prenom,
+                'Email' => $soumissionOriginale->Email,
+                'Telephone' => $soumissionOriginale->Telephone,
+                'Nom_Travail' => $soumissionOriginale->Nom_Travail,
+                'Date_Livraison' => $soumissionOriginale->Date_Livraison,
+            ];
+
+            // 3. Créer la nouvelle soumission
+            $idNouvelleSoumission = DB::table('SoumissionsSynology')->insertGetId($dataToInsert);
+
+            // 4. Trouver tous les ItemID liés à l’ancienne soumission
             $itemIdsOriginaux = DB::table('ItemsSoumissionsSynology')
                 ->where('SoumissionID', $idSoumission)
                 ->pluck('ItemID')
                 ->toArray();
 
-            // 4. Préparer la nouvelle liaison item <-> nouvelle soumission
+            // 5. Dupliquer les items et les relier à la nouvelle soumission
             foreach ($itemIdsOriginaux as $itemId) {
-                // 4.1 Récupérer les données originales
+                // 5.1 Récupérer les données originales
                 $itemData = DB::table('ItemsSynology')->where('ID', $itemId)->first();
 
-                // 4.2 Retirer l’ID pour l’insertion
+                if (!$itemData) {
+                    continue; // on skippe les items manquants
+                }
+
+                // 5.2 Retirer l’ID pour l’insertion
                 $itemArray = (array) $itemData;
                 unset($itemArray['ID']);
+                $itemArray['IsReady'] = 0; // forcé à non prêt
 
-                // 4.3 Insérer la copie
+                // 5.3 Insérer la copie
                 $newItemId = DB::table('ItemsSynology')->insertGetId($itemArray);
 
-                // 4.4 Insérer la relation
+                // 5.4 Insérer la relation
                 DB::table('ItemsSoumissionsSynology')->insert([
                     'SoumissionID' => $idNouvelleSoumission,
                     'ItemID' => $newItemId
                 ]);
+
+                // 5.5 Ajouter les nouveaux items dans les tables Request
+                EstimateItemController::addRequest($newItemId);
             }
 
             DB::commit();
