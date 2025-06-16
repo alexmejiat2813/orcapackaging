@@ -33,9 +33,22 @@ $(document).ready(function () {
             },
             body: JSON.stringify(data)
         })
-        .then(res => res.json())
-        .then(callback)
-        .catch(error => console.error('Erreur réseau :', error));
+        .then(async res => {
+            const json = await res.json();
+            
+            if (!res.ok || json.success === false) {
+                // Affiche une alerte avec le message d'erreur s'il est disponible
+                alert(json.message || 'Échec de la suppression. Veuillez réessayer.');
+                return;
+            }
+        
+            // Appel du callback seulement si tout est OK
+            callback(json);
+        })
+        .catch(error => {
+            console.error('Erreur réseau :', error);
+            alert("Erreur réseau ou serveur. Veuillez vérifier votre connexion.");
+        });
     }
 
     // ⚙️ Bouton "Gérer"

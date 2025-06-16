@@ -4,7 +4,7 @@
         <div id="container-clients" class="divParametres">
             <label for="clients"> Choix du client </label>
             <select name="clients" id="clients" style="width: 300px;" required>
-                <option value="">-- Sélectionner --</option>
+                <option value="-1"> Prospect ou Inconnu </option>
                 @foreach($clients as $client)
                     <option value="{{ $client->Customer_No }}">
                         {{ $client->Customer_Name }}
@@ -15,7 +15,7 @@
         <div id="container-assets" class="divParametres">
             <label for="assets"> Nom du client </label>
             <select name="assets" id="assets" style="width: 300px;" required>
-                <option value="-1"> Inconnu </option>
+                <option value="-1"> Prospect ou Inconnu </option>
                 @foreach($assets as $asset)
                     <option value="{{ $asset->Asset_ID }}">
                         {{ $asset->Asset_FName }}  {{ $asset->Asset_Name }}
@@ -47,7 +47,7 @@
                 <input name="telephoneClient" type="tel" id="inputTelephoneClient" 
                        pattern="[0-9]{10}" title="0123456789" 
                        placeholder="0123456789" maxlength="10">
-                <label id="validationIconTel" class="validationIcon"></label>
+                <label id="validationIconTel" class="validationIcon"></label>       
             </div>
         </div>
     </div>

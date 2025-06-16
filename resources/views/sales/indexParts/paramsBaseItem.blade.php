@@ -30,10 +30,9 @@
         </div>
 
         <div class="divParametres">
-            <label for="frais_admin">Frais Admin</label>
+            <label for="frais_admin">Frais Administratifs</label>
             <div class="divHorizontale">
-                <input name="frais_admin" type="number" id="frais_admin" min="0" max="100" step="0.1" value="{{ old('frais_admin', 0) }}">
-                <label>%</label>
+                <input name="frais_admin" type="number" id="frais_admin" value="{{ old('frais_admin', 0) }}">
             </div>
             @error('frais_admin') <div class="text-danger">{{ $message }}</div> @enderror
         </div>
@@ -58,9 +57,16 @@
                 <option value="unite">A l'unite</option>
             </select>
         </div>
+    </div>
+
+    <div class="parametres">
         <div class="divParametres">
             <label for="dossierPrecedent">Dossier Precedent</label>
             <input name="dossierPrecedent" type="text" maxlength="10" id="dossierPrecedent">
+        </div>
+        <div class="divParametres">
+            <label for="poClient">PO Client</label>
+            <input name="poClient" type="text" id="poClient">
         </div>
     </div>
 
@@ -71,8 +77,8 @@
         </div>
     </div>
 
-    <div id="container-commande">
-        <select name="commande" id="commande" onchange="afficherTexte()">
+    <div id="container-commande" class="d-flex justify-content-center align-items-center p-3">
+        <select name="commande" id="commande" class="form-select w-auto" onchange="afficherTexte()">
             <option value="- Aucun -">-- Sélectionne une option --</option>
             @foreach($options as $value => $label)
                 <option value="{{ $value }}">{{ $label }}</option>

@@ -5,6 +5,7 @@ namespace App\Services\Sales;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Exception;
 
 class FormulaireService
@@ -29,6 +30,7 @@ class FormulaireService
         // Insertion
         try {
             $idItem = DB::table($this->table)->insertGetId($data);
+            Session::put('ID_Item' ,$idItem);
             // Lier l'ID de la soumission avec les items
             DB::table('ItemsSoumissionsSynology')->insert([
                 'SoumissionID' => session('ID_Soumission'),

@@ -1,24 +1,22 @@
 <form id="form-rouleaux" class="form-to-validate" action="traitement.php" method="POST">
 
-    <div class="divVerticale">
-        <h2>Mesures du produit final</h2>
-        <div class="parametres">
-            <div class="divParametres">
-                <label for="largeur">Largeur</label>
-                <input name="largeur" type="number" id="largeur" required>
-            </div>
-            <div class="divParametres">
-                <label for="hauteur">Hauteur</label>
-                <input name="hauteur" type="number" id="hauteur" required>
-            </div>
-            <div class="divParametres">
-                <label for="poignee">Poignee ou Lip</label>
-                <input name="poignee" type="number" id="poignee">
-            </div>
-            <div class="divParametres">
-                <label for="gousset">Gousset</label>
-                <input name="gousset" type="number" id="gousset">
-            </div>
+    <h2>Mesures du produit final</h2>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="largeur">Largeur</label>
+            <input name="largeur" type="number" id="largeur" required>
+        </div>
+        <div class="divParametres">
+            <label for="hauteur">Hauteur</label>
+            <input name="hauteur" type="number" id="hauteur" required>
+        </div>
+        <div class="divParametres">
+            <label for="poignee">Poignee ou Lip</label>
+            <input name="poignee" type="number" id="poignee">
+        </div>
+        <div class="divParametres">
+            <label for="gousset">Gousset</label>
+            <input name="gousset" type="number" id="gousset">
         </div>
     </div>
 
@@ -67,54 +65,50 @@
         </div>
     </div>
 
-    <div class="divVerticale">
-        <div class="parametres">
-            <div class="divParametres">
-                <label for="web">Web</label>
-                <input name="web" type="number" id="web" required>
-            </div>
-            <div class="divParametres">
-                <label for="epaisseur">Epaisseur</label>
-                <input name="epaisseur" type="number" id="epaisseur" required>
-            </div>
-            <div class="divParametres">
-                <label for="coutParLivre">Cout par livre</label>
-                <input name="coutParLivre" type="number" id="coutParLivre" required>
-            </div>
-            <div class="divParametres">
-                <label for="lbParMil">Lb/Mil</label>
-                <input name="lbParMil" type="number" id="lbParMil" required>
-            </div>
-            <div class="divParametres">
-                <label for="totalPieds">Total de Pieds</label>
-                <input name="totalPieds" type="number" id="totalPieds" required>
-            </div>
-            <div class="divParametres">
-                <label for="totalLivres">Total de Livres</label>
-                <input name="totalLivres" type="number" id="totalLivres" required>
-            </div>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="web">Web</label>
+            <input name="web" type="number" id="web" required>
+        </div>
+        <div class="divParametres">
+            <label for="epaisseur">Epaisseur</label>
+            <input name="epaisseur" type="number" id="epaisseur" required>
+        </div>
+        <div class="divParametres">
+            <label for="coutParLivre">Cout par livre</label>
+            <input name="coutParLivre" type="number" id="coutParLivre" required>
+        </div>
+        <div class="divParametres">
+            <label for="lbParMil">Lb/Mil</label>
+            <input name="lbParMil" type="number" id="lbParMil" required>
+        </div>
+        <div class="divParametres">
+            <label for="totalPieds">Total de Pieds</label>
+            <input name="totalPieds" type="number" id="totalPieds" required>
+        </div>
+        <div class="divParametres">
+            <label for="totalLivres">Total de Livres</label>
+            <input name="totalLivres" type="number" id="totalLivres" required>
         </div>
     </div>
 
-    <div class="divVerticale">
-        <h2>Quantite totale finale</h2>
-        <div class="parametres">
-            <div class="divParametres">
-                <label for="totalPiedsPlusTolerance">Total de Pieds + Tolerance</label>
-                <input name="totalPiedsPlusTolerance" type="number" id="totalPiedsPlusTolerance" required>
-            </div>
-            <div class="divParametres">
-                <label for="totalLivresPlusTolerance">Total de Livres + Tolerance</label>
-                <input name="totalLivresPlusTolerance" type="number" id="totalLivresPlusTolerance" required>
-            </div>
-            <div class="divParametres">
-                <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
-                <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
-            </div>
-            <div class="divParametres">
-                <label for="coutTotal">Cout Total (en $CAD)</label>
-                <input name="coutTotal" type="number" id="coutTotal" required>
-            </div>
+    <h2>Quantite totale finale</h2>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="totalPiedsPlusTolerance">Total de Pieds + Tolerance</label>
+            <input name="totalPiedsPlusTolerance" type="number" id="totalPiedsPlusTolerance" required>
+        </div>
+        <div class="divParametres">
+            <label for="totalLivresPlusTolerance">Total de Livres + Tolerance</label>
+            <input name="totalLivresPlusTolerance" type="number" id="totalLivresPlusTolerance" required>
+        </div>
+        <div class="divParametres">
+            <label for="poucesCarresParQuantiteAProduire">Pouces Carres par Quantite a Produire </label>
+            <input name="poucesCarresParQuantiteAProduire" type="number" id="poucesCarresParQuantiteAProduire">
+        </div>
+        <div class="divParametres">
+            <label for="coutTotal">Cout Total (en $CAD)</label>
+            <input name="coutTotal" type="number" id="coutTotal" required>
         </div>
     </div>
 
@@ -169,20 +163,18 @@
     </div>
 
     <h2>Solvant</h2>
-    <div class="divVerticale">
-        <div class="parametres">
-            <div class="divParametres">
-                <label for="quantiteKGSolvant"> Quantite KG </label>
-                <input name="quantiteKGSolvant" type="number" id="quantiteKGSolvant">
-            </div>
-            <div class="divParametres">
-                <label for="coutKGSolvant"> Cout par KG ($CAD) </label>
-                <input name="coutKGSolvant" type="number" id="coutKGSolvant" value="4.2">
-            </div>
-            <div class="divParametres">
-                <label for="coutTotalSolvant"> Cout total du solvant ($CAD) </label>
-                <input name="coutTotalSolvant" type="number" id="coutTotalSolvant">
-            </div>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="quantiteKGSolvant"> Quantite KG </label>
+            <input name="quantiteKGSolvant" type="number" id="quantiteKGSolvant">
+        </div>
+        <div class="divParametres">
+            <label for="coutKGSolvant"> Cout par KG ($CAD) </label>
+            <input name="coutKGSolvant" type="number" id="coutKGSolvant" value="4.2">
+        </div>
+        <div class="divParametres">
+            <label for="coutTotalSolvant"> Cout total du solvant ($CAD) </label>
+            <input name="coutTotalSolvant" type="number" id="coutTotalSolvant">
         </div>
     </div>
 
@@ -203,6 +195,13 @@
         <div class="divParametres">
             <label for="salaireImpression"> Salaire ($CAD) </label>
             <input name="salaireImpression" type="number" id="salaireImpression" required>
+        </div>
+    </div>
+
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="commentaireImpression">Commentaire d'impression</label>
+            <textarea id="commentaireImpression" name="commentaireImpression" rows="6" cols="40"></textarea>
         </div>
     </div>
 
@@ -243,6 +242,25 @@
             <label for="upc"> UPC </label>
             <input name="upc" type="number" id="upc">
         </div>
+    </div>
+
+    <h2> Cylindre </h2>
+    <div class="parametres">
+        <div id="container-cylindre" class="divParametres">
+            <label for="cylindre"> Choix du cylindre </label>
+            <select name="cylindre" id="cylindre" class="form-select" style="width: 300px;" required>
+                <option value="">-- Sélectionner --</option>
+                @foreach($cylindres as $cylindre)
+                    <option value="{{ $cylindre->Cylinder_ID }}">
+                        {{ $cylindre->Cylinder_Name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+    <h2> Eye-Mark </h2>
+    <div class="parametres">
         <div class="divParametres">
             <label for="imprimeEyeMark"> Imprime de Eye Mark </label>
             <select name="imprimeEyeMark" id="imprimeEyeMark">
@@ -259,6 +277,33 @@
                 <option value="lecteur-optique">Speciale : Lecteur Optique</option>
             </select>
         </div>
+        <div class="divParametres">
+            <label for="couleurEyeMark"> Couleur de Eye Mark </label>
+            <select name="couleurEyeMark" id="couleurEyeMark">
+                <option value="">--- Selectionner ---</option>
+                <option value="noir">Noir</option>
+                <option value="lecteur-optique">Opacite Speciale</option>
+            </select>
+        </div>
+        <div class="divParametres">
+            <label for="eyeMarkOpaciteSpecialeCouleur"> Couleur de l'opacite speciale </label>
+            <input name="eyeMarkOpaciteSpecialeCouleur" type="text" id="eyeMarkOpaciteSpecialeCouleur">
+        </div>
+    </div>
+
+    <h2>Validation de la presse</h2>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="validationPresse"> Verification Presse ? </label>
+            <select name="validationPresse" id="validationPresse">
+                <option value="non">Non</option>
+                <option value="oui">Oui</option>
+            </select>
+        </div>
+        <div class="divParametres">
+            <label for="quiVaInspecter">Qui Va Inspecter ?</label>
+            <input name="quiVaInspecter" type="text" id="quiVaInspecter">
+        </div>
     </div>
 
     <h1>Emballage</h1>
@@ -270,6 +315,13 @@
         <div class="divParametres">
             <label for="totalImpressionsParPalette"> Total d'impressions par palettes </label>
             <input name="totalImpressionsParPalette" type="number" id="totalImpressionsParPalette" required>
+        </div>
+        <div class="divParametres">
+            <label for="typePalette"> Type de palette </label>
+            <select name="typePalette" id="typePalette" required>
+                <option value="23543">40x48</option>
+                <option value="27505">48x48"</option>
+            </select>
         </div>
     </div>
 
@@ -311,7 +363,22 @@
             </select>
         </div>
         <div class="divParametres">
-            <label for="prixLivraison"> Prix de vente au client ($CAD) </label>
+            <label for="transport"> Quel transporteur ? </label>
+            <select name="transport" id="transport" class="form-select" style="width: 300px;" required>
+                <option value=""> Aucun </option>
+                @foreach($transports as $transport)
+                    <option value="{{ $transport->Transp_Description }}">
+                        {{ $transport->Transp_Description }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="divParametres">
+            <label for="compteTransporteur"> Compte transporteur </label>
+            <input name="compteTransporteur" type="number" id="compteTransporteur">
+        </div>
+        <div class="divParametres">
+            <label for="prixLivraison"> Prix de Livraison ($CAD) </label>
             <input name="prixLivraison" type="number" id="prixLivraison" required>
         </div>
     </div>
