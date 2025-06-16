@@ -80,25 +80,31 @@
     </div>
 
     <h2>Solvant</h2>
-    <div class="divVerticale">
-        <div class="parametres">
-            <div class="divParametres">
-                <label for="quantiteKGSolvant"> Quantite KG </label>
-                <input name="quantiteKGSolvant" type="number" id="quantiteKGSolvant">
-            </div>
-            <div class="divParametres">
-                <label for="coutKGSolvant"> Cout par KG ($CAD) </label>
-                <input name="coutKGSolvant" type="number" id="coutKGSolvant" value="4.2">
-            </div>
-            <div class="divParametres">
-                <label for="coutTotalSolvant"> Cout total du solvant ($CAD) </label>
-                <input name="coutTotalSolvant" type="number" id="coutTotalSolvant">
-            </div>
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="quantiteKGSolvant"> Quantite KG </label>
+            <input name="quantiteKGSolvant" type="number" id="quantiteKGSolvant">
+        </div>
+        <div class="divParametres">
+            <label for="coutKGSolvant"> Cout par KG ($CAD) </label>
+            <input name="coutKGSolvant" type="number" id="coutKGSolvant" value="4.2">
+        </div>
+        <div class="divParametres">
+            <label for="coutTotalSolvant"> Cout total du solvant ($CAD) </label>
+            <input name="coutTotalSolvant" type="number" id="coutTotalSolvant">
         </div>
     </div>
 
     <h1>Impression</h1>
     <div class="parametres">
+        <div class="divParametres">
+            <label for="quiVaImprimer"> Qui va imprimer ? </label>
+            <select name="quiVaImprimer" id="quiVaImprimer" required>
+                <option value="orca">Orca</option>
+                <option value="client">Client</option>
+                <option value="sous-traitance">Sous-Traitance</option>
+            </select>
+        </div>
         <div class="divParametres">
             <label for="sacsParHeurePapier"> Sacs Par Heure </label>
             <input name="sacsParHeurePapier" type="number" id="sacsParHeurePapier" required>
@@ -106,6 +112,13 @@
         <div class="divParametres">
             <label for="salaireImpression"> Salaire ($CAD) </label>
             <input name="salaireImpression" type="number" id="salaireImpression" required>
+        </div>
+    </div>
+
+    <div class="parametres">
+        <div class="divParametres">
+            <label for="commentaireImpression">Commentaire d'impression</label>
+            <textarea id="commentaireImpression" name="commentaireImpression" rows="6" cols="40"></textarea>
         </div>
     </div>
 
@@ -142,6 +155,13 @@
         <div class="divParametres">
             <label for="totalSacsParPalette"> Total de sacs par palettes </label>
             <input name="totalSacsParPalette" type="number" id="totalSacsParPalette" required>
+        </div>
+        <div class="divParametres">
+            <label for="typePalette"> Type de palette </label>
+            <select name="typePalette" id="typePalette" required>
+                <option value="23543">40x48</option>
+                <option value="27505">48x48"</option>
+            </select>
         </div>
     </div>
 
@@ -191,7 +211,22 @@
             </select>
         </div>
         <div class="divParametres">
-            <label for="prixLivraison"> Prix de vente au client ($CAD) </label>
+            <label for="transport"> Quel transporteur ? </label>
+            <select name="transport" id="transport" class="form-select" style="width: 300px;" required>
+                <option value=""> Aucun </option>
+                @foreach($transports as $transport)
+                    <option value="{{ $transport->Transp_Description }}">
+                        {{ $transport->Transp_Description }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="divParametres">
+            <label for="compteTransporteur"> Compte transporteur </label>
+            <input name="compteTransporteur" type="text" id="compteTransporteur">
+        </div>
+        <div class="divParametres">
+            <label for="prixLivraison"> Prix de Livraison ($CAD) </label>
             <input name="prixLivraison" type="number" id="prixLivraison" required>
         </div>
     </div>
