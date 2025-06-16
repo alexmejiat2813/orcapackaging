@@ -179,6 +179,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('production')->group(function () {
         Route::get('/orders', [CommandesController::class, 'index']);
         Route::get('/production/get-commandes', [CommandesController::class, 'getCommandes']);
+        Route::get('/production/get-schedules', [CommandesController::class, 'getSchedulesWithEquipment']);
         Route::post('/orders/sync-schedule', [CommandesController::class, 'syncSchedule']);
 
         Route::get('/bom', [BomController::class, 'index']);

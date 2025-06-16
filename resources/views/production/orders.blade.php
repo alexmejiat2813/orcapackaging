@@ -26,15 +26,15 @@
                 <div class="d-flex flex-wrap gap-3 align-items-center">
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_transmittedFirst" id="is_transmittedFirst" data-field="Commande_Transmit_First" value="transmittedFirst" checked>
-                        <label class="form-check-label" for="is_transmittedFirst">Commande Transmit First</label>
+                        <label class="form-check-label" for="is_transmittedFirst">Order preparation</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_transmitted" id="is_transmitted" data-field="Transmit" value="transmitted" checked>
-                        <label class="form-check-label" for="is_transmitted">Transmit</label>
+                        <label class="form-check-label" for="is_transmitted">Order approval</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_complete" id="is_complete" data-field="Credit_Autorise" value="completed" checked>
-                        <label class="form-check-label" for="is_complete">Credit Autorise</label>
+                        <label class="form-check-label" for="is_complete">Authorized credit</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_canceled" id="is_canceled" data-field="isReady_Production" value="cancelled" checked>

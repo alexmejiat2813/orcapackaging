@@ -7,31 +7,34 @@
 @endpush
 
 @section('content')
-    <div id="centergrid">
-        <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left; width: 80%;">
+    <div class="page-estimate-create container-fluid py-4">
+        <div class="section-top divVerticale">
+            <div id="jqxWidget">
                 <div id="jqxgrid"></div>
+            </div>
+        
+            <div class="action-buttons">
+                <input type="button" id="modifierItemBouton" value="Modifier l'objet" class="btn btn-outline-primary">
+                <input type="button" id="supprimerItemBouton" value="Supprimer" class="btn btn-outline-danger">
+                <input type="button" id="copierItemBouton" value="Dupliquer" class="btn btn-outline-secondary">
+            </div>
         </div>
-
-        <div class="align-content">
-            <input type="button" id="modifierItemBouton" value="Modifier l'objet">
-            <input type="button" id="supprimerItemBouton" value="Supprimer">
-            <input type="button" id="copierItemBouton" value="Dupliquer">
-        </div>
-    </div>
-    <div id="principale">
-        <h1 id="titre-item">Nouvel Item</h1>
-
-        @include('sales.indexParts.paramsBaseItem')
-
-        <div class="divVerticale" style="margin-top: 40px;">
-            <button type="submit" name="soumettreItem" id="soumettreItem" class="bouton-formulaire" style="display: flex;flex-direction: column;">
-                <div class="divVerticale">
-                    <p class="btn-text">Soumettre l'objet</p>
-                    <svg class="spinner d-none" width="20" height="20" viewBox="0 0 50 50">
-                      <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                    </svg>
-                </div>
-            </button>
+        
+        <div id="principale" class="section-main">
+            <h1 class="h1-main" id="titre-item">Nouvel Item</h1>
+        
+            @include('sales.indexParts.paramsBaseItem')
+        
+            <div class="divVerticale mt-4">
+                <button type="submit" name="soumettreItem" id="soumettreItem" class="btn btn-primary bouton-formulaire">
+                    <div class="divVerticale align-items-center">
+                        <p class="btn-text mb-1">Soumettre l'objet</p>
+                        <svg class="spinner d-none" width="20" height="20" viewBox="0 0 50 50">
+                            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                        </svg>
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
 

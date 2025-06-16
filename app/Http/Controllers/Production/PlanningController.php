@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Auth;
 
 class PlanningController extends Controller
 {
+
+private function nowLocal()
+    {
+        return now()->setTimezone('America/Toronto');
+    }
     
     /**
      * Render the planning view with available machines
@@ -74,6 +79,8 @@ class PlanningController extends Controller
                 $equipmentDescription = Equipment::getDescriptionById((int) $equipId);
                 $duration = is_numeric($item->Equip_Receipe_Value) ? (float) $item->Equip_Receipe_Value : 2;
 
+        
+
                 $appointments->push([
                     'id' => $item->Commande_Receipe_Id,
                     'description' => $item->Schedule_ID,
@@ -83,8 +90,8 @@ class PlanningController extends Controller
                     'subject' => ' Cmd ' . $item->InInvoiceNumber . ' - Lot ' . $item->Lot_Id . ' : ' . $item->PrDescription1 . ' (' . $item->Lots_Qty . ')',
                     //'description' => $item->PrDescription1 ?? 'No comments',
                     'calendar' => $equipmentDescription,
-                    'start' => Carbon::parse($item->Scheduled_Date)->addHours(8)->toISOString(),
-                    'end' => Carbon::parse($item->Scheduled_Date)->addHours(8 + $duration)->toISOString(),
+                    'start' => Carbon::parse($item->Scheduled_Date)->setTimezone('America/Toronto')->format('Y-m-d H:i:s'),
+                    'end' => Carbon::parse($item->Scheduled_Date)->addHours($duration)->setTimezone('America/Toronto')->format('Y-m-d H:i:s'),
                 ]);
             }
         }
@@ -98,7 +105,7 @@ class PlanningController extends Controller
     public function saveAppointment(Request $request)
     {
         try {
-
+       
             $lotId = $request->input('location');
             $scheduleId = $request->input('description');
             $receipeId = $request->input('id');

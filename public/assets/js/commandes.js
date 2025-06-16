@@ -67,65 +67,7 @@ class OrdersModule {
             showtoolbar: false, groupable: true, showgroupsheader: true, showstatusbar: true,
             statusbarheight: 50,
 
-            /*rendertoolbar: function (toolbar) {
-                const container = $("<div style='margin: 5px;'></div>");
-                toolbar.append(container);
-                container.append('<input class="btn btn-primary" id="syncButton" type="button" value="Synchronize Schedule" />');
-                $("#syncButton").jqxButton();
 
-                $('#syncButton').on('click', function () {
-                    // Remove focus from edited cell to ensure value is saved
-                    $('#commandesGrid').jqxGrid('endcelledit', $('#commandesGrid').jqxGrid('getselectedrowindex'), "Scheduled_Date", false);
-
-                    const rows = $('#commandesGrid').jqxGrid('getrows');
-
-                    const selectedLots = rows
-                        .filter(row => row.Scheduled_Date instanceof Date && !isNaN(row.Scheduled_Date))
-                        .map(row => ({
-                            lot_id: row.Lot_Id,
-                            commande_id: row.Commande_Id,
-                            Scheduled_Date: row.Scheduled_Date.toISOString().split('T')[0] // formatted date
-                        }));
-
-                    if (selectedLots.length === 0) {
-                        Swal.fire('No data', 'No lots with a scheduled date to synchronize.', 'info');
-                        return;
-                    }
-
-                    // Disable button and show loading
-                    $("#syncButton").prop("disabled", true).val("Synchronizing...");
-
-                    Swal.fire({
-                        title: 'Synchronizing...',
-                        text: 'Please wait while we update the schedule.',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    fetch(urlSyncSchedule, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            "X-CSRF-TOKEN": window.csrfToken
-                        },
-                        body: JSON.stringify({ lots: selectedLots })
-                    })
-                        .then(response => response.json())
-                        .then(result => {
-                            Swal.fire('Done', `Synchronization complete. Changes made: ${result.updated}`, 'success');
-                            $('#commandesGrid').jqxGrid('updatebounddata');
-                        })
-                        .catch(error => {
-                            console.error('Error syncing:', error);
-                            Swal.fire('Error', 'An error occurred during synchronization.', 'error');
-                        })
-                        .finally(() => {
-                            $("#syncButton").prop("disabled", false).val("Synchronize Schedule");
-                        });
-                });
-            },*/
 
             columns: [
                 //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
