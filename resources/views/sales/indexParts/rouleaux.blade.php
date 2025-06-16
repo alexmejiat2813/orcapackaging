@@ -375,7 +375,7 @@
         </div>
         <div class="divParametres">
             <label for="compteTransporteur"> Compte transporteur </label>
-            <input name="compteTransporteur" type="number" id="compteTransporteur">
+            <input name="compteTransporteur" type="text" id="compteTransporteur">
         </div>
         <div class="divParametres">
             <label for="prixLivraison"> Prix de Livraison ($CAD) </label>

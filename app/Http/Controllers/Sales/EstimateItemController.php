@@ -372,7 +372,7 @@ class EstimateItemController extends Controller
             'Col' => 0,
             'InInvoiceNumber' => -1,
             'Commande_Id' => -1,
-            'Customer_Id' => $customer->Customer_ID,
+            'Customer_Id' => $customer->Customer_ID ?? -1,
             'Press_Type_Id' => $request->Work_Type
         ]);   
 
@@ -427,7 +427,7 @@ class EstimateItemController extends Controller
             'Status_Fabrication_Id' => 1,
             'A_livrer' => 0,
             'Credit_To_Approuve' => 0,
-            'Customer_Id' => $customer->Customer_ID,
+            'Customer_Id' => $customer->Customer_ID ?? -1,
             'Com_Autre' => '',
             'Com_Expedition' => '',
             'Com_Finition' => '',
