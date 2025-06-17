@@ -1,10 +1,10 @@
 <form id="form-ParamsBase" class="form-to-validate" method="POST">
     @csrf
     <div class="parametres">
-        <div id="container-clients" class="divParametres">
-            <label for="clients"> Choix du client </label>
-            <select name="clients" id="clients" style="width: 300px;" required>
-                <option value="-1"> Prospect ou Inconnu </option>
+        <div id="container-clients" class="divParametres mb-4">
+            <label for="clients" class="form-label">Choix du client</label>
+            <select name="clients" id="clients" class="form-select" style="width: 300px;" required>
+                <option value="-1">Prospect ou Inconnu</option>
                 @foreach($clients as $client)
                     <option value="{{ $client->Customer_No }}">
                         {{ $client->Customer_Name }}
@@ -12,18 +12,15 @@
                 @endforeach
             </select>
         </div>
-        <div id="container-assets" class="divParametres">
-            <label for="assets"> Nom du client </label>
-            <select name="assets" id="assets" style="width: 300px;" required>
-                <option value="-1"> Prospect ou Inconnu </option>
-                @foreach($assets as $asset)
-                    <option value="{{ $asset->Asset_ID }}">
-                        {{ $asset->Asset_FName }}  {{ $asset->Asset_Name }}
-                    </option>
-                @endforeach
+
+        <div id="container-assets" class="divParametres mb-4" style="display: none;">
+            <label for="assets" class="form-label">Nom du client</label>
+            <select name="assets" id="assets" class="form-select" style="width: 300px;" required>
+                <option value="-1">Inconnu</option>
             </select>
         </div>
     </div>
+
 
     <div id="client-inconnu" class="parametres">
         <div class="divParametres">

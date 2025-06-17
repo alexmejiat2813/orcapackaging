@@ -17,6 +17,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const futureDate = addDays(new Date(), 30);
         dateInput.value = formatDate(futureDate);
     }
+
+    // Réinitialise le select à -1 à chaque chargement
+    const clientSelect = document.getElementById('clients');
+    if (clientSelect) {
+        clientSelect.value = '-1';
+        // Si tu utilises Select2, pense à le rafraîchir
+        if ($(clientSelect).hasClass("select2-hidden-accessible")) {
+            $(clientSelect).trigger('change');
+        }
+    }
+
+    // Et tu peux cacher les assets directement ici aussi
+    document.getElementById('container-assets').style.display = 'none';
 });
 
 // Validation de l'email
@@ -43,4 +56,5 @@ inputTel.addEventListener('input', function() {
     // Affichage de l'icône ✅ ou ❌
     validationIconTel.textContent = tel ? (isValid ? '✅' : '❌') : '';
     validationIconTel.className = tel ? (isValid ? 'valid' : 'invalid') : '';
-});
+}); 
+
