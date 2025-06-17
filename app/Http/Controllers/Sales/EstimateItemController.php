@@ -500,6 +500,10 @@ class EstimateItemController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function images(Request $request){
+        
+    }
+
     // Fonctions pour ajout Database Thomas
 
     // Ajoute le dernier item qui a ete ajoute

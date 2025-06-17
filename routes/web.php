@@ -130,6 +130,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/modifier', [EstimateController::class, 'modifier']);
             Route::get('/gridData', [EstimateController::class, 'gridData']);
             Route::get('/getSession', [EstimateController::class, 'getSession']);
+            Route::get('/getAssets/{customerId}', [EstimateController::class, 'getAssets']);
         });
         Route::prefix('estimates_item')->group(function () {
             Route::get('/', [EstimateItemController::class, 'index'])->middleware(CheckSoumissionID::class);
@@ -142,6 +143,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/getSession', [EstimateItemController::class, 'getSession']);
             Route::get('/modification', [EstimateItemController::class, 'modification']);
             Route::post('/ajouterCommentaire', [EstimateItemController::class, 'ajouterCommentaire']);
+            Route::post('/images', [EstimateItemController::class, 'images'])->name('images.estimates.upload');
         });
         
         ///////////////////////////////////////////////////////////////////
