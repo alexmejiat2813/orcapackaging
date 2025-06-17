@@ -22,6 +22,12 @@
         
         <div id="principale" class="section-main">
             <h1 class="h1-main" id="titre-item">Nouvel Item</h1>
+
+            <div class="divVerticale d-none" id="divBoutonStopModif">
+                <a href="#" id="boutonStopModif" class="btn btn-primary btn-lg d-inline-flex align-items-center px-4 py-2">
+                  Quitter la modification
+                </a>
+            </div>
         
             @include('sales.indexParts.paramsBaseItem')
 

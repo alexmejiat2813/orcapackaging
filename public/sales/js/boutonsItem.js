@@ -4,6 +4,7 @@ $(document).ready(function () {
     const $modifier = $("#modifierItemBouton");
     const $supprimer = $("#supprimerItemBouton");
     const $copier = $("#copierItemBouton");
+    const btnStopModif = document.getElementById("divBoutonStopModif");
 
     $modifier.prop("disabled", true);
     $supprimer.prop("disabled", true);
@@ -54,7 +55,7 @@ $(document).ready(function () {
     // Fonction permettant de recuperer les donnees des ItemsSynologyodificationLog
     function afficherHistoriqueModifications(itemId) {
         const sectionModif = document.getElementById("formulaireModificationSection");
-        sectionModif.classList.remove("d-none")
+        sectionModif.classList.remove("d-none");
         // Appel au contrôleur Laravel avec fetch()
         fetch(`/sales/estimates_item/modification?item_id=${itemId}`, {
             method: 'GET',
@@ -124,8 +125,14 @@ $(document).ready(function () {
             .then(data => {
                 if (data.success) {
                     const item = data.data;
+                    btnStopModif.classList.remove("d-none");
 
-                    afficherHistoriqueModifications(item.ID);
+                    if (item.IsReady == 1) {
+                        afficherHistoriqueModifications(item.ID);
+                    } else {
+                        const sectionModif = document.getElementById("formulaireModificationSection");
+                        sectionModif.classList.add("d-none");
+                    }
 
                     // 1️⃣ Appliquer d'abord la valeur du SELECT "commande"
                     if ('commande' in item) {
@@ -212,6 +219,13 @@ $(document).ready(function () {
             $('#jqxgrid').jqxGrid('updatebounddata');
         });
     });
+
+    // Gestion du bouton Stop Modification
+    document.getElementById('boutonStopModif').addEventListener('click', function (e) {
+        btnStopModif.classList.add("d-none");
+        window.location.reload();
+    });
+
 });
 
 // Pour affichage titre
