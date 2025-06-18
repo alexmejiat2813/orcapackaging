@@ -49,9 +49,13 @@
 
     <script>
         $(document).ready(function () {
+            $('#assets').select2({
+                placeholder: "Tape pour chercher..."
+            });
+        });
+        $(document).ready(function () {
             $('#clients').select2({
-                placeholder: "Tape pour chercher...",
-                allowClear: true
+                placeholder: "Tape pour chercher..."
             });
 
             $('#clients').on('change', function () {
@@ -62,21 +66,30 @@
                 } else {
                     $('#client-inconnu').hide();
                 }
-            });
-        });
-        $(document).ready(function () {
-            $('#assets').select2({
-                placeholder: "Tape pour chercher...",
-                allowClear: true
-            });
 
-            $('#assets').on('change', function () {
-                const value = parseFloat($(this).val());
+                const customerId = $(this).val();
+                console.log('Client sélectionné :', customerId);
 
-                if (value === -1) {
-                    $('#client-inconnu').show();
+                if (customerId !== '-1') {
+                    $('#container-assets').show();
+                    $('#assets').html('<option>Chargement...</option>');
+                
+                    fetch(`/sales/estimates/getAssets/${customerId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let options = '';
+                            data.forEach(asset => {
+                                options += `<option value="${asset.Asset_ID}">${asset.Asset_FName} ${asset.Asset_Name}</option>`;
+                            });
+                            $('#assets').html(options).trigger('change'); // important pour refresh Select2
+                        })
+                        .catch(error => {
+                            console.error('Erreur AJAX :', error);
+                            $('#assets').html('<option value="-1">Erreur de chargement</option>');
+                        });
                 } else {
-                    $('#client-inconnu').hide();
+                    $('#container-assets').hide();
+                    $('#assets').html('<option value="-1">Veuillez d\'abord choisir un client</option>');
                 }
             });
         });
