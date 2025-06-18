@@ -167,20 +167,25 @@ function validerForm(formData) {
         if (element && element.required) {
             const valeur = formData.get(nomChamp);
 
-            if (!valeur) {
-                estValide = false;
-                const label = element.labels?.[0]?.textContent || element.name;
-                messageErreurs.push(`Le champ "${label}" est requis`);
-            } else {
-                if (element.type === 'email' && !validerEmail(valeur)) {
+            const container = element.closest('.divParametres');
+            const isVisible = container && container.offsetParent !== null;
+
+            if (isVisible) {
+                if (!valeur) {
                     estValide = false;
                     const label = element.labels?.[0]?.textContent || element.name;
-                    messageErreurs.push(`L'email "${label}" n'est pas valide`);
-                }
-                if (element.type === 'tel' && !validerTelephone(valeur)) {
-                    estValide = false;
-                    const label = element.labels?.[0]?.textContent || element.name;
-                    messageErreurs.push(`Le téléphone "${label}" doit contenir exactement 10 chiffres`);
+                    messageErreurs.push(`Le champ "${label}" est requis`);
+                } else {
+                    if (element.type === 'email' && !validerEmail(valeur)) {
+                        estValide = false;
+                        const label = element.labels?.[0]?.textContent || element.name;
+                        messageErreurs.push(`L'email "${label}" n'est pas valide`);
+                    }
+                    if (element.type === 'tel' && !validerTelephone(valeur)) {
+                        estValide = false;
+                        const label = element.labels?.[0]?.textContent || element.name;
+                        messageErreurs.push(`Le téléphone "${label}" doit contenir exactement 10 chiffres`);
+                    }
                 }
             }
         }

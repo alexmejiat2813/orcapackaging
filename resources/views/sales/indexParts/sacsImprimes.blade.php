@@ -204,29 +204,30 @@
 
     <!-- Modal -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- modal-lg = plus grand / centered = centré -->
+      <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-          <form action="{{ route('images.estimates.upload') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="modal-header">
-              <h5 class="modal-title" id="imageModalLabel">Ajouter des images</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+    
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageModalLabel">Ajouter des images</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+    
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="image1" class="form-label">Image 1</label>
+              <input class="form-control" type="file" id="image1" accept="image/*">
             </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="image1" class="form-label">Image 1</label>
-                <input class="form-control" type="file" name="image1" id="image1" accept="image/*">
-              </div>
-              <div class="mb-3">
-                <label for="image2" class="form-label">Image 2 (optionnelle)</label>
-                <input class="form-control" type="file" name="image2" id="image2" accept="image/*">
-              </div>
+            <div class="mb-3">
+              <label for="image2" class="form-label">Image 2 (optionnelle)</label>
+              <input class="form-control" type="file" id="image2" accept="image/*">
             </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-success">Téléverser</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            </div>
-          </form>
+          </div>
+    
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="uploadImagesBtn">Téléverser</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          </div>
+    
         </div>
       </div>
     </div>
@@ -408,9 +409,13 @@
             <label for="salaireConversion"> Salaire ($CAD) </label>
             <input name="salaireConversion" type="number" id="salaireConversion" required>
         </div>
+        <div class="divParametres" id="coutSousTraitanceContainer" style="display: none;">
+            <label for="coutSousTraitance">Coût de la sous-traitance </label>
+            <input type="number" name="coutSousTraitance" id="coutSousTraitance" step="0.01">
+        </div>
     </div>
 
-    <h2>Temps de production</h2>
+    <h2 class="titre-temps-production">Temps de production</h2>
     <div class="parametres">
         <div class="divParametres">
             <label for="dureeTotaleConversion"> Duree Totale de Conversion  </label>
