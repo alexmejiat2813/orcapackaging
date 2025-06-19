@@ -192,19 +192,21 @@ $(document).ready(function () {
         const listSource = {
             datatype: "json",
             datafields: [
-                { name: 'Scheduled_Date', type: 'date' },
                 { name: 'Commande_Id', type: 'int' },
+                { name: 'InInvoiceNumber', type: 'string' },
                 { name: 'Customer_No', type: 'string' },
                 { name: 'Customer_Name', type: 'string' },
-                { name: 'InInvoiceNumber', type: 'string' },
-                { name: 'Lot_ID', type: 'int' },
+                { name: 'Lot_Id', type: 'int' },
                 { name: 'PrNumber', type: 'string' },
                 { name: 'PrDescription1', type: 'string' },
+                { name: 'Commande_Receipe_Id', type: 'int' },
                 { name: 'Equipment_Id', type: 'int' },
                 { name: 'Equipment_Description', type: 'string' },
+                { name: 'Schedule_Id', type: 'int' },
+                { name: 'Scheduled_Date', type: 'date' },
                 { name: 'qtyHeures', type: 'float' }
             ],
-            id: 'Commande_Id',
+            id: 'Schedule_Id',
             url: '/production/production/get-schedules'
         };
 
@@ -271,12 +273,16 @@ $(document).ready(function () {
                 });
             },
             columns: [
+                { text: 'Commande_Id', dataField: 'Commande_Id', width: '5%', align: 'center', cellsalign: 'center', editable: false, hide: true },
+                { text: 'CMD', dataField: 'InInvoiceNumber', width: '5%', align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Customer Code', dataField: 'Customer_No', width: '5%', align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Customer', dataField: 'Customer_Name', width: '20%', align: 'center', editable: false },
-                { text: 'CMD', dataField: 'InInvoiceNumber', width: '5%', align: 'center', cellsalign: 'center', editable: false },
-                { text: 'Lot Id', dataField: 'Lot_ID', width: '5%', align: 'center', cellsalign: 'center', editable: false },
+                { text: 'Lot Id', dataField: 'Lot_Id', width: '5%', align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Product', dataField: 'PrDescription1', width: '28%', align: 'center', editable: false },
+                { text: 'Commande_Receipe_Id', dataField: 'Commande_Receipe_Id', width: '5%', align: 'center', cellsalign: 'center', editable: false, hide: true },
+                { text: 'Equipment Id', dataField: 'Equipment_Id', width: '10%', align: 'center', editable: false, hide: true },
                 { text: 'Equipment', dataField: 'Equipment_Description', width: '10%', align: 'center', editable: false },
+                { text: 'Schedule Id', dataField: 'Schedule_Id', width: '5%', align: 'center', cellsalign: 'center', editable: false, hide: true },
                 { text: 'Scheduled Date', dataField: 'Scheduled_Date', cellsformat: 'yyyy-MM-dd HH:mm', columntype: 'datetimeinput', width: '10%', align: 'center', editable: true },
                 { text: 'Estimated Hours', dataField: 'qtyHeures', width: '6%', align: 'center', cellsalign: 'center', editable: true },
                 {
@@ -296,7 +302,8 @@ $(document).ready(function () {
                             data: JSON.stringify({
                                 lot_id: dataRecord.Lot_ID,
                                 commande_id: dataRecord.Commande_Id,
-                                Scheduled_Date: dataRecord.Scheduled_Date
+                                Scheduled_Date: dataRecord.Scheduled_Date,
+                                Equipment_Id: dataRecord.Equipment_Id
                             }),
                             success: function (response) {
                                 alert(response.message);
@@ -317,9 +324,9 @@ $(document).ready(function () {
                     text: '', datafield: 'Delete', columntype: 'button', width: '5%',
                     cellsrenderer: function () { return "Delete"; },
                     buttonclick: function (row) {
-                        var dataRecord = $("#recCommandesGrid").jqxGrid('getrowdata', row);
+                        var dataRecord = $("#jqxTable").jqxGrid('getrowdata', row);
                         var commandeReceipeId = dataRecord.Commande_Receipe_Id;
-                        var quotationReceipeId = dataRecord.Quotation_Receipe_Id;
+                        var scheduleId = dataRecord.Schedule_Id;
 
                         // Confirmación con el usuario
                         if (!confirm("Are you sure you want to delete this record?")) {
@@ -328,18 +335,21 @@ $(document).ready(function () {
 
                         // Enviar petición AJAX
                         $.ajax({
-                            url: "/production/bom/delete-recipe", // tu ruta Laravel
+                            url: "/production/schedule/delete", // tu ruta Laravel
                             type: "POST",
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': window.csrfToken
+                            },
                             data: {
                                 Commande_Receipe_Id: commandeReceipeId,
-                                Quotation_Receipe_Id: quotationReceipeId,
-                                _token: $('meta[name="csrf-token"]').attr('content') // asegúrate de tener el token en el header
+                                Schedule_Id: scheduleId
                             },
                             success: function (response) {
                                 if (response.success) {
                                     // Recargar el grid de detalles
-                                    $("#recCommandesGrid").jqxGrid('deleterow', row);
-                                    $("#recCommandesGrid").jqxGrid('updatebounddata');
+                                    $("#jqxTable").jqxGrid('deleterow', row);
+                                    $("#jqxTable").jqxGrid('updatebounddata');
                                     // O si prefieres refrescar todo desde backend:
                                     // $("#recCommandesGrid").jqxGrid('updatebounddata');
                                 } else {

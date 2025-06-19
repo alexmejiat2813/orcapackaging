@@ -1,3 +1,109 @@
+// Gestion Modal
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[id^="form-"]').forEach(form => {
+    // On récupère LE modal dans ce formulaire
+    const modal = form.querySelector('#imageModal');
+    if (!modal) return;
+
+    const btnUpload = modal.querySelector('.uploadImagesBtn');
+    const inputImage1 = modal.querySelector('#image1');
+    const inputImage2 = modal.querySelector('#image2');
+
+    if (!btnUpload || !inputImage1 || !inputImage2) return;
+
+    btnUpload.addEventListener('click', function () {
+      const image1 = inputImage1.files[0];
+      const image2 = inputImage2.files[0];
+      const formData = new FormData();
+
+      if (image1) formData.append('image1', image1);
+      if (image2) formData.append('image2', image2);
+
+      fetch("{{ route('images.estimates.upload') }}", {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Échec du téléversement");
+        return response.json();
+      })
+      .then(data => {
+        console.log('Succès:', data);
+        alert('Images téléversées avec succès');
+
+        // Fermer le modal
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) bsModal.hide();
+      })
+      .catch(error => {
+        console.error('Erreur:', error);
+        alert('Erreur lors du téléversement');
+      });
+    });
+  });
+});
+
+
+// Gestion affichage selon les Select
+
+// Select Conversion 
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[id^="form-"]').forEach(form => {
+    const select = form.querySelector('#quiVaProduireConversion');
+    if (!select) return; // Sécurité si le formulaire ne contient pas ce champ
+    console.log(select);
+
+    // Champs à masquer si sous-traitance (dans ce form uniquement)
+    const sacsParHeure = form.querySelector('#sacsParHeure')?.closest('.divParametres');
+    const salaireConversion = form.querySelector('#salaireConversion')?.closest('.divParametres');
+    const dureeTotale = form.querySelector('#dureeTotaleConversion')?.closest('.divParametres');
+    const montage = form.querySelector('#dureeMontageConversion')?.closest('.divParametres');
+    const menage = form.querySelector('#dureeMenageConversion')?.closest('.divParametres');
+    const tempsTotal = form.querySelector('#tempsTotalConversion')?.closest('.divParametres');
+    const difficulte = form.querySelector('#niveauDifficulte')?.closest('.divParametres');
+    const coutContainer = form.querySelector('#coutSousTraitanceContainer');
+
+    const titreTempsProduction = form.querySelector('.titre-temps-production');
+
+    const afficher = (el) => el && (el.style.display = 'flex');
+    const afficherBlock = (el) => el && (el.style.display = 'block');
+    const cacher = (el) => el && (el.style.display = 'none');
+
+    function ajusterAffichage() {
+      const valeur = select.value;
+
+      if (valeur === 'sous-traitance') {
+        cacher(sacsParHeure);
+        cacher(salaireConversion);
+        cacher(dureeTotale);
+        cacher(montage);
+        cacher(menage);
+        cacher(tempsTotal);
+        cacher(difficulte);
+        cacher(titreTempsProduction);
+        afficher(coutContainer);
+      } else {
+        afficher(sacsParHeure);
+        afficher(salaireConversion);
+        afficher(dureeTotale);
+        afficher(montage);
+        afficher(menage);
+        afficher(tempsTotal);
+        afficher(difficulte);
+        afficherBlock(titreTempsProduction);
+        cacher(coutContainer);
+      }
+    }
+
+    // Appel initial + sur changement
+    ajusterAffichage();
+    select.addEventListener('change', ajusterAffichage);
+  });
+});
+
 // Gestion refresh page
 window.addEventListener('load', function () {
 
@@ -1347,6 +1453,20 @@ document.querySelectorAll("form").forEach(form => {
       });
     }
   });
+
+// coutSousTraitance = coutTotauxProductionConversion
+document.querySelectorAll("form").forEach(form => {
+  const inputCoutSousTraitance = form.querySelector('[name="coutSousTraitance"]');
+  const inputCoutConversion = form.querySelector('[name="coutTotauxProductionConversion"]');
+
+  if (inputCoutSousTraitance && inputCoutConversion) {
+    inputCoutSousTraitance.addEventListener("input", () => {
+      const cout = parseFloat(inputCoutSousTraitance.value) || 0;
+      inputCoutConversion.value = cout.toFixed(2);
+      inputCoutConversion.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  }
+});
 
 ///////////////////////////// TAPE //////////////////////////////// 
 const formTape = document.getElementById('form-tape');

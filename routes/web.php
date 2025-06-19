@@ -183,8 +183,11 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('production')->group(function () {
         Route::get('/orders', [CommandesController::class, 'index']);
         Route::get('/production/get-commandes', [CommandesController::class, 'getCommandes']);
-        Route::get('/production/get-schedules', [CommandesController::class, 'getSchedulesWithEquipment']);
+        Route::get('/production/get-schedules', [CommandesController::class, 'getCommandesWithSchedule']);
         Route::post('/orders/sync-schedule', [CommandesController::class, 'syncSchedule']);
+        Route::get('/orders/today-schedule', [CommandesController::class, 'getTodayScheduledCommandes']);
+        Route::post('/schedule/delete', [CommandesController::class, 'deleteScheduleWithReceipe']);
+
 
         Route::get('/bom', [BomController::class, 'index']);
         Route::get('/bom/get-commandes', [CommandesController::class, 'getCommandes']);

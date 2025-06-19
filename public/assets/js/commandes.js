@@ -2,13 +2,49 @@ import { urlGetOrders, urlSyncSchedule } from './config.js';
 
 class OrdersModule {
     constructor() {
+        this.currentFilters = [];
+        this.shouldApplyFilters = false;
         this.adapter = null;
         this.source = null;
         this.existingAppointments = new Set();
         this.initialize();
     }
 
+    applySavedFilters() {
+        try {
+            const grid = $("#commandesGrid");
+
+            // Esto previene aplicar filtros si los datos aún se están cargando
+            /*const rows = grid.jqxGrid('getrows');
+            if (!rows || rows.length === 0) {
+                console.warn("Grid not ready: no data rows yet.");
+                return;
+            }*/
+
+            //grid.jqxGrid('clearfilters');
+
+            this.currentFilters.forEach(filter => {
+                const filterGroup = new $.jqx.filter();
+                const filterCondition = filterGroup.createfilter('booleanfilter', filter.value, 'equal');
+                filterGroup.addfilter(1, filterCondition);
+                grid.jqxGrid('addfilter', filter.field, filterGroup);
+            });
+
+            grid.jqxGrid('applyfilters');
+
+        } catch (error) {
+            console.error("applySavedFilters() failed:", error);
+        }
+    }
+
+
+
+
+
+
     initialize() {
+        const self = this;
+        
         this.source = {
             datatype: "json",
             datafields: [
@@ -55,8 +91,7 @@ class OrdersModule {
             source: this.adapter,
             //pagermode: "simple",
             //pageable: true,
-            //autoheight: true,
-            height : 600,
+            autoheight: true,
             sortable: true,
             filterable: true,
             columnsresize: true,
@@ -108,8 +143,18 @@ class OrdersModule {
                 { text: "Cancel", datafield: "IsCanceledLogic", width: '5%', hidden: true },
             ],
             ready: function () {
+                self.currentFilters = [
+                    { field: "Commande_Transmit_First", value: true },
+                    { field: "Transmit", value: true },
+                    { field: "Credit_Autorise", value: true },
+                    { field: "isReady_Production", value: true },
+                    { field: "IsCompletedLogic", value: false },
+                    { field: "IsCanceledLogic", value: false }
+                ];
+
+                self.applySavedFilters();
                 // Aplicar filtros por defecto al cargar el grid
-                const filters = [
+                /*const filters = [
                     { field: "Commande_Transmit_First", value: true },
                     { field: "Transmit", value: true },
                     { field: "Credit_Autorise", value: true },
@@ -124,13 +169,54 @@ class OrdersModule {
                     filterGroup.addfilter(1, filterCondition);
                     $("#commandesGrid").jqxGrid('addfilter', filter.field, filterGroup);
                 });
-                $("#commandesGrid").jqxGrid('applyfilters');
+                $("#commandesGrid").jqxGrid('applyfilters');*/
             }
+        });
+
+        let firstBinding = true;
+
+        $("#commandesGrid").on('bindingcomplete', function () {
+            if (!firstBinding) return;
+            firstBinding = false;
+            // Esperar un poco para asegurar que el grid tenga columnas visibles
+            setTimeout(() => {
+                self.currentFilters = [
+                    { field: "Commande_Transmit_First", value: true },
+                    { field: "Transmit", value: true },
+                    { field: "Credit_Autorise", value: true },
+                    { field: "isReady_Production", value: true },
+                    { field: "IsCompletedLogic", value: false },
+                    { field: "IsCanceledLogic", value: false }
+                ];
+                // 🔹 PASO 1: Sincronizar checkboxes visuales con los filtros guardados
+                self.currentFilters.forEach(filter => {
+                    const $checkbox = $(`.status-filter[data-field="${filter.field}"]`);
+                    if ($checkbox.length > 0) {
+                        $checkbox.prop("checked", filter.value);
+                    }
+                });
+                if (this.shouldApplyFilters) {
+                    this.shouldApplyFilters = false;
+                    self.applySavedFilters(); // ✅ Ahora sí seguro
+                }
+            }, 200); // puedes ajustar este delay si es necesario
         });
 
         // Filtros dinámicos al cambiar los checkboxes
         $(".status-filter").on("change", function () {
             const field = $(this).data("field");
+            const isChecked = $(this).is(":checked");
+
+            // Actualizar filtro en la variable global
+            const index = self.currentFilters.findIndex(f => f.field === field);
+            if (index !== -1) {
+                self.currentFilters[index].value = isChecked;
+            } else {
+                self.currentFilters.push({ field, value: isChecked });
+            }
+
+            self.applySavedFilters();
+            /*const field = $(this).data("field");
             const isChecked = $(this).is(":checked");
 
             $("#commandesGrid").jqxGrid('removefilter', field);
@@ -141,11 +227,22 @@ class OrdersModule {
             filterGroup.addfilter(1, filter);
             $("#commandesGrid").jqxGrid('addfilter', field, filterGroup);
 
-            $("#commandesGrid").jqxGrid('applyfilters');
+            $("#commandesGrid").jqxGrid('applyfilters');*/
         });
 
         $("#btnRefresh").on("click", function () {
-            alert("Refreshing data...");
+            this.shouldApplyFilters = true;
+            $("#commandesGrid").jqxGrid('updatebounddata');
+            setTimeout(() => {
+                self.applySavedFilters();
+                // Sincronizar checkboxes si hiciste cambios manuales en otra vista
+                self.currentFilters.forEach(filter => {
+                    const $checkbox = $(`.status-filter[data-field="${filter.field}"]`);
+                    if ($checkbox.length > 0) {
+                        $checkbox.prop("checked", filter.value);
+                    }
+                });
+            }, 1000);
         });
 
     }

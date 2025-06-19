@@ -137,7 +137,7 @@
                 { name: 'IsCanceledLogic', type: 'boolean' },
                 { name: 'Commande_Transmit_First', type: 'boolean' },
                 ], id: 'Commande_Id',
-                url: '/production/production/get-commandes'
+                url: '/production/orders/today-schedule?equipment_id=17'
                 
             });
 
@@ -154,7 +154,7 @@
                     { text: 'Customer Name', datafield: 'Customer_Name', width: 200 },
                     { text: 'Order Date', datafield: 'Date_Commande', width: 100, cellsformat: 'yyyy-MM-dd' },
                     { text: 'Requested Date', datafield: 'Date_Demander', width: 100, cellsformat: 'yyyy-MM-dd' },
-                    { text: 'Client PO', datafield: 'clientPO', width: 120 },
+                    { text: 'Client PO', datafield: 'Po_Client', width: 120 },
                     { text: 'Lot ID', datafield: 'Lot_Id', width: 80 },
                     { text: 'Product Number', datafield: 'PrNumber', width: 120 },
                     { text: 'Product Description', datafield: 'PrDescription1', width: 250 },
