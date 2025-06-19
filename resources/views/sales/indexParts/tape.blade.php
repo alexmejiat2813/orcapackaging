@@ -88,15 +88,40 @@
           </div>
     
           <div class="modal-body">
-            <div class="mb-3">
-              <label for="image1" class="form-label">Image 1</label>
-              <input class="form-control" type="file" id="image1" accept="image/*">
+              <div class="mb-3">
+                <label for="image1" class="form-label">Image 1</label>
+                <input class="form-control" type="file" id="image1" accept="image/*">
+                <div class="mt-3">
+                  <div class="row">
+                    <div class="col">
+                      <label for="image1_width" class="form-label">Largeur</label>
+                      <input type="number" class="form-control" id="image1_width" placeholder="px">
+                    </div>
+                    <div class="col">
+                      <label for="image1_height" class="form-label">Hauteur</label>
+                      <input type="number" class="form-control" id="image1_height" placeholder="px">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="image2" class="form-label">Image 2 (optionnelle)</label>
+                <input class="form-control" type="file" id="image2" accept="image/*">
+                <div class="mt-3">
+                  <div class="row">
+                    <div class="col">
+                      <label for="image2_width" class="form-label">Largeur</label>
+                      <input type="number" class="form-control" id="image2_width" placeholder="px">
+                    </div>
+                    <div class="col">
+                      <label for="image2_height" class="form-label">Hauteur</label>
+                      <input type="number" class="form-control" id="image2_height" placeholder="px">
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="image2" class="form-label">Image 2 (optionnelle)</label>
-              <input class="form-control" type="file" id="image2" accept="image/*">
-            </div>
-          </div>
     
           <div class="modal-footer">
             <button type="button" class="btn btn-success" id="uploadImagesBtn">Téléverser</button>
@@ -106,6 +131,7 @@
         </div>
       </div>
     </div>
+
 
 
     <div class="parametres">
