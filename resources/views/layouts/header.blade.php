@@ -259,7 +259,7 @@
       <li><a href="{{ url('/inventory/formule-inks') }}" class="{{ Request::is('inventory/formule-inks') ? 'active' : '' }}"><i class="bi bi-circle"></i>Formule Inks</a></li>
       </x-permission-users>
       <x-permission-users :allowed-roles="['Thomas Admin']">
-        <li><a href="{{ url('/inventory/items') }}" class="{{ Request::is('inventory/items') ? 'active' : '' }}"><i class="bi bi-circle"></i>Items</a></li>
+        <li><a href="{{ url('/inventory/types-products') }}" class="{{ Request::is('inventory/types-products') ? 'active' : '' }}"><i class="bi bi-circle"></i>Items</a></li>
         <li><a href="{{ url('/inventory/movements') }}" class="{{ Request::is('inventory/movements') ? 'active' : '' }}"><i class="bi bi-circle"></i>Movements</a></li>
         <li><a href="{{ url('/inventory/warehouses') }}" class="{{ Request::is('inventory/warehouses') ? 'active' : '' }}"><i class="bi bi-circle"></i>Warehouses</a></li>
         <li><a href="{{ url('/inventory/barcodes') }}" class="{{ Request::is('inventory/barcodes') ? 'active' : '' }}"><i class="bi bi-circle"></i>Barcodes</a></li>

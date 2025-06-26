@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Models\Product\Product;
 use Illuminate\Http\Request;
+use App\Models\Product\ProductType;
 
 class ProductController extends Controller
 {
@@ -44,4 +45,27 @@ class ProductController extends Controller
 
         return response()->json($product);
     }
+
+// Vista principal con jqxGrid
+public function showByType($type)
+{
+    return view('inventory.product', ['type' => $type]);
+}
+
+// Endpoint para el grid (AJAX)
+public function getProductsByType($type)
+{
+    $productType = ProductType::where('ProductType_Code', $type)
+                    ->orWhere('ProductType_ID', $type)
+                    ->first();
+
+    if (!$productType) {
+        return response()->json(['error' => 'Invalid type'], 404);
+    }
+
+    $products = Product::where('ProductType_ID', $productType->ProductType_ID)->get();
+
+    return response()->json($products);
+}
+
 }

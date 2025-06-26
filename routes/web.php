@@ -36,6 +36,7 @@ use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
     use App\Http\Controllers\Inventory\InkFormuleComponentController;
 
      use App\Http\Controllers\Product\ProductController;
+     use App\Http\Controllers\Product\ProductTypeController;
 
 use App\Http\Middleware\CheckSoumissionID;
 
@@ -102,6 +103,11 @@ Route::middleware(['auth'])->group(function () {
         //Route::get('/credit-check', [SalesOrderController::class, 'index'])->name('accounting.check');
         
     });
+
+    Route::get('/inventory/types-products', [ProductTypeController::class, 'index'])->name('inventory.types');
+    Route::get('/inventory/products/type/{id}', [ProductController::class, 'showByType'])->name('products.byType');
+    Route::get('/inventory/products/{id}', [ProductController::class, 'getProductsByType']);
+
 
    
 
