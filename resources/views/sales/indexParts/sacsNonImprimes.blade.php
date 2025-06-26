@@ -173,9 +173,13 @@
             <label for="salaireConversion"> Salaire ($CAD) </label>
             <input name="salaireConversion" type="number" id="salaireConversion" required>
         </div>
+        <div class="divParametres" id="coutSousTraitanceContainer" style="display: none;">
+            <label for="coutSousTraitance">Coût de la sous-traitance </label>
+            <input type="number" name="coutSousTraitance" id="coutSousTraitance" step="0.01">
+        </div>
     </div>
 
-    <h2>Temps de production</h2>
+    <h2 class="titre-temps-production">Temps de production</h2>
     <div class="parametres">
         <div class="divParametres">
             <label for="dureeTotaleConversion"> Duree Totale de Conversion  </label>
