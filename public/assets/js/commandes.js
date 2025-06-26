@@ -89,17 +89,17 @@ class OrdersModule {
         $("#commandesGrid").jqxGrid({
             width: '100%',
             source: this.adapter,
-            //pagermode: "simple",
-            //pageable: true,
+            pagermode: "simple",
+            pageable: true,
             autoheight: true,
             sortable: true,
             filterable: true,
             columnsresize: true,
             showfilterrow: true, selectionmode: 'singlecell', enablebrowserselection: true,
 
-            //pageSize: 15,
+            pageSize: 15,
             editable: true, 
-            showtoolbar: false, groupable: true, showgroupsheader: true, showstatusbar: true,
+            showtoolbar: false, groupable: false, showgroupsheader: false, showstatusbar: true,
             statusbarheight: 50,
 
 
