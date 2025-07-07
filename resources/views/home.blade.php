@@ -59,6 +59,11 @@
 
 @push('scripts')
 <script>
+    setTimeout(() => {
+        location.reload();
+    }, 30 * 60 * 1000); // 30 min
+</script>
+<script>
     const jotformListUrl = "{{ url('/hr/timeinput/data') }}";
 
     $(document).ready(function () {
@@ -170,3 +175,5 @@ let timer;
     }
 </script>
 @endpush
+
+

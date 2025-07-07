@@ -2,13 +2,49 @@ import { urlGetOrders, urlSyncSchedule } from './config.js';
 
 class OrdersModule {
     constructor() {
+        this.currentFilters = [];
+        this.shouldApplyFilters = false;
         this.adapter = null;
         this.source = null;
         this.existingAppointments = new Set();
         this.initialize();
     }
 
+    applySavedFilters() {
+        try {
+            const grid = $("#commandesGrid");
+
+            // Esto previene aplicar filtros si los datos aún se están cargando
+            /*const rows = grid.jqxGrid('getrows');
+            if (!rows || rows.length === 0) {
+                console.warn("Grid not ready: no data rows yet.");
+                return;
+            }*/
+
+            //grid.jqxGrid('clearfilters');
+
+            this.currentFilters.forEach(filter => {
+                const filterGroup = new $.jqx.filter();
+                const filterCondition = filterGroup.createfilter('booleanfilter', filter.value, 'equal');
+                filterGroup.addfilter(1, filterCondition);
+                grid.jqxGrid('addfilter', filter.field, filterGroup);
+            });
+
+            grid.jqxGrid('applyfilters');
+
+        } catch (error) {
+            console.error("applySavedFilters() failed:", error);
+        }
+    }
+
+
+
+
+
+
     initialize() {
+        const self = this;
+        
         this.source = {
             datatype: "json",
             datafields: [
@@ -40,7 +76,8 @@ class OrdersModule {
                 { name: 'Credit_Autorise', type: 'boolean' },
                 { name: 'isReady_Production', type: 'boolean' },
                 { name: 'IsCompletedLogic', type: 'boolean' },
-                { name: 'IsCancelledLogic', type: 'boolean' },
+                { name: 'IsCanceledLogic', type: 'boolean' },
+                { name: 'Commande_Transmit_First', type: 'boolean' },
             ],
             id: 'Commande_Id',
             url: urlGetOrders
@@ -58,76 +95,32 @@ class OrdersModule {
             sortable: true,
             filterable: true,
             columnsresize: true,
-            showfilterrow: true,
-            pageSize: 17,
+            showfilterrow: true, selectionmode: 'singlecell', enablebrowserselection: true,
+
+            pageSize: 15,
             editable: true, 
-            showtoolbar: true, groupable: true, showgroupsheader: true,
-            /*rendertoolbar: function (toolbar) {
-                const container = $("<div style='margin: 5px;'></div>");
-                toolbar.append(container);
-                container.append('<input class="btn btn-primary" id="syncButton" type="button" value="Synchronize Schedule" />');
-                $("#syncButton").jqxButton();
+            showtoolbar: false, groupable: false, showgroupsheader: false, showstatusbar: true,
+            statusbarheight: 50,
 
-                $('#syncButton').on('click', function () {
-                    // Remove focus from edited cell to ensure value is saved
-                    $('#commandesGrid').jqxGrid('endcelledit', $('#commandesGrid').jqxGrid('getselectedrowindex'), "Scheduled_Date", false);
 
-                    const rows = $('#commandesGrid').jqxGrid('getrows');
-
-                    const selectedLots = rows
-                        .filter(row => row.Scheduled_Date instanceof Date && !isNaN(row.Scheduled_Date))
-                        .map(row => ({
-                            lot_id: row.Lot_Id,
-                            commande_id: row.Commande_Id,
-                            Scheduled_Date: row.Scheduled_Date.toISOString().split('T')[0] // formatted date
-                        }));
-
-                    if (selectedLots.length === 0) {
-                        Swal.fire('No data', 'No lots with a scheduled date to synchronize.', 'info');
-                        return;
-                    }
-
-                    // Disable button and show loading
-                    $("#syncButton").prop("disabled", true).val("Synchronizing...");
-
-                    Swal.fire({
-                        title: 'Synchronizing...',
-                        text: 'Please wait while we update the schedule.',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
-                    fetch(urlSyncSchedule, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            "X-CSRF-TOKEN": window.csrfToken
-                        },
-                        body: JSON.stringify({ lots: selectedLots })
-                    })
-                        .then(response => response.json())
-                        .then(result => {
-                            Swal.fire('Done', `Synchronization complete. Changes made: ${result.updated}`, 'success');
-                            $('#commandesGrid').jqxGrid('updatebounddata');
-                        })
-                        .catch(error => {
-                            console.error('Error syncing:', error);
-                            Swal.fire('Error', 'An error occurred during synchronization.', 'error');
-                        })
-                        .finally(() => {
-                            $("#syncButton").prop("disabled", false).val("Synchronize Schedule");
-                        });
-                });
-            },*/
 
             columns: [
                 //{ text: 'Scheduled Date', datafield: 'Scheduled_Date', width: 110, columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', align: 'center', cellsalign: 'center', editable: isAdmin },
-                //{ text: 'ID', datafield: 'Commande_Id', align: 'center', cellsalign: 'center', width: 60 },
+                { text: 'ID', datafield: 'Commande_Id', align: 'center', cellsalign: 'center', width: 60, hidden:true },
                 { text: '# Customer', datafield: 'Customer_Code', width: 95, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Customer', datafield: 'Customer_Name', width: 255, align: 'center', editable: false },
-                { text: '# Order', datafield: 'InInvoiceNumber', width: 75, align: 'center', cellsalign: 'center', editable: false },
+                {
+                    text: '# Order', datafield: 'InInvoiceNumber', width: 75, align: 'center', cellsalign: 'center', editable: false, aggregates: ['count',
+                        {
+                            'Cappuccino Items':
+                                function (aggregatedValue, currentValue) {
+                                    if (currentValue == "Cappuccino") {
+                                        return aggregatedValue + 1;
+                                    }
+                                    return aggregatedValue;
+                                }
+                        }
+                    ] },
                 { text: 'Client PO', datafield: 'Po_Client', width: 160, align: 'center', editable: false },
                 { text: 'Order Date', datafield: 'Date_Commande', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', filtertype: 'range', editable: false },
                 { text: 'Requested Date', datafield: 'Date_Demander', width: 110, cellsformat: 'yyyy-MM-dd', columntype: 'datetimeinput', align: 'center', cellsalign: 'center', filtertype: 'range', editable: false },
@@ -138,24 +131,36 @@ class OrdersModule {
                 { text: 'Stock Qty', datafield: 'Qty_InStock', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Shipping Qty', datafield: 'Shipping_Qty', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Finish Qty', datafield: 'Qty_Finish', width: 100, align: 'center', cellsalign: 'center', editable: false },               
-                { text: 'Lot Price', datafield: 'Lots_Price', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
+                { text: 'Lot Price', datafield: 'Lots_Price', width: 100, cellsformat: 'c4', align: 'center', cellsalign: 'right', editable: false },
                 { text: 'Unit Price', datafield: 'Unit_Price', width: 100, align: 'center', cellsalign: 'center', editable: false },
                 { text: 'Sub-Total', datafield: 'SubTotal', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
                 { text: 'Total', datafield: 'Total', width: 100, cellsformat: 'c2', align: 'center', cellsalign: 'right', editable: false },
-                { text: "Transmit", datafield: "Transmit", hidden: true },
-                { text: "Credit Autorise", datafield: "Credit_Autorise", hidden: true },
-                { text: "isReady Production", datafield: "isReady_Production", hidden: true },
-                { text: "Complet", datafield: "IsCompletedLogic", hidden: true },
-                { text: "Cancel", datafield: "IsCancelledLogic", hidden: true },
+                { text: "Commande_Transmit_First", datafield: "Commande_Transmit_First", width: '5%', hidden: true },
+                { text: "Transmit", datafield: "Transmit", width: '5%', hidden: true },
+                { text: "Credit Autorise", datafield: "Credit_Autorise", width: '5%', hidden: true },
+                { text: "isReady Production", datafield: "isReady_Production", width: '5%', hidden: true },
+                { text: "Complet", datafield: "IsCompletedLogic", width: '5%', hidden: true },
+                { text: "Cancel", datafield: "IsCanceledLogic", width: '5%', hidden: true },
             ],
             ready: function () {
-                // Aplicar filtros por defecto al cargar el grid
-                const filters = [
+                self.currentFilters = [
+                    { field: "Commande_Transmit_First", value: true },
                     { field: "Transmit", value: true },
                     { field: "Credit_Autorise", value: true },
                     { field: "isReady_Production", value: true },
                     { field: "IsCompletedLogic", value: false },
-                    { field: "IsCancelledLogic", value: false }
+                    { field: "IsCanceledLogic", value: false }
+                ];
+
+                self.applySavedFilters();
+                // Aplicar filtros por defecto al cargar el grid
+                /*const filters = [
+                    { field: "Commande_Transmit_First", value: true },
+                    { field: "Transmit", value: true },
+                    { field: "Credit_Autorise", value: true },
+                    { field: "isReady_Production", value: true },
+                    { field: "IsCompletedLogic", value: false },
+                    { field: "IsCanceledLogic", value: false }
                 ];
                 filters.forEach(filter => {
                     let filterGroup = new $.jqx.filter();
@@ -164,13 +169,54 @@ class OrdersModule {
                     filterGroup.addfilter(1, filterCondition);
                     $("#commandesGrid").jqxGrid('addfilter', filter.field, filterGroup);
                 });
-                $("#commandesGrid").jqxGrid('applyfilters');
+                $("#commandesGrid").jqxGrid('applyfilters');*/
             }
+        });
+
+        let firstBinding = true;
+
+        $("#commandesGrid").on('bindingcomplete', function () {
+            if (!firstBinding) return;
+            firstBinding = false;
+            // Esperar un poco para asegurar que el grid tenga columnas visibles
+            setTimeout(() => {
+                self.currentFilters = [
+                    { field: "Commande_Transmit_First", value: true },
+                    { field: "Transmit", value: true },
+                    { field: "Credit_Autorise", value: true },
+                    { field: "isReady_Production", value: true },
+                    { field: "IsCompletedLogic", value: false },
+                    { field: "IsCanceledLogic", value: false }
+                ];
+                // 🔹 PASO 1: Sincronizar checkboxes visuales con los filtros guardados
+                self.currentFilters.forEach(filter => {
+                    const $checkbox = $(`.status-filter[data-field="${filter.field}"]`);
+                    if ($checkbox.length > 0) {
+                        $checkbox.prop("checked", filter.value);
+                    }
+                });
+                if (this.shouldApplyFilters) {
+                    this.shouldApplyFilters = false;
+                    self.applySavedFilters(); // ✅ Ahora sí seguro
+                }
+            }, 200); // puedes ajustar este delay si es necesario
         });
 
         // Filtros dinámicos al cambiar los checkboxes
         $(".status-filter").on("change", function () {
             const field = $(this).data("field");
+            const isChecked = $(this).is(":checked");
+
+            // Actualizar filtro en la variable global
+            const index = self.currentFilters.findIndex(f => f.field === field);
+            if (index !== -1) {
+                self.currentFilters[index].value = isChecked;
+            } else {
+                self.currentFilters.push({ field, value: isChecked });
+            }
+
+            self.applySavedFilters();
+            /*const field = $(this).data("field");
             const isChecked = $(this).is(":checked");
 
             $("#commandesGrid").jqxGrid('removefilter', field);
@@ -181,7 +227,22 @@ class OrdersModule {
             filterGroup.addfilter(1, filter);
             $("#commandesGrid").jqxGrid('addfilter', field, filterGroup);
 
-            $("#commandesGrid").jqxGrid('applyfilters');
+            $("#commandesGrid").jqxGrid('applyfilters');*/
+        });
+
+        $("#btnRefresh").on("click", function () {
+            this.shouldApplyFilters = true;
+            $("#commandesGrid").jqxGrid('updatebounddata');
+            setTimeout(() => {
+                self.applySavedFilters();
+                // Sincronizar checkboxes si hiciste cambios manuales en otra vista
+                self.currentFilters.forEach(filter => {
+                    const $checkbox = $(`.status-filter[data-field="${filter.field}"]`);
+                    if ($checkbox.length > 0) {
+                        $checkbox.prop("checked", filter.value);
+                    }
+                });
+            }, 1000);
         });
 
     }

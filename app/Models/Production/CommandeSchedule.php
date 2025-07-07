@@ -8,32 +8,47 @@ class CommandeSchedule extends Model
 {
     protected $table = 'CommandeSchedule'; // Nombre de la tabla en la base de datos
 
-    // Método para obtener los datos con la consulta que definiste
-    public static function getCommandeScheduleData()
+public static function getScheduleWithReceipe()
     {
-        // Usamos Query Builder para ejecutar la consulta
-        $results = DB::table('ThomasOrca.dbo.CommandeSchedule')
-            ->where('Checked', 1)
+        return DB::table('ThomasOrca.dbo.Commande')
+            ->leftJoin('ThomasOrca.dbo.Commande_Receipe', 'Commande.Commande_Id', '=', 'Commande_Receipe.Commande_Id')
+            ->leftJoin('ThomasOrca.dbo.Lots', 'Commande_Receipe.Commande_Id', '=', 'Lots.Commande_Id')
+            ->leftJoin('ThomasOrca.dbo.CommandeSchedule', function ($join) {
+                $join->on('Lots.Lot_Id', '=', 'CommandeSchedule.Lot_ID')
+                     ->on('Commande_Receipe.Equipment_Id', '=', 'CommandeSchedule.Equipment_ID');
+            })
+            ->leftJoin('ThomasOrca.dbo.Equipment', 'Equipment.Equipment_ID', '=', 'Commande_Receipe.Equipment_Id')
+            ->leftJoin('ThomasOrca.dbo.Customer', 'Customer.Customer_ID', '=', 'Commande.Customer_Id')
+            ->leftJoin('ThomasOrca.dbo.Product', 'Product.Product_ID', '=', 'Lots.Product_Id')
             ->select(
-                'Schedule_ID',
-                'Lot_Id',
-                'Users_ID',
-                'Equipment_ID',
-                'Scheduled_Date',
-                'StatusCommande',
-                'Comment',
-                'Created_At',
-                'Update_At',
-                'Checked',
-                'Priority'
+                'Commande.Commande_Id',
+                'Commande.InInvoiceNumber',
+                'Customer.Customer_No',
+                'Customer.Customer_Name',
+                'CommandeSchedule.Schedule_Id',
+                'Lots.Lot_ID',
+                'Product.PrNumber',
+                'Product.PrDescription1',
+                'Commande_Receipe.Equipment_Id',
+                'Equipment.Equipment_Description',
+                'CommandeSchedule.Equipment_ID AS Scheduled_Equipment_ID',
+                'CommandeSchedule.Scheduled_Date',
+                'Commande_Receipe.Value as qtyHeures'
             )
-            ->orderBy('Checked')
-            ->orderBy('Scheduled_Date')
-            ->orderBy('Lot_Id')
-            ->get(); // Ejecutamos la consulta y obtenemos los resultados
-        
-        return $results;
+            ->where('Product.ProductType_ID', 1)
+            ->where('Commande.Complet', 0)
+            ->where('Commande.Cancel', 0)
+            ->where('Commande.isReady_Production', 1)
+            ->where('Lots.Lots_Complet', 0)
+            ->where('Lots.Lots_Cancel', 0)
+            ->whereNotNull('Commande_Receipe.Equipment_Id')
+            ->orderBy('Lots.Lot_Id')
+            ->orderBy('Commande_Receipe.Equipment_Id')
+            ->orderBy('CommandeSchedule.Scheduled_Date')
+            ->get();
     }
+
+
 
     public function schedules()
 {

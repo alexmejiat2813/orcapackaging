@@ -20,37 +20,21 @@
         <!-- Toolbar -->
         <div class="d-flex flex-column mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <!-- Botones -->
-                <x-permission-users :allowed-roles="['Thomas Admin']">
-                    <div class="d-flex gap-2">
-                        <button type="button" id="btnNew" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
-                            <i class="bi bi-file-earmark-plus"></i>
-                        </button>
-                        <button type="button" id="btnEdit" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Modifier commande (Edit Order)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button type="button" id="btnDuplicate" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Dupliquer commande (Duplicate)">
-                            <i class="bi bi-files"></i>
-                        </button>
-                        <button type="button" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Actualiser la liste (Refresh)">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                        <button type="button" id="btnFollowUps" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Consulter les suivis (Check Follow-Ups)">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </x-permission-users>
-                <!-- Título del listado -->
+            <!-- Título del listado -->
                 <h4 class="mb-0 ms-3">List of orders</h4>
                 <!-- Filtros -->
                 <div class="d-flex flex-wrap gap-3 align-items-center">
                     <div class="form-check">
+                        <input class="form-check-input status-filter" type="checkbox" name="is_transmittedFirst" id="is_transmittedFirst" data-field="Commande_Transmit_First" value="transmittedFirst" checked>
+                        <label class="form-check-label" for="is_transmittedFirst">Order preparation</label>
+                    </div>
+                    <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_transmitted" id="is_transmitted" data-field="Transmit" value="transmitted" checked>
-                        <label class="form-check-label" for="is_transmitted">Transmit</label>
+                        <label class="form-check-label" for="is_transmitted">Order approval</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_complete" id="is_complete" data-field="Credit_Autorise" value="completed" checked>
-                        <label class="form-check-label" for="is_complete">Credit Autorise</label>
+                        <label class="form-check-label" for="is_complete">Authorized credit</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input status-filter" type="checkbox" name="is_canceled" id="is_canceled" data-field="isReady_Production" value="cancelled" checked>
@@ -61,10 +45,33 @@
                         <label class="form-check-label" for="is_blocked">Complet</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_blocked" id="is_blocked" data-field="IsCancelledLogic" value="barred">
+                        <input class="form-check-input status-filter" type="checkbox" name="is_blocked" id="is_blocked" data-field="IsCanceledLogic" value="barred">
                         <label class="form-check-label" for="is_blocked">Cancel</label>
                     </div>
                 </div>
+            <!-- Botones -->
+                <x-permission-users :allowed-roles="['Thomas Admin']">
+                    <div class="d-flex gap-2 align-items-center">
+                        <button type="button" id="btnNew" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
+                            <i class="bi bi-file-earmark-plus"></i>
+                        </button>
+                        <button type="button" id="btnEdit" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Modifier commande (Edit Order)">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button type="button" id="btnDuplicate" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Dupliquer commande (Duplicate)">
+                            <i class="bi bi-files"></i>
+                        </button>
+                        <button type="button" id="btnRefresh" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Actualiser la liste (Refresh)">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                        <button type="button" id="btnFollowUps" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Consulter les suivis (Check Follow-Ups)">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Etiquetas" onclick="openLabelsModal()">
+                            <i class="bi bi-tag"></i>
+                        </button>
+                    </div>
+                </x-permission-users>                
             </div>
         </div>
         <!-- Grid principal -->

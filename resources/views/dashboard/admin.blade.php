@@ -5,37 +5,111 @@
 @section('content')
 <div class="container py-4">
     @if(Auth::check())
-        <div class="alert alert-primary d-flex justify-content-between align-items-center">
-            <div>
-                <h2 class="mb-0">Welcome, {{ Auth::user()->Users_Name }}</h2>
-                <p class="mb-0">Administrative Tools Panel</p>
+        <h2 class="mb-4">📊 Dashboard - Key Performance Indicators</h2>
+        <div class="row">
+        <!-- Active Work Orders -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-left-primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Active Work Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $activeOrders ?? 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-clipboard-check fs-3 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>  
+        </div>
 
-        <section class="section mb-5">
-            <h3 class="mb-3">Monthly Sales by Year</h3>
-            <div id="chartContainer" style="width:100%; height:500px;"></div>
-        </section>
+        <!-- Low Stock Items -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-left-danger h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Low Stock Items</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $lowStock ?? 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-exclamation-circle fs-3 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <section class="section">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="mb-0">Top Clients per Year</h3>
-                <div class="d-flex align-items-center">
-                    <label for="yearSelector" class="me-2 mb-0 fw-semibold">Select Year:</label>
-                    <select id="yearSelector" class="form-select form-select-sm" style="width: 120px;"></select>
+        <!-- Total Ink Formules -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-left-success h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Ink Formulations</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $formules ?? 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-droplet-half fs-3 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Today -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-left-info h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Completed Today</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $completedToday ?? 0 }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-check-circle fs-3 text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="row">
+            <!-- Monthly Sales -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">📈 Monthly Sales by Year</h5>
+                        <div id="chartContainer" style="width:100%; height:400px;"></div>
+                    </div>
                 </div>
             </div>
 
-            <div id="chartContainer1" style="width:100%; height:500px;"></div>
-        </section>
+            <!-- Top Clients -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">🏆 Top Clients per Year</h5>
+                            <select id="yearSelector" class="form-select form-select-sm" style="width: auto;">
+                                <!-- Se llena dinámicamente -->
+                            </select>
+                        </div>
+                        <div id="chartContainer1" style="width:100%; height:400px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
      @else
         <div class="alert alert-warning">
             <a href="{{ route('login') }}" class="btn btn-outline-primary">Login</a>
         </div>
     @endif
 </div>
-
 @endsection
+
 
 @push('scripts')
 <script type="text/javascript" src="/assets/jqwidgets/jqxcore.js"></script>
@@ -140,3 +214,7 @@
 </script>
 
 @endpush
+
+
+
+

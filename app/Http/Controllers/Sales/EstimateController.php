@@ -254,6 +254,18 @@ class EstimateController extends Controller
         Session::flash('ID_Soumission', $idSoumission);
         return $reponse;
     }
+
+    public function getAssets($customerNo){
+        $assets = DB::table('Customer')
+            ->leftJoin('Asset_Link', 'Customer.Customer_ID', '=', 'Asset_Link.Customer_ID')
+            ->leftJoin('Asset', 'Asset_Link.Asset_ID', '=', 'Asset.Asset_ID')
+            ->where('Customer.Customer_No', $customerNo)
+            ->select('Asset.Asset_ID', 'Asset.Asset_FName', 'Asset.Asset_Name')
+            ->get();
+
+        return response()->json($assets);
+    }
+
 }
 
 ?>

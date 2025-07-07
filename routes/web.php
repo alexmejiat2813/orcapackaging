@@ -16,16 +16,27 @@ use App\Http\Controllers\Purchasing\FollowUp\PurchaseOrderFollowUpController;
 
 
 use App\Http\Controllers\Sales\SalesOrderController;
+use App\Http\Controllers\Sales\SalesValidationOrderController;
+
 use App\Http\Controllers\Production\CommandesController;
 use App\Http\Controllers\Production\BomController;
 use App\Http\Controllers\Production\PlanningController;
+use App\Http\Controllers\Production\LiveOrdersController;
 use App\Http\Controllers\Production\TrackingController;
+
+
 use App\Http\Controllers\Sales\EstimateController;
 use App\Http\Controllers\Sales\EstimateItemController;
 use App\Http\Controllers\Settings\SettingsController;
 use App\Http\Controllers\Settings\Modules\General\DepartmentController;
 use App\Http\Controllers\Settings\Modules\General\EquipmentController;
 use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
+
+    use App\Http\Controllers\Inventory\InkFormuleController;
+    use App\Http\Controllers\Inventory\InkFormuleComponentController;
+
+     use App\Http\Controllers\Product\ProductController;
+     use App\Http\Controllers\Product\ProductTypeController;
 
 use App\Http\Middleware\CheckSoumissionID;
 
@@ -86,13 +97,31 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/chart/', [DashboardController::class, 'getInvoiceData']);
     Route::get('/dashboard/chart/top-clients', [DashboardController::class, 'getTopClientsByYear']);
 
+
+    Route::prefix('accounting')->group(function () {
+        Route::get('/credit-check', fn() => view('accounting.check'));
+        //Route::get('/credit-check', [SalesOrderController::class, 'index'])->name('accounting.check');
+        
+    });
+
+    Route::get('/inventory/types-products', [ProductTypeController::class, 'index'])->name('inventory.types');
+    Route::get('/inventory/products/type/{id}', [ProductController::class, 'showByType'])->name('products.byType');
+    Route::get('/inventory/products/{id}', [ProductController::class, 'getProductsByType']);
+
+
+   
+
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
     /*
     |--------------------------------------------------------------------------
     | Sales Module Routes
     |--------------------------------------------------------------------------
     */
     Route::prefix('sales')->group(function () {
-        Route::get('/orders', [SalesOrderController::class, 'index'])->name('sales.orders');
+        Route::get('/draft', [SalesOrderController::class, 'index'])->name('sales.draft');
+        Route::get('/validation', [SalesValidationOrderController::class, 'index'])->name('sales.validation');
         // Route::get('/quotations', [QuotationController::class, 'index']);
         // Route::get('/invoices', [InvoiceController::class, 'index']);
         // Route::get('/clients', [ClientController::class, 'index']);
@@ -107,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/modifier', [EstimateController::class, 'modifier']);
             Route::get('/gridData', [EstimateController::class, 'gridData']);
             Route::get('/getSession', [EstimateController::class, 'getSession']);
+            Route::get('/getAssets/{customerId}', [EstimateController::class, 'getAssets']);
         });
         Route::prefix('estimates_item')->group(function () {
             Route::get('/', [EstimateItemController::class, 'index'])->middleware(CheckSoumissionID::class);
@@ -117,6 +147,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/copier', [EstimateItemController::class, 'copier']);
             Route::post('/itemReady', [EstimateItemController::class, 'itemReady']);
             Route::get('/getSession', [EstimateItemController::class, 'getSession']);
+            Route::get('/modification', [EstimateItemController::class, 'modification']);
+            Route::post('/ajouterCommentaire', [EstimateItemController::class, 'ajouterCommentaire']);
+            Route::post('/images', [EstimateItemController::class, 'images'])->name('images.estimates.upload');
         });
         
         ///////////////////////////////////////////////////////////////////
@@ -156,7 +189,11 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('production')->group(function () {
         Route::get('/orders', [CommandesController::class, 'index']);
         Route::get('/production/get-commandes', [CommandesController::class, 'getCommandes']);
+        Route::get('/production/get-schedules', [CommandesController::class, 'getCommandesWithSchedule']);
         Route::post('/orders/sync-schedule', [CommandesController::class, 'syncSchedule']);
+        Route::get('/orders/today-schedule', [CommandesController::class, 'getTodayScheduledCommandes']);
+        Route::post('/schedule/delete', [CommandesController::class, 'deleteScheduleWithReceipe']);
+
 
         Route::get('/bom', [BomController::class, 'index']);
         Route::get('/bom/get-commandes', [CommandesController::class, 'getCommandes']);
@@ -174,6 +211,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/planning/save-appointment', [PlanningController::class, 'saveAppointment']);
         Route::post('/planning/delete-appointment', [PlanningController::class, 'deleteAppointment']);
 
+        Route::get('/live-orders', [LiveOrdersController::class, 'index']);
+        Route::get('/live-orders/data', [LiveOrdersController::class, 'getDataByDate']);
+
         Route::get('/tracking', [TrackingController::class, 'index']);
         Route::get('/tracking/get-commandes', [TrackingController::class, 'getCommandes']);
 
@@ -183,6 +223,35 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/reception', fn() => view('purchasing.reception'));
         // Route::get('/facture', fn() => view('purchasing.facture'));
     });
+
+    Route::prefix('inventory')->group(function () {
+        Route::get('/formule-inks', [InkFormuleController::class, 'create'])->name('create');
+        Route::post('/formule-inks/save', [InkFormuleController::class, 'store'])->name('store');
+        Route::get('/formule-inks/list', [InkFormuleController::class, 'list']);
+    });
+
+
+
+    Route::prefix('ink-formulas')->name('ink-formulas.')->group(function () {
+        Route::get('/', [InkFormuleController::class, 'index'])->name('index');
+        Route::get('/create', [InkFormuleController::class, 'create'])->name('create');
+        Route::post('/', [InkFormuleController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [InkFormuleController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [InkFormuleController::class, 'update'])->name('update');
+        Route::delete('/{id}', [InkFormuleController::class, 'destroy'])->name('destroy');
+    });
+
+
+    
+    Route::prefix('ink-formulas/{formulaId}/components')->name('ink-components.')->group(function () {
+        Route::get('/', [InkFormuleComponentController::class, 'index'])->name('index');
+        Route::get('/create', [InkFormuleComponentController::class, 'create'])->name('create');
+        Route::post('/', [InkFormuleComponentController::class, 'store'])->name('store');
+        Route::get('/{componentId}/edit', [InkFormuleComponentController::class, 'edit'])->name('edit');
+        Route::put('/{componentId}', [InkFormuleComponentController::class, 'update'])->name('update');
+        Route::delete('/{componentId}', [InkFormuleComponentController::class, 'destroy'])->name('destroy');
+    });
+
 
     Route::prefix('settings')->group(function () {
 

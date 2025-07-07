@@ -1,3 +1,5 @@
+export const urlGetDataLiveOrders = "/production/live-orders/data";
+
 export const urlGetAppointments = "/production/planning/get-appointments";
 export const urlSaveAppointments = "/production/planning/save-appointment";
 export const urlDeleteAppointments = "/production/planning/delete-appointment";

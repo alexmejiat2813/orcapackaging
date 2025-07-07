@@ -356,25 +356,7 @@ class EstimateItemController extends Controller
 
         $asset = DB::table('Asset')
             ->where('Asset_ID', $item->Asset_ID)
-            ->first();
-        
-        // Ajout de toutes les informations dans la table Est_Master
-        DB::table('Est_Master')->insert([
-            'Request_ID' => $request->Request_ID,
-            'Est_ID' => $estimationID,
-            'Quotation_ID' => $quotationID,
-            'Customer_No' => $item->Client,
-            'Customer_Name' => $customer->Customer_Name ?? 'Inconnu',
-            'Customer_Contact' => ($asset?->Asset_FName ?? '') . ' ' . ($asset?->Asset_Name ?? ''),
-            'Rep_No' => $customer->Rep_No ?? 1,
-            'Rep_Name' => $customer->Rep_Name ?? 'SoniVo',
-            'CuPriceLevel' => 0,
-            'Col' => 0,
-            'InInvoiceNumber' => -1,
-            'Commande_Id' => -1,
-            'Customer_Id' => $customer->Customer_ID,
-            'Press_Type_Id' => $request->Work_Type
-        ]);   
+            ->first();  
 
         // Preparation du champ InInvoiceNumber
         $param = DB::table('ParamKey')
@@ -387,7 +369,7 @@ class EstimateItemController extends Controller
         $subTotal = $item->quantite * $item->prixFinauxMilleAvecProfit;
 
         // Ajout des informations dans Commande
-        DB::table('Commande')->insert([
+        $commandeId = DB::table('Commande')->insertGetId([
             'Customer_Code' => $item->Client,
             'Expedie_Tel' => "_(___)___-____",
             'Expedie_Fax' => "_(___)___-____",
@@ -427,7 +409,7 @@ class EstimateItemController extends Controller
             'Status_Fabrication_Id' => 1,
             'A_livrer' => 0,
             'Credit_To_Approuve' => 0,
-            'Customer_Id' => $customer->Customer_ID,
+            'Customer_Id' => $customer->Customer_ID ?? -1,
             'Com_Autre' => '',
             'Com_Expedition' => '',
             'Com_Finition' => '',
@@ -458,9 +440,68 @@ class EstimateItemController extends Controller
             ->where('Champ', 'InInvoiceNumber')
             ->update(['Valeur' => $invoiceNumber + 1]);
 
+        // Ajout de toutes les informations dans la table Est_Master
+        DB::table('Est_Master')->insert([
+            'Request_ID' => $request->Request_ID,
+            'Est_ID' => $estimationID,
+            'Quotation_ID' => $quotationID,
+            'Customer_No' => $item->Client,
+            'Customer_Name' => $customer->Customer_Name ?? 'Inconnu',
+            'Customer_Contact' => ($asset?->Asset_FName ?? '') . ' ' . ($asset?->Asset_Name ?? ''),
+            'Rep_No' => $customer->Rep_No ?? 1,
+            'Rep_Name' => $customer->Rep_Name ?? 'SoniVo',
+            'CuPriceLevel' => 0,
+            'Col' => 0,
+            'InInvoiceNumber' => $invoiceNumber,
+            'Commande_Id' => $commandeId,
+            'Customer_Id' => $customer->Customer_ID ?? -1,
+            'Press_Type_Id' => $request->Work_Type
+        ]); 
+
         DB::commit();
 
         return response()->json(['message' => 'Item marked as ready and linked to estimation & quotation.']);
+    }
+
+    public function modification(Request $request){
+
+        $itemId = $request->query('item_id');
+
+        $logs = DB::table('ItemsSynologyModificationLog')
+            ->join('Users', 'ItemsSynologyModificationLog.UserID', '=', 'Users.Users_ID')
+            ->select(
+                'Users.Users_Name as utilisateur',
+                'ItemsSynologyModificationLog.DateCommentaire as date',
+                'ItemsSynologyModificationLog.Commentaire as commentaire'
+            )
+            ->where('ItemID', $itemId)
+            ->orderByDesc('ItemsSynologyModificationLog.DateCommentaire')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $logs
+        ]);
+    }
+
+    public function ajouterCommentaire(Request $request){
+        $validated = $request->validate([
+            'item_id' => 'required|integer',
+            'commentaire' => 'required|string'
+        ]);
+
+        DB::table('ItemsSynologyModificationLog')->insert([
+            'ItemID' => $validated['item_id'],
+            'UserID' => Auth::id(),
+            'Commentaire' => $validated['commentaire'],
+            'DateCommentaire' => DB::raw('GETDATE()')
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function images(Request $request){
+        
     }
 
     // Fonctions pour ajout Database Thomas

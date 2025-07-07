@@ -14,7 +14,7 @@ class SalesOrderController extends Controller
      */
     public function index()
     {
-        return view('sales.orders'); // Make sure this view file exists
+        return view('sales.draft'); // Make sure this view file exists
     }
 }
 

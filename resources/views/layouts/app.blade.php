@@ -26,6 +26,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
+
     <!-- jqWidgets Core & Basic -->
     <script src="/assets/jqwidgets/jqxcore.js"></script>
     <script src="/assets/jqwidgets/jqxbuttons.js"></script>
@@ -58,6 +65,18 @@
 
     <script src="/assets/jqwidgets/jqxsplitter.js"></script>
     <script src="/assets/jqwidgets/jqxgrid.grouping.js"></script>
+
+    <script src="/assets/jqwidgets/jqxdate.js"></script>
+    <script src="/assets/jqwidgets/jqxscheduler.js"></script>
+    <script src="/assets/jqwidgets/jqxscheduler.api.js"></script>
+    <script src="/assets/jqwidgets/jqxtooltip.js"></script>
+    <script src="/assets/jqwidgets/jqxnumberinput.js"></script>
+    <script src="/assets/jqwidgets/jqxradiobutton.js"></script>
+    <script src="/assets/jqwidgets/jqxdatatable.js"></script>
+
+    <!-- SweetAlert for alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">

@@ -22,8 +22,25 @@
         
         <div id="principale" class="section-main">
             <h1 class="h1-main" id="titre-item">Nouvel Item</h1>
+
+            <div class="divVerticale d-none" id="divBoutonStopModif">
+                <a href="#" id="boutonStopModif" class="btn btn-primary btn-lg d-inline-flex align-items-center px-4 py-2">
+                  Quitter la modification
+                </a>
+            </div>
         
             @include('sales.indexParts.paramsBaseItem')
+
+            <div id="formulaireModificationSection" class="mt-4 d-none">
+                <h1> Commentaire de modification</h1>
+
+                <div id="modificationGrid" style="height: 300px;"></div>
+
+                <div class="mt-3">
+                    <label for="modificationCommentaire" class="form-label">Commentaire</label>
+                    <textarea id="modificationCommentaire" name="modificationCommentaire" rows="4" class="form-control" placeholder="Ajoutez un commentaire sur cette modification..."></textarea>
+                </div>
+            </div>
         
             <div class="divVerticale mt-4">
                 <button type="submit" name="soumettreItem" id="soumettreItem" class="btn btn-primary bouton-formulaire">

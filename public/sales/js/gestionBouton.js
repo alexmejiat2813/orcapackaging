@@ -54,6 +54,34 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             alert('Item enregistré/modifié avec succès');
                             window.removeEventListener("beforeunload", alertBeforeUnload);
+
+                            // Second fetch pour poster les donnees de modifications si il y'en a 
+                            if (data.success) {
+                                const commentaire = document.getElementById('modificationCommentaire').value.trim();
+                                // const itemId = @json(session()->get('user_id')); // dans .blade
+                                if (commentaire !== "" && data.item_id) {
+                                    const commentResponse = await fetch('/sales/estimates_item/ajouterCommentaire', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': csrfToken
+                                        },
+                                        body: JSON.stringify({
+                                            item_id: data.item_id,
+                                            commentaire: commentaire
+                                        })
+                                    });
+                                
+                                    const commentResult = await commentResponse.json();
+                                
+                                    if (!commentResult.success) {
+                                        alert("Erreur lors de l'enregistrement du commentaire.");
+                                    } else {
+                                        // Optionnel : vider le champ commentaire
+                                        document.getElementById('modificationCommentaire').value = '';
+                                    }
+                                }
+                            }
                             window.location.reload();
                         }
                     } else {
@@ -139,20 +167,25 @@ function validerForm(formData) {
         if (element && element.required) {
             const valeur = formData.get(nomChamp);
 
-            if (!valeur) {
-                estValide = false;
-                const label = element.labels?.[0]?.textContent || element.name;
-                messageErreurs.push(`Le champ "${label}" est requis`);
-            } else {
-                if (element.type === 'email' && !validerEmail(valeur)) {
+            const container = element.closest('.divParametres');
+            const isVisible = container && container.offsetParent !== null;
+
+            if (isVisible) {
+                if (!valeur) {
                     estValide = false;
                     const label = element.labels?.[0]?.textContent || element.name;
-                    messageErreurs.push(`L'email "${label}" n'est pas valide`);
-                }
-                if (element.type === 'tel' && !validerTelephone(valeur)) {
-                    estValide = false;
-                    const label = element.labels?.[0]?.textContent || element.name;
-                    messageErreurs.push(`Le téléphone "${label}" doit contenir exactement 10 chiffres`);
+                    messageErreurs.push(`Le champ "${label}" est requis`);
+                } else {
+                    if (element.type === 'email' && !validerEmail(valeur)) {
+                        estValide = false;
+                        const label = element.labels?.[0]?.textContent || element.name;
+                        messageErreurs.push(`L'email "${label}" n'est pas valide`);
+                    }
+                    if (element.type === 'tel' && !validerTelephone(valeur)) {
+                        estValide = false;
+                        const label = element.labels?.[0]?.textContent || element.name;
+                        messageErreurs.push(`Le téléphone "${label}" doit contenir exactement 10 chiffres`);
+                    }
                 }
             }
         }
