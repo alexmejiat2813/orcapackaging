@@ -501,7 +501,40 @@ class EstimateItemController extends Controller
     }
 
     public function images(Request $request){
-        
+        $request->validate([
+            'image1' => 'required|image',
+            'image2' => 'nullable|image',
+            'image1_width' => 'required|numeric',
+            'image1_height' => 'required|numeric',
+            'image2_width' => 'nullable|numeric',
+            'image2_height' => 'nullable|numeric',
+        ]);
+
+        // Sauvegarde temporaire des images
+        $image1Path = $request->file('image1')->store('temp_images');
+        $image2Path = $request->hasFile('image2') ? $request->file('image2')->store('temp_images') : null;
+
+        $process = new Process([
+            'python',
+            base_path('scripts/encre.py'),
+            storage_path("app/{$image1Path}"),
+            $request->input('image1_width'),
+            $request->input('image1_height'),
+            $image2Path ? storage_path("app/{$image2Path}") : '',
+            $request->input('image2_width', 0),
+            $request->input('image2_height', 0),
+        ]);
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return response()->json(['success' => false, 'error' => $process->getErrorOutput()], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'result' => trim($process->getOutput())
+        ]);
     }
 
     // Fonctions pour ajout Database Thomas

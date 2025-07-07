@@ -80,6 +80,15 @@ DB_PASSWORD=thomasbsc
 
 Le projet ne devrait plus donner d'erreur de certificat.
 
+# Mise en ligne du site
+
+On va pour l'instant garder le serveur PHP en local dans notre reseau (c'est une application interne apres tout !)
+
+Pour ca, c'est simple ! On va ouvrir Laragon sur la machine hote, puis ouvrir le terminal de Laragon, se mettre dans le repertoire ```C:\laragon\www\orcapackaging``` et y entrer cette commande :
+```
+php artisan serve --host=192.168.0.97 --port=8000
+```
+
 # Deploiement Automatique
 
 Nous avons mis en place sur la machine 192.168.0.97 un webhook avec un tunnel ngrok afin de permettre a GitHub d'acceder a la machine local lors d'un push afin de pull main sur la machine pour mettre a jour automatiquement.
@@ -98,7 +107,7 @@ Ouvrez ensuite un terminal **GIT BASH (important)** et tapez cette suite de comm
 ```
 eval $(ssh-agent)
 ssh-add ~/.ssh/id_rsa
-py webhook-server.py
+py webhook_server.py
 ```
 Votre webhook est pret a l'utilisation
 
