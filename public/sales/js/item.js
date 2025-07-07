@@ -324,44 +324,44 @@ document.querySelectorAll(".prixVenteClientPlaque").forEach(element =>
   };
 
 // poucesCarresParSac * prixStickyBagPoucesCarres = prixStickyBagTotal 13 
-document.querySelectorAll('[id^="form-"]').forEach(form => {
-  const inputSurface = form.querySelector('[name="poucesCarresParSac"]');
-  const inputPrixUnitaire = form.querySelector('[name="prixStickyBagPoucesCarres"]');
-  const inputTotal = form.querySelector('[name="prixStickyBagTotal"]');
-
-  if (!inputSurface || !inputPrixUnitaire || !inputTotal) return;
-
-  const calculerTotal = () => {
-    const surface = parseFloat(inputSurface.value) || 0;
-    const prixUnitaire = parseFloat(inputPrixUnitaire.value) || 0;
-    const total = surface * prixUnitaire;
-    inputTotal.value = total.toFixed(2);
-    inputTotal.dispatchEvent(new Event("input", { bubbles: true }));
-  };
-
-  attacherListener(inputSurface, calculerTotal);
-  attacherListener(inputPrixUnitaire, calculerTotal);
-});
-
-// web * largeur = poucesCarresParSac 14
-document.querySelectorAll('[id^="form-"]').forEach(form => {
-  const inputWeb = form.querySelector('[name="web"]');
-  const inputLargeur = form.querySelector('[name="largeur"]');
-  const inputSurface = form.querySelector('[name="poucesCarresParSac"]');
-
-  if (!inputWeb || !inputLargeur || !inputSurface) return;
-
-  const calculerSurface = () => {
-    const web = parseFloat(inputWeb.value) || 0;
-    const largeur = parseFloat(inputLargeur.value) || 0;
-    const surface = web * largeur;
-    inputSurface.value = surface.toFixed(2);
-    inputSurface.dispatchEvent(new Event("input", { bubbles: true }));
-  };
-
-  attacherListener(inputWeb, calculerSurface);
-  attacherListener(inputLargeur, calculerSurface);
-});
+//document.querySelectorAll('[id^="form-"]').forEach(form => {
+//  const inputSurface = form.querySelector('[name="poucesCarresParSac"]');
+//  const inputPrixUnitaire = form.querySelector('[name="prixStickyBagPoucesCarres"]');
+//  const inputTotal = form.querySelector('[name="prixStickyBagTotal"]');
+//
+//  if (!inputSurface || !inputPrixUnitaire || !inputTotal) return;
+//
+//  const calculerTotal = () => {
+//    const surface = parseFloat(inputSurface.value) || 0;
+//    const prixUnitaire = parseFloat(inputPrixUnitaire.value) || 0;
+//    const total = surface * prixUnitaire;
+//    inputTotal.value = total.toFixed(2);
+//    inputTotal.dispatchEvent(new Event("input", { bubbles: true }));
+//  };
+//
+//  attacherListener(inputSurface, calculerTotal);
+//  attacherListener(inputPrixUnitaire, calculerTotal);
+//});
+//
+//// web * largeur = poucesCarresParSac 14
+//document.querySelectorAll('[id^="form-"]').forEach(form => {
+//  const inputWeb = form.querySelector('[name="web"]');
+//  const inputLargeur = form.querySelector('[name="largeur"]');
+//  const inputSurface = form.querySelector('[name="poucesCarresParSac"]');
+//
+//  if (!inputWeb || !inputLargeur || !inputSurface) return;
+//
+//  const calculerSurface = () => {
+//    const web = parseFloat(inputWeb.value) || 0;
+//    const largeur = parseFloat(inputLargeur.value) || 0;
+//    const surface = web * largeur;
+//    inputSurface.value = surface.toFixed(2);
+//    inputSurface.dispatchEvent(new Event("input", { bubbles: true }));
+//  };
+//
+//  attacherListener(inputWeb, calculerSurface);
+//  attacherListener(inputLargeur, calculerSurface);
+//});
 
 // Calcul nombre palettes necessaires
 document.querySelectorAll('[id^="form-"]').forEach(form => {

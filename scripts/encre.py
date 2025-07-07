@@ -3,6 +3,26 @@ from PIL import Image
 from collections import Counter
 import matplotlib.pyplot as plt
 
+def surface(w, h):
+    return round((int(w) * int(h)), 2)  # Conversion pouces carrés
+
+
+if __name__ == '__main__':
+
+    image2_valid = image2_path and image2_w and image2_h
+
+    image1_path = sys.argv[1]
+    image1_w = sys.argv[2]
+    image1_h = sys.argv[3]
+    image2_path = sys.argv[4]
+    image2_w = sys.argv[5]
+    image2_h = sys.argv[6]
+
+    surface_image1 = surface(image1_w, image1_h)
+
+    if image2_valid:
+        surface_image2 += surface(image2_w, image2_h)
+
 # === Paramètres ===
 image_path = "test.png"  # Remplace par ton chemin réel
 largeur_reelle_pouces = 19.25
