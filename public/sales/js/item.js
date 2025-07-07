@@ -1146,7 +1146,7 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
 });
 
 
-// (0.00000331767 * poucesCarresParQuantiteAProduire) * (couverture(num) / 100) = kg(num)  86-90
+// (0.00000331767 * poucesCarresParQuantiteAProduire) * (couverture(num) / 100) + 5 (consommation demarrage) = kg(num)  86-90
 document.querySelectorAll('[id^="form-"]').forEach(form => {
   const inputSurfaceTotale = form.querySelector('[name="poucesCarresParQuantiteAProduire"]');
 
@@ -1162,7 +1162,7 @@ document.querySelectorAll('[id^="form-"]').forEach(form => {
 
       if (inputCouverture && inputKg) {
         const couverture = parseFloat(inputCouverture.value) || 0;
-        const kg = base * (couverture / 100);
+        const kg = base * (couverture / 100) + 5;
         inputKg.value = kg.toFixed(2);
         inputKg.dispatchEvent(new Event("input", { bubbles: true }));
       }
