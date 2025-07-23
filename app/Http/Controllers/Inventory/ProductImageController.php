@@ -8,30 +8,28 @@ use App\Models\Product\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ProductImageController extends Controller {
     public function index()
     {
-        $clients = DB::table('Customer')->select('Customer_No', 'Customer_Name')->get();
         $products = DB::table('Product')->select('PrNumber')->get();
-        return view('inventory.productImage', compact('clients', 'products'));
+        return view('inventory.productImage', compact( 'products'));
     }
 
     public function upload(Request $request)
     {
         $request->validate([
             'image' => 'required|image',
-            'client' => 'required|string',
             'product' => 'required|string'
         ]);
 
         $file = $request->file('image');
-        $client = $request->input('client');
         $product = $request->input('product');
 
-        $folder = "images/{$client}";
+        $folder = "images";
 
-        $filename = time() . '_' . $file->getClientOriginalName();
+        $filename = Str::slug($product, '_') . '.' . $file->getClientOriginalExtension();
         $path = $file->storeAs($folder, $filename);
 
         if (!$path) {
@@ -43,11 +41,11 @@ class ProductImageController extends Controller {
 
         DB::table('Product')
             ->where('PrNumber', "{$product}")
-            ->update(['PrPath' => '\\\\192.168.0.97\\storage\\app\\private\\{$folder}']);
+            ->update(['PrPath' => "\\\\192.168.0.97\\storage\\app\\private\\{$path}"]);
 
         return response()->json([
             'success' => true,
-            'message' => "Image enregistrée dans /storage/app/private/{$folder} avec succès !"
+            'message' => "Image enregistrée {$path} avec succès !"
         ]);
     }
 }
