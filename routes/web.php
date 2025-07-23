@@ -31,15 +31,13 @@ use App\Http\Controllers\Settings\SettingsController;
 use App\Http\Controllers\Settings\Modules\General\DepartmentController;
 use App\Http\Controllers\Settings\Modules\General\EquipmentController;
 use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
-
-    use App\Http\Controllers\Inventory\InkFormuleController;
-    use App\Http\Controllers\Inventory\InkFormuleComponentController;
-
-     use App\Http\Controllers\Product\ProductController;
-     use App\Http\Controllers\Product\ProductTypeController;
+use App\Http\Controllers\Inventory\InkFormuleController;
+use App\Http\Controllers\Inventory\InkFormuleComponentController;
+use App\Http\Controllers\Inventory\ProductImageController;  
+use App\Http\Controllers\Product\ProductController; 
+use App\Http\Controllers\Product\ProductTypeController;
 
 use App\Http\Middleware\CheckSoumissionID;
-
 use App\Routes\Helpers\AutoSettingsRouter;
 
 Route::get('/check-app-key', function () {
@@ -107,6 +105,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/inventory/types-products', [ProductTypeController::class, 'index'])->name('inventory.types');
     Route::get('/inventory/products/type/{id}', [ProductController::class, 'showByType'])->name('products.byType');
     Route::get('/inventory/products/{id}', [ProductController::class, 'getProductsByType']);
+    Route::get('/inventory/productsImage', [ProductImageController::class, 'index'])->name('inventory.productImage');
+    Route::post('/inventory/productsImage', [ProductImageController::class, 'upload'])->name('productImage.upload');;
 
 
    
