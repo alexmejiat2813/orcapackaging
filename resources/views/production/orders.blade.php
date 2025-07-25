@@ -77,15 +77,17 @@
         <!-- Grid principal -->
         <div id="commandesGrid"></div>
 
-        <div class="modal fade" id="imagePreviewModal" tabindex="-1">
-          <div class="modal-dialog modal-lg">
+        <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Aperçu du produit</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title">Aperçu de l'image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
               </div>
               <div class="modal-body text-center">
-                <img id="previewImage" src="" alt="Image du produit" class="img-fluid rounded" style="max-height: 500px;">
+                <div id="zoomContainer" style="overflow: hidden; display: inline-block;">
+                  <img id="previewImage" src="" alt="Preview" style="max-width: 100%; transition: transform 0.3s ease;">
+                </div>
               </div>
             </div>
           </div>
