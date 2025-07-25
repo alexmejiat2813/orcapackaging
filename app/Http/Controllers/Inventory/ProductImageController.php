@@ -30,7 +30,7 @@ class ProductImageController extends Controller {
         $folder = "images";
 
         $filename = Str::slug($product, '_') . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs($folder, $filename);
+        $path = $file->storeAs($folder, $filename, 'public');
 
         if (!$path) {
             return response()->json([
@@ -41,7 +41,7 @@ class ProductImageController extends Controller {
 
         DB::table('Product')
             ->where('PrNumber', "{$product}")
-            ->update(['PrPath' => "\\\\192.168.0.97\\storage\\app\\private\\{$path}"]);
+            ->update(['PrPath' => "\\\\192.168.0.97\\storage\\app\\public\\{$path}"]);
 
         return response()->json([
             'success' => true,

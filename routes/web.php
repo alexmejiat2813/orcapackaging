@@ -193,6 +193,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/orders/sync-schedule', [CommandesController::class, 'syncSchedule']);
         Route::get('/orders/today-schedule', [CommandesController::class, 'getTodayScheduledCommandes']);
         Route::post('/schedule/delete', [CommandesController::class, 'deleteScheduleWithReceipe']);
+        Route::post('/image', [CommandesController::class, 'showModalImage'])->name('production.image');
 
 
         Route::get('/bom', [BomController::class, 'index']);

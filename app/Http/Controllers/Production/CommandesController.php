@@ -33,8 +33,6 @@ public function index()
     return response()->json($results);
 }
 
-
-
     /**
      * Delete a schedule and its associated receipe line.
      */
@@ -82,8 +80,6 @@ public function index()
             ], 500);
         }
     }
-
-
 
     public static function getCommandesWithSchedule()
 {
@@ -326,6 +322,30 @@ public function getSchedulesWithEquipment()
     $data = CommandeSchedule::getScheduleWithReceipe();
 
     return response()->json($data);
+}
+
+public function showModalImage(Request $request) {
+
+    $productNb = $request->input('productNb');
+
+    $imagePath = DB::table('Product')
+        ->where('PrNumber', $productNb)
+        ->value('PrPath'); 
+
+
+    //if (!file_exists($imagePath)) {
+    //    return response()->json([
+    //        'success' => false,
+    //        'message' => "Aucune image pour ce produit"
+    //    ]);
+    //}
+
+    $imagePath =   str_replace('\\\\192.168.0.97\\storage\\app\\public\\', 'storage\\', $imagePath);
+
+    return response()->json([
+        'success' => true,
+        'image_path' => $imagePath
+    ]);
 }
 
 }

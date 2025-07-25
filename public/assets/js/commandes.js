@@ -95,7 +95,7 @@ class OrdersModule {
             sortable: true,
             filterable: true,
             columnsresize: true,
-            showfilterrow: true, selectionmode: 'singlecell', enablebrowserselection: true,
+            showfilterrow: true, enablebrowserselection: true,
 
             pageSize: 15,
             editable: true, 
@@ -243,6 +243,46 @@ class OrdersModule {
                     }
                 });
             }, 1000);
+        });
+
+        $("#commandesGrid").on('cellclick', async function (event) {
+            const rowindex = event.args.rowindex;
+            const rowdata = $('#commandesGrid').jqxGrid('getrowdata', rowindex);
+
+            const productNb = rowdata.PrNumber;
+            const formData = new FormData();
+            formData.append('productNb', productNb);
+            formData.append('_token', window.csrfToken);
+            try {
+                const response = await fetch(window.routeProductUpload, {
+                    method: "POST",
+                    body: formData
+                });
+            
+                const data = await response.json();
+            
+                if (data.success) {
+                    const imageUrl = data.image_path;
+                    if (!imageUrl) {
+                        alert("Aucune image trouvée pour ce produit.");
+                        return;
+                    }
+                
+                    // Met à jour le src de l’image dans la modale
+                    document.getElementById('previewImage').src = '/' + imageUrl;
+                
+                    // Affiche la modale (Bootstrap 5)
+                    const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+                    modal.show();
+                } else {
+                    alert(data.message);
+                }
+            
+            } catch (error) {
+                console.error(error);
+                result.innerHTML = `<div class="alert alert-danger">Erreur réseau ou serveur.</div>`;
+            }
+            
         });
 
     }

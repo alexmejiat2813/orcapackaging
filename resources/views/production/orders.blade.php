@@ -76,12 +76,31 @@
         </div>
         <!-- Grid principal -->
         <div id="commandesGrid"></div>
+
+        <div class="modal fade" id="imagePreviewModal" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Aperçu du produit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body text-center">
+                <img id="previewImage" src="" alt="Image du produit" class="img-fluid rounded" style="max-height: 500px;">
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 @endsection
 
 @push('scripts')
     <!-- SweetAlert for alerts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        window.csrfToken = '{{ csrf_token() }}';
+        window.routeProductUpload = '{{ route('production.image') }}';
+    </script>
 
     <!-- Global machine data -->
     <script>const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Thomas Admin');</script>
