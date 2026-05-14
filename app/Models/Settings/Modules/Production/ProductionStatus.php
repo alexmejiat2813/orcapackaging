@@ -15,31 +15,19 @@ class ProductionStatus extends Model
         'Production_Status_Code',
         'Production_Status_Description',
         'Production_Status_Description_English',
-        'Production_Status_Active',
-        'Production_Status_Order',
+        'Production_Status_Actif',
+        'Production_Status_Quantity_Required',
+        'Production_Status_Color',
+        'Production_Status_Pattern',
     ];
 
     protected $casts = [
-        'Production_Status_Active' => 'boolean',
+        'Production_Status_Actif'             => 'boolean',
+        'Production_Status_Quantity_Required' => 'boolean',
     ];
-
-    public function requisProductionStatuses()
-    {
-        return $this->hasMany(\App\Models\Settings\Modules\Production\Requis\RequisProductionStatus::class, 'Production_Status_Id');
-    }
-
-    public function requisConditions()
-    {
-        return $this->hasMany(\App\Models\Settings\Modules\Production\Requis\RequisCondition::class, 'Production_Status_Id');
-    }
-
-    public function statusCompletes()
-    {
-        return $this->hasMany(\App\Models\Settings\Modules\Production\Requis\RequisProductionStatusComplete::class, 'Follow_Production_Status_Id');
-    }
 
     public function scopeActive($query)
     {
-        return $query->where('Production_Status_Active', 1)->orderBy('Production_Status_Order');
+        return $query->where('Production_Status_Actif', 1);
     }
 }
