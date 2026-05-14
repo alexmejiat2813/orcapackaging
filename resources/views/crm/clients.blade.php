@@ -34,6 +34,7 @@
 @endsection
 
 @push('scripts')
+<script src="/assets/jqwidgets/jqxgrid.columnsreorder.js"></script>
 <script>
 $(document).ready(function () {
 
