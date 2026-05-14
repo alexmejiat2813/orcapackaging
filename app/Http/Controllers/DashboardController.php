@@ -45,6 +45,8 @@ class DashboardController extends Controller
 
         $recentOrders = $this->commandeService->getReadyForProduction()->take(5);
 
+        $showFinancials = in_array($fonctionId, [1, 14]);
+
         $view = view('dashboard.admin', compact(
             'activeOrders',
             'openPOs',
@@ -52,13 +54,11 @@ class DashboardController extends Controller
             'formules',
             'completedToday',
             'completedTotal',
-            'recentOrders'
+            'recentOrders',
+            'showFinancials'
         ));
 
-        return match ($fonctionId) {
-            1, 14   => Response::noCache(response($view)),
-            default => view('home'),
-        };
+        return Response::noCache(response($view));
     }
 
     public function getInvoiceData()

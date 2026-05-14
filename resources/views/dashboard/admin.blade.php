@@ -108,7 +108,8 @@
             </div>
         </div>
 
-        {{-- Charts --}}
+        {{-- Charts (admin only) --}}
+        @if($showFinancials ?? false)
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm">
@@ -131,6 +132,8 @@
                 </div>
             </div>
         </div>
+
+        @endif
 
         {{-- Recent Active Orders --}}
         @if($recentOrders->isNotEmpty())
@@ -182,6 +185,7 @@
 
 
 @push('scripts')
+@if($showFinancials ?? false)
 <script type="text/javascript" src="/assets/jqwidgets/jqxcore.js"></script>
 <script type="text/javascript" src="/assets/jqwidgets/jqxdata.js"></script>
 <script type="text/javascript" src="/assets/jqwidgets/jqxdraw.js"></script>
@@ -249,4 +253,5 @@
             .catch(err => console.error('Chart loading failed:', err));
     });
 </script>
+@endif
 @endpush
