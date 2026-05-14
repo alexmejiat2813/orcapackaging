@@ -6,203 +6,131 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\Production\CommandeService;
+use App\Services\Purchasing\PurchasingService;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the main dashboard view.
-     *
-     * @return \Illuminate\Http\Response
-     */
-     public function index()
+    public function __construct(
+        private CommandeService $commandeService,
+        private PurchasingService $purchasingService
+    ) {}
+
+    public function index()
     {
-         // Optional: redirect based on role (stored in session or via Auth)
         $fonctionId = Auth::user()?->Fonction_ID;
-        $activeOrders = DB::table('Commande')
-    ->where('Complet', 0)
-    ->where('Cancel', 0)
-    ->where('isReady_Production', 1)
-    ->count();
 
-$lowStock = DB::table('Product')
-    ->leftJoin('Stock', 'Product.product_id', '=', 'Stock.product_id')
-    ->whereRaw('(Stock.Stock_Initial_Qty - Stock.Stock_Qty_Used) < Product.PrMinQty')
-    ->where('Product.PrActif', 1)
-    ->count();
+        $commandeStats = $this->commandeService->stats();
+        $purchasingStats = $this->purchasingService->stats();
 
-$formules = DB::table('ink_formules')->count();
+        $activeOrders   = $commandeStats['ready_prod'];
+        $openPOs        = $purchasingStats['open_pos'];
+        $completedTotal = $commandeStats['completed'];
 
-$completedToday = DB::table('Commande')
-    ->leftJoin('Shipping', 'Commande.InInvoiceNumber', '=', 'Shipping.InInvoiceNumber')
-    ->where('Commande.Complet', 1)
-    ->whereDate(DB::raw('CAST(Shipping.Shipping_Date AS DATE)'), '=', now()->toDateString())
-    ->count();
+        $formules = DB::table('ink_formules')->count();
 
-$view = view('dashboard.admin', [
-    'activeOrders' => $activeOrders,
-    'lowStock' => $lowStock,
-    'formules' => $formules,
-    'completedToday' => $completedToday,
-]);
+        $lowStock = DB::connection('sqlsrv')
+            ->table('ThomasOrca.dbo.Product')
+            ->leftJoin('ThomasOrca.dbo.Stock', 'Product.Product_ID', '=', 'Stock.Product_ID')
+            ->whereRaw('(Stock.Stock_Initial_Qty - Stock.Stock_Qty_Used) < Product.PrMinQty')
+            ->where('Product.PrActif', 1)
+            ->count();
 
+        $completedToday = DB::connection('sqlsrv')
+            ->table('ThomasOrca.dbo.Commande')
+            ->leftJoin('ThomasOrca.dbo.Shipping', 'Commande.InInvoiceNumber', '=', 'Shipping.InInvoiceNumber')
+            ->where('Commande.Complet', 1)
+            ->whereRaw("CAST(Shipping.Shipping_Date AS DATE) = CAST(GETDATE() AS DATE)")
+            ->count();
 
-        switch ($fonctionId) {
-            case 1: // Administrative Assistant
-        return Response::noCache(response($view));
-         case 14: // Administrative Assistant
-        return Response::noCache(response($view));
-         default:
-                return view('home');
-        }
+        $recentOrders = $this->commandeService->getReadyForProduction()->take(5);
+
+        $view = view('dashboard.admin', compact(
+            'activeOrders',
+            'openPOs',
+            'lowStock',
+            'formules',
+            'completedToday',
+            'completedTotal',
+            'recentOrders'
+        ));
+
+        return match ($fonctionId) {
+            1, 14   => Response::noCache(response($view)),
+            default => view('home'),
+        };
     }
 
     public function getInvoiceData()
     {
-        //$view = view('dashboard.admin');
-
-        // Return the dashboard view with no cache headers
-        //return Response::noCache(response($view));
-
-        
-        // Optional: redirect based on role (stored in session or via Auth)
         $fonctionId = Auth::user()?->Fonction_ID;
 
-        switch ($fonctionId) {
-            case 1: // Administrative Assistant
-                $data = DB::table('View_Invoice_TotalxMonth')
-                ->select('year_invoice', 'month_invoice', 'subtotal', 'total')
-                ->orderBy('year_invoice')
-                ->orderBy('month_invoice')
-                ->get();
-
-                return response()->json($data);
-
-            case 14: // Administrative Assistant
-                $data = DB::table('View_Invoice_TotalxMonth')
-                ->select('year_invoice', 'month_invoice', 'subtotal', 'total')
-                ->orderBy('year_invoice')
-                ->orderBy('month_invoice')
-                ->get();
-
-                return response()->json($data);
-
-            default:
-                return view('home');
+        if (!in_array($fonctionId, [1, 14])) {
+            return view('home');
         }
-        
+
+        $data = DB::connection('sqlsrv')
+            ->table('ThomasOrca.dbo.View_Invoice_TotalxMonth')
+            ->select('year_invoice', 'month_invoice', 'subtotal', 'total')
+            ->orderBy('year_invoice')
+            ->orderBy('month_invoice')
+            ->get();
+
+        return response()->json($data);
     }
 
     public function getTopClientsByYear(Request $request)
-{
-    $year = $request->get('year');
-
-    // Optional: redirect based on role (stored in session or via Auth)
+    {
         $fonctionId = Auth::user()?->Fonction_ID;
 
-        switch ($fonctionId) {
-            case 1: // Administrative Assistant
-    $data = DB::select('WITH RankedCustomers AS (
-            SELECT 
-		        Customer_No,
-                Customer.CuSortKey as Customer_Name,
-                DATEPART(YEAR, Invoice.Invoice_Date) AS Year,
-                SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) AS Total,
-                RANK() OVER (PARTITION BY DATEPART(YEAR, Invoice.Invoice_Date) ORDER BY SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) DESC) AS RankPerYear
-            FROM ThomasOrca.dbo.Invoice
-            JOIN ThomasOrca.dbo.Customer ON Customer.Customer_ID = Invoice.Customer_Id
-            WHERE Invoice.Invoice_Transmit = 1
-              AND DATEPART(YEAR, Invoice.Invoice_Date) BETWEEN YEAR(GETDATE()) - 4 AND YEAR(GETDATE())
-            GROUP BY Customer.Customer_No,Customer.CuSortKey, DATEPART(YEAR, Invoice.Invoice_Date)
-        )
-        SELECT  Customer_No, Customer_Name, Year, Total
-        FROM RankedCustomers
-        WHERE RankPerYear <= 10 and Year = ?
-        ORDER BY Year, Total DESC;', [$year]);
-
-    $allYears = [];
-    $allClients = [];
-
-    // Index by year and client
-    $matrix = [];
-
-    foreach ($data as $row) {
-        $year = $row->Year;
-        $client = substr($row->Customer_Name, 0, 20);
-        $safeClient = preg_replace('/[^a-zA-Z0-9]/', '_', $client); // clean label
-
-        $allYears[$year] = true;
-        $allClients[$safeClient] = true;
-
-        $matrix[$year][$safeClient] = round($row->Total, 2);
-    }
-
-    // Build consistent structure
-    $finalData = [];
-    foreach (array_keys($allYears) as $year) {
-        $entry = ['Year' => $year];
-        foreach (array_keys($allClients) as $client) {
-            $entry[$client] = $matrix[$year][$client] ?? 0;
+        if (!in_array($fonctionId, [1, 14])) {
+            return view('home');
         }
-        $finalData[] = $entry;
-    }
 
-    return response()->json($finalData);
+        $year = $request->get('year');
 
-    case 14: // Administrative Assistant
-    $data = DB::select('WITH RankedCustomers AS (
-            SELECT 
-		        Customer_No,
-                Customer.CuSortKey as Customer_Name,
-                DATEPART(YEAR, Invoice.Invoice_Date) AS Year,
-                SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) AS Total,
-                RANK() OVER (PARTITION BY DATEPART(YEAR, Invoice.Invoice_Date) ORDER BY SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) DESC) AS RankPerYear
-            FROM ThomasOrca.dbo.Invoice
-            JOIN ThomasOrca.dbo.Customer ON Customer.Customer_ID = Invoice.Customer_Id
-            WHERE Invoice.Invoice_Transmit = 1
-              AND DATEPART(YEAR, Invoice.Invoice_Date) BETWEEN YEAR(GETDATE()) - 4 AND YEAR(GETDATE())
-            GROUP BY Customer.Customer_No,Customer.CuSortKey, DATEPART(YEAR, Invoice.Invoice_Date)
-        )
-        SELECT  Customer_No, Customer_Name, Year, Total
-        FROM RankedCustomers
-        WHERE RankPerYear <= 10 and Year = ?
-        ORDER BY Year, Total DESC;', [$year]);
+        $data = DB::connection('sqlsrv')->select('
+            WITH RankedCustomers AS (
+                SELECT
+                    Customer_No,
+                    Customer.CuSortKey as Customer_Name,
+                    DATEPART(YEAR, Invoice.Invoice_Date) AS Year,
+                    SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) AS Total,
+                    RANK() OVER (
+                        PARTITION BY DATEPART(YEAR, Invoice.Invoice_Date)
+                        ORDER BY SUM(Invoice.SubTotal * ISNULL(Invoice.Curency_Rate, 1)) DESC
+                    ) AS RankPerYear
+                FROM ThomasOrca.dbo.Invoice
+                JOIN ThomasOrca.dbo.Customer ON Customer.Customer_ID = Invoice.Customer_Id
+                WHERE Invoice.Invoice_Transmit = 1
+                  AND DATEPART(YEAR, Invoice.Invoice_Date) BETWEEN YEAR(GETDATE()) - 4 AND YEAR(GETDATE())
+                GROUP BY Customer.Customer_No, Customer.CuSortKey, DATEPART(YEAR, Invoice.Invoice_Date)
+            )
+            SELECT Customer_No, Customer_Name, Year, Total
+            FROM RankedCustomers
+            WHERE RankPerYear <= 10 AND Year = ?
+            ORDER BY Year, Total DESC
+        ', [$year]);
 
-    $allYears = [];
-    $allClients = [];
+        $matrix = [];
+        $allClients = [];
 
-    // Index by year and client
-    $matrix = [];
-
-    foreach ($data as $row) {
-        $year = $row->Year;
-        $client = substr($row->Customer_Name, 0, 20);
-        $safeClient = preg_replace('/[^a-zA-Z0-9]/', '_', $client); // clean label
-
-        $allYears[$year] = true;
-        $allClients[$safeClient] = true;
-
-        $matrix[$year][$safeClient] = round($row->Total, 2);
-    }
-
-    // Build consistent structure
-    $finalData = [];
-    foreach (array_keys($allYears) as $year) {
-        $entry = ['Year' => $year];
-        foreach (array_keys($allClients) as $client) {
-            $entry[$client] = $matrix[$year][$client] ?? 0;
+        foreach ($data as $row) {
+            $client = substr($row->Customer_Name, 0, 20);
+            $safeClient = preg_replace('/[^a-zA-Z0-9]/', '_', $client);
+            $allClients[$safeClient] = true;
+            $matrix[$row->Year][$safeClient] = round($row->Total, 2);
         }
-        $finalData[] = $entry;
-    }
 
-    return response()->json($finalData);
-
-    default:
-                return view('home');
+        $finalData = [];
+        foreach (array_keys($matrix) as $y) {
+            $entry = ['Year' => $y];
+            foreach (array_keys($allClients) as $client) {
+                $entry[$client] = $matrix[$y][$client] ?? 0;
+            }
+            $finalData[] = $entry;
         }
+
+        return response()->json($finalData);
+    }
 }
-
-
-}
-
-
-?>
