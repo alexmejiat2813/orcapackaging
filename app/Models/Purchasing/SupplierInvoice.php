@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Supplier;
+namespace App\Models\Purchasing;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Purchasing\Receiving;
@@ -9,6 +9,7 @@ use App\Models\Purchasing\SupplierInvoiceDetail;
 class SupplierInvoice extends Model
 {
     protected $table = 'Supplier_Invoice';
+    protected $connection = 'sqlsrv';
     protected $primaryKey = 'Supplier_Invoice_Id';
     public $timestamps = false;
 
