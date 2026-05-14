@@ -100,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('crm')->group(function () {
         Route::get('/clients', [CustomerController::class, 'index'])->name('crm.clients');
         Route::get('/clients/data', [CustomerController::class, 'data'])->name('crm.clients.data');
+        Route::get('/clients/{id}', [CustomerController::class, 'show'])->where('id', '[0-9]+')->name('crm.clients.show');
     });
 
     // Dashboard
