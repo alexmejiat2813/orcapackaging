@@ -10,6 +10,7 @@ use App\Models\Production\Commande;
 use App\Models\Production\CommandeSchedule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Production\CommandeService;
 
 class CommandesController extends Controller
 {
@@ -322,6 +323,28 @@ public function getSchedulesWithEquipment()
     $data = CommandeSchedule::getScheduleWithReceipe();
 
     return response()->json($data);
+}
+
+public function show(int $id)
+{
+    $commande = (new CommandeService())->getById($id);
+
+    $lots = DB::connection('sqlsrv')
+        ->table('ThomasOrca.dbo.Lots as l')
+        ->leftJoin('ThomasOrca.dbo.Product as p', 'p.Product_ID', '=', 'l.Product_Id')
+        ->where('l.Commande_Id', $id)
+        ->select('l.Lot_Id', 'l.Lots_Qty', 'l.Lots_Complet', 'l.Lots_Cancel', 'p.PrNumber', 'p.PrDescription1')
+        ->get();
+
+    $recipe = DB::connection('sqlsrv')
+        ->table('ThomasOrca.dbo.Commande_Receipe as cr')
+        ->leftJoin('ThomasOrca.dbo.Equipment as e', 'e.Equipment_ID', '=', 'cr.Equipment_Id')
+        ->where('cr.Commande_Id', $id)
+        ->where('cr.Actif', 1)
+        ->select('cr.Commande_Receipe_Id', 'cr.Equipment_Id', 'e.Equipment_Description', 'cr.Value as Hours')
+        ->get();
+
+    return view('production.show', compact('commande', 'lots', 'recipe'));
 }
 
 public function showModalImage(Request $request) {

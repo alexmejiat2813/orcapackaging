@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Purchasing;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purchasing\PO;
+use App\Models\Purchasing\PODetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Services\Purchasing\PurchasingService;
 
 class POController extends Controller
 {
@@ -50,6 +53,26 @@ class POController extends Controller
         return response()->json($formatted);
     }
 
+
+    public function show(int $id)
+    {
+        $po = (new PurchasingService())->getPOById($id);
+
+        $details = DB::connection('sqlsrv')
+            ->table('ThomasOrca.dbo.PO_Detail as pd')
+            ->leftJoin('ThomasOrca.dbo.Product as p', 'p.Product_ID', '=', 'pd.Product_ID')
+            ->where('pd.PO_ID', $id)
+            ->select(
+                'pd.PO_Detail_ID', 'pd.Product_ID', 'pd.Quantity', 'pd.Unit_Price',
+                'pd.Unit_Qty', 'pd.PO_Detail_Note',
+                'p.PrNumber', 'p.PrDescription1'
+            )
+            ->get();
+
+        $receivings = (new PurchasingService())->getReceivingsForPO($id);
+
+        return view('purchasing.show', compact('po', 'details', 'receivings'));
+    }
 
     public function data()
     {

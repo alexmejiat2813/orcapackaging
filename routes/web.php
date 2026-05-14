@@ -170,6 +170,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/orders', fn() => view('purchasing.orders'));
         Route::get('/orders/data', [POController::class, 'index']);
+        Route::get('/orders/{id}', [POController::class, 'show'])->where('id', '[0-9]+');
         //Route::get('/orders/data', [POController::class, 'data']); // si necesitas otra vista
 
         Route::get('/followup', fn() => view('purchasing.followup'));
@@ -188,6 +189,7 @@ Route::middleware(['auth'])->group(function () {
     // Production (public for now)
     Route::prefix('production')->group(function () {
         Route::get('/orders', [CommandesController::class, 'index']);
+        Route::get('/orders/{id}', [CommandesController::class, 'show'])->where('id', '[0-9]+');
         Route::get('/get-commandes', [CommandesController::class, 'getCommandes']);
         Route::get('/get-schedules', [CommandesController::class, 'getCommandesWithSchedule']);
         Route::post('/orders/sync-schedule', [CommandesController::class, 'syncSchedule']);
