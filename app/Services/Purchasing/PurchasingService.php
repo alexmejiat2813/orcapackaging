@@ -61,12 +61,10 @@ class PurchasingService
     public function stats(): array
     {
         $pos = DB::connection('sqlsrv')->table('ThomasOrca.dbo.PO');
-        $inv = DB::connection('sqlsrv')->table('ThomasOrca.dbo.Supplier_Invoice');
 
         return [
-            'open_pos'         => (clone $pos)->where('PO_Completed', 0)->where('PO_Cancel', 0)->count(),
-            'total_pos'        => (clone $pos)->count(),
-            'pending_invoices' => (clone $inv)->where('Invoice_Paid', 0)->count(),
+            'open_pos'  => (clone $pos)->where('PO_Completed', 0)->where('PO_Cancel', 0)->count(),
+            'total_pos' => (clone $pos)->count(),
         ];
     }
 }
