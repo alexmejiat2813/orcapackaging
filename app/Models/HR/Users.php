@@ -16,21 +16,10 @@ class Users extends Authenticatable
      *
      * @var string
      */
+    protected $connection = 'sqlsrv';
     protected $table = 'Users';
-
-    /**
-     * The primary key of the table.
-     *
-     * @var string
-     */
     protected $primaryKey = 'Users_ID';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.

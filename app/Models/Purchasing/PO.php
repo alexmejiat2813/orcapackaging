@@ -9,9 +9,18 @@ use App\Models\Purchasing\Receiving;
 
 class PO extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'PO';
     protected $primaryKey = 'PO_ID';
-    public $timestamps = false;
+    public $timestamps = true;
+
+    protected $fillable = [
+        'PO_Number',
+        'PO_Date',
+        'Supplier_ID',
+        'PO_Status',
+        'PO_Total',
+    ];
 
     public function supplier()
     {

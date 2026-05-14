@@ -7,6 +7,7 @@ use App\Models\Settings\Modules\General\Department;
 
 class Equipment extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Equipment';
     protected $primaryKey = 'Equipment_ID';
     public $timestamps = false;
