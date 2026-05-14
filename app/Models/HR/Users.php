@@ -5,12 +5,14 @@ namespace App\Models\HR;
 use App\Models\HR\Fonction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Custom User model that extends Laravel's authentication base.
  */
 class Users extends Authenticatable
 {
+    use Notifiable;
     /**
      * The table associated with the model.
      *
@@ -99,6 +101,18 @@ class Users extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function notifications()
+    {
+        return $this->hasMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable_id', 'Users_ID')
+            ->where('notifiable_type', self::class)
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
+    }
+
     public function timeInputs()
     {
         return $this->hasMany(TimeInput::class, 'Users_ID', 'Users_ID');
