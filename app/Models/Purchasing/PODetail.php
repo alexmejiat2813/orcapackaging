@@ -9,9 +9,18 @@ use App\Models\Purchasing\Product;
 
 class PODetail extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'PO_Detail';
     protected $primaryKey = 'PO_Detail_ID';
     public $timestamps = false;
+
+    protected $fillable = [
+        'PO_ID',
+        'Product_ID',
+        'Quantity',
+        'Unit_Price',
+        'Line_Total',
+    ];
 
     public function po()
     {
