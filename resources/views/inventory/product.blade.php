@@ -1,130 +1,95 @@
 @extends('layouts.app')
 
-@section('title', 'Orca Packaging')
+@section('title', $productType->ProductType_Description ?? 'Products')
 
 @section('content')
-    <div class="pagetitle">
-        <h1>Products</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active"><a href="/inventory/types-products">Types</a></li>
-                <li class="breadcrumb-item active">Products</li>
-            </ol>
-        </nav>
-    </div>
+<div class="pagetitle">
+    <h1>{{ $productType->ProductType_Description ?? 'Products' }}</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('inventory.types') }}">Types</a></li>
+            <li class="breadcrumb-item active">{{ $productType->ProductType_Description ?? '' }}</li>
+        </ol>
+    </nav>
+</div>
 
-        <!-- Grid Section -->
-    <div id="followUpGridSection">
-        <!-- Alerta de selección -->
-        <div id="messageBox" style="display: none; color: red; font-weight: bold; margin-top: 10px;"></div>
-        <!-- Toolbar -->
-        <div class="d-flex flex-column mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-            <!-- Título del listado -->
-                <h4 class="mb-0 ms-3">List of orders</h4>
-                <!-- Filtros -->
-                <div class="d-flex flex-wrap gap-3 align-items-center">
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_transmittedFirst" id="is_transmittedFirst" data-field="Commande_Transmit_First" value="transmittedFirst" checked>
-                        <label class="form-check-label" for="is_transmittedFirst">Order preparation</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_transmitted" id="is_transmitted" data-field="Transmit" value="transmitted" checked>
-                        <label class="form-check-label" for="is_transmitted">Order approval</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_complete" id="is_complete" data-field="Credit_Autorise" value="completed" checked>
-                        <label class="form-check-label" for="is_complete">Authorized credit</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_canceled" id="is_canceled" data-field="isReady_Production" value="cancelled" checked>
-                        <label class="form-check-label" for="is_canceled">Ready to produce</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_blocked" id="is_blocked" data-field="IsCompletedLogic" value="barred">
-                        <label class="form-check-label" for="is_blocked">Complet</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input status-filter" type="checkbox" name="is_blocked" id="is_blocked" data-field="IsCanceledLogic" value="barred">
-                        <label class="form-check-label" for="is_blocked">Cancel</label>
-                    </div>
-                </div>
-            <!-- Botones -->
-                <x-permission-users :allowed-roles="['Thomas Admin']">
-                    <div class="d-flex gap-2 align-items-center">
-                        <button type="button" id="btnNew" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Nouvelle commande (New Order)">
-                            <i class="bi bi-file-earmark-plus"></i>
-                        </button>
-                        <button type="button" id="btnEdit" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Modifier commande (Edit Order)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button type="button" id="btnDuplicate" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Dupliquer commande (Duplicate)">
-                            <i class="bi bi-files"></i>
-                        </button>
-                        <button type="button" id="btnRefresh" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Actualiser la liste (Refresh)">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                        <button type="button" id="btnFollowUps" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Consulter les suivis (Check Follow-Ups)">
-                            <i class="bi bi-search"></i>
-                        </button>
-                        <button type="button" class="btn btn-outline-primary btn-sm rounded shadow-sm" data-bs-toggle="tooltip" title="Etiquetas" onclick="openLabelsModal()">
-                            <i class="bi bi-tag"></i>
-                        </button>
-                    </div>
-                </x-permission-users>                
-            </div>
-        </div>
-        <!-- Grid principal -->
-        <div id="jqxGridProduct"></div>
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold">{{ $products->count() }} product(s)</span>
+        <a href="{{ route('inventory.catalog') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-search"></i> Full Catalog
+        </a>
     </div>
+    <div class="card-body p-0">
+        <div class="p-3 border-bottom">
+            <input type="text" id="tableSearch" class="form-control form-control-sm" placeholder="Search by number or description...">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="productTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product #</th>
+                        <th>Description</th>
+                        <th>Description 2</th>
+                        <th class="text-center">Active</th>
+                        <th class="text-center">Stock</th>
+                        <th class="text-end">Min Qty</th>
+                        <th class="text-end">Price</th>
+                        <th>Location</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($products as $product)
+                    <tr class="product-row">
+                        <td class="fw-bold">{{ $product->PrNumber }}</td>
+                        <td>{{ $product->PrDescription1 }}</td>
+                        <td class="text-muted small">{{ $product->PrDescription2 }}</td>
+                        <td class="text-center">
+                            @if($product->PrActif)
+                                <span class="badge bg-success">Active</span>
+                            @else
+                                <span class="badge bg-secondary">Inactive</span>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($product->PrStock)
+                                <i class="bi bi-check-circle text-success"></i>
+                            @else
+                                <i class="bi bi-dash text-muted"></i>
+                            @endif
+                        </td>
+                        <td class="text-end">{{ $product->PrMinQty ?? '-' }}</td>
+                        <td class="text-end">
+                            @if($product->Price_1)
+                                ${{ number_format($product->Price_1, 4) }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="text-muted small">{{ $product->PrLocation ?? '-' }}</td>
+                        <td>
+                            <a href="{{ route('products.show', $product->Product_ID) }}" class="btn btn-xs btn-outline-primary btn-sm py-0">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
-    <!-- SweetAlert for alerts -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Global machine data -->
-    <script>const isAdmin = @json(Auth::user()?->fonction?->Fonction_Desc === 'Thomas Admin');</script>
-
-    <script>
-    $(document).ready(function () {
-        let type = "{{ $type }}";
-
-        let source = {
-            datatype: "json",
-            datafields: [
-                { name: 'Product_ID', type: 'number' },
-                { name: 'PrNumber', type: 'string' },
-                { name: 'PrDescription1', type: 'string' },
-                { name: 'PrDescription2', type: 'string' },
-                { name: 'PrDescription3', type: 'string' },
-                { name: 'PrSortKey1', type: 'string' },
-                { name: 'PrSortKey2', type: 'string' },
-                { name: 'quantity', type: 'number' },
-                // agrega más campos si es necesario
-            ],
-            url: `/inventory/products/${type}`
-        };
-
-        let dataAdapter = new $.jqx.dataAdapter(source);
-
-        $("#jqxGridProduct").jqxGrid({
-            width: '100%',
-            autoheight: true,
-            source: dataAdapter,
-            pageable: true,
-            sortable: true,
-            filterable: true,
-            columnsresize: true,
-            columns: [
-                { text: 'Code', datafield: 'PrNumber', width: '10%' },
-                { text: 'Nom', datafield: 'PrDescription1', width: '30%' },
-                { text: 'Nom', datafield: 'PrDescription2', width: '30%' },
-                { text: 'Nom', datafield: 'PrDescription3', width: '25%' },
-                { text: 'Quantité', datafield: 'quantity', width: '30%' },
-            ]
-        });
+<script>
+document.getElementById('tableSearch').addEventListener('input', function () {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('#productTable .product-row').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
+});
 </script>
 @endpush

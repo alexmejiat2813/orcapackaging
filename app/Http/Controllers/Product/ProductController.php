@@ -4,68 +4,109 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product\Product;
-use Illuminate\Http\Request;
 use App\Models\Product\ProductType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /**
-     * Return a list of products (base inks or pigments).
-     */
     public function index(Request $request)
     {
         $query = Product::query();
 
-        // 🔎 Opcional: filtrado si solo se quieren activos o tipo tinta
         if ($request->has('ink_only') && $request->ink_only) {
-            $query->where('ProductType_ID', 10); // ejemplo: 5 = tintas
+            $query->where('ProductType_ID', 10);
         }
 
         if ($request->has('q')) {
             $q = $request->get('q');
-            $query->where('PrNumber', 'like', "%$q%");
-            $query->where('PrActif', '=', "1");
+            $query->where(function ($q2) use ($q) {
+                $q2->where('PrNumber', 'like', "%{$q}%")
+                   ->orWhere('PrDescription1', 'like', "%{$q}%");
+            })->where('PrActif', 1);
         }
 
-        $products = $query
-            ->orderBy('PrDescription1')
-            ->get(['Product_ID as id', 'PrDescription1 as text']);
-
-        return response()->json($products);
+        return response()->json(
+            $query->orderBy('PrDescription1')
+                  ->get(['Product_ID as id', 'PrNumber', 'PrDescription1 as text'])
+        );
     }
 
-    /**
-     * Get single product by name or ID
-     */
     public function show($id)
     {
-        $product = Product::select('Product_ID as id', 'PrDescription1 as text')
+        $product = Product::with('productType')
             ->where('Product_ID', $id)
             ->firstOrFail();
 
-        return response()->json($product);
+        if (request()->expectsJson()) {
+            return response()->json($product);
+        }
+
+        return view('inventory.product-show', compact('product'));
     }
 
-// Vista principal con jqxGrid
-public function showByType($type)
-{
-    return view('inventory.product', ['type' => $type]);
-}
+    public function showByType($type)
+    {
+        $productType = ProductType::where('ProductType_Code', $type)
+            ->orWhere('ProductType_ID', $type)
+            ->first();
 
-// Endpoint para el grid (AJAX)
-public function getProductsByType($type)
-{
-    $productType = ProductType::where('ProductType_Code', $type)
-                    ->orWhere('ProductType_ID', $type)
-                    ->first();
+        if (!$productType) {
+            abort(404);
+        }
 
-    if (!$productType) {
-        return response()->json(['error' => 'Invalid type'], 404);
+        $products = Product::where('ProductType_ID', $productType->ProductType_ID)
+            ->orderBy('PrNumber')
+            ->get([
+                'Product_ID', 'PrNumber', 'PrDescription1', 'PrDescription2',
+                'PrActif', 'PrStock', 'PrMinQty', 'PrMaxQty', 'Price_1',
+                'ProductType_ID', 'PrLocation'
+            ]);
+
+        return view('inventory.product', compact('products', 'productType'));
     }
 
-    $products = Product::where('ProductType_ID', $productType->ProductType_ID)->get();
+    public function getProductsByType($type)
+    {
+        $productType = ProductType::where('ProductType_Code', $type)
+            ->orWhere('ProductType_ID', $type)
+            ->first();
 
-    return response()->json($products);
-}
+        if (!$productType) {
+            return response()->json(['error' => 'Invalid type'], 404);
+        }
 
+        return response()->json(
+            Product::where('ProductType_ID', $productType->ProductType_ID)
+                ->orderBy('PrNumber')
+                ->get()
+        );
+    }
+
+    public function catalog(Request $request)
+    {
+        $types = ProductType::orderBy('ProductType_Description')->get();
+
+        $query = Product::query();
+
+        if ($request->filled('type')) {
+            $query->where('ProductType_ID', $request->type);
+        }
+
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function ($q2) use ($q) {
+                $q2->where('PrNumber', 'like', "%{$q}%")
+                   ->orWhere('PrDescription1', 'like', "%{$q}%");
+            });
+        }
+
+        if ($request->filled('active')) {
+            $query->where('PrActif', (int) $request->active);
+        }
+
+        $products = $query->orderBy('PrNumber')->paginate(50)->withQueryString();
+
+        return view('inventory.catalog', compact('products', 'types'));
+    }
 }

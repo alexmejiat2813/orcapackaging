@@ -3,9 +3,11 @@
 namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Product\ProductType;
 
 class Product extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Product';
     protected $primaryKey = 'Product_ID';
     public $timestamps = false;
@@ -105,4 +107,9 @@ class Product extends Model
         'Is_Include_Production_Needs',
         'Is_Reprint_Est'
     ];
+
+    public function productType()
+    {
+        return $this->belongsTo(ProductType::class, 'ProductType_ID', 'ProductType_ID');
+    }
 }

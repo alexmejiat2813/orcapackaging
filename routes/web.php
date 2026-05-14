@@ -103,13 +103,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/inventory/types-products', [ProductTypeController::class, 'index'])->name('inventory.types');
+    Route::get('/inventory/catalog', [ProductController::class, 'catalog'])->name('inventory.catalog');
     Route::get('/inventory/products/type/{id}', [ProductController::class, 'showByType'])->name('products.byType');
     Route::get('/inventory/products/{id}', [ProductController::class, 'getProductsByType']);
     Route::get('/inventory/productsImage', [ProductImageController::class, 'index'])->name('inventory.productImage');
-    Route::post('/inventory/productsImage', [ProductImageController::class, 'upload'])->name('productImage.upload');;
-
-
-   
+    Route::post('/inventory/productsImage', [ProductImageController::class, 'upload'])->name('productImage.upload');
 
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
