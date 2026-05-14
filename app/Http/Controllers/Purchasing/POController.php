@@ -19,6 +19,7 @@ class POController extends Controller
             'receptions'
         ])
         ->orderByDesc('PO_ID')
+        ->take(500)
         ->get();
 
         $formatted = [];
