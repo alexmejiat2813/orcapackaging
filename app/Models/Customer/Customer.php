@@ -13,16 +13,42 @@ class Customer extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'Customer_Code',
+        'Customer_No',
         'Customer_Name',
-        'Customer_Active',
-        'Customer_Contact',
-        'Customer_Email',
-        'Customer_Phone',
+        'Rep_Name',
+        'Cst_Active',
+        'CuAddress',
+        'CuAddress2',
+        'CuCity',
+        'CuProvince',
+        'CuPostalCode',
+        'CuISOCountryCode',
+        'CuPhoneNumber1',
+        'CuPhoneNumber2',
+        'CuPhoneNumber3',
+        'CuEMail',
+        'CuEMail2',
+        'CuEMail_Invoice',
+        'CuEMail_Order',
+        'CuWebAddress',
+        'CuTotalPurchases',
+        'CuLastPurchasesDate',
+        'CuOpeningDate',
+        'CuMarginLimit',
+        'CuProspect',
+        'Customer_Block_Credit',
+        'Customer_Stop_Transactions',
+        'CuComment',
+        'Comment_Control',
     ];
 
     protected $casts = [
-        'Customer_Active' => 'boolean',
+        'Cst_Active'                  => 'boolean',
+        'CuProspect'                  => 'boolean',
+        'Customer_Block_Credit'       => 'boolean',
+        'Customer_Stop_Transactions'  => 'boolean',
+        'CuLastPurchasesDate'         => 'datetime',
+        'CuOpeningDate'               => 'datetime',
     ];
 
     public function commandes()
@@ -32,7 +58,7 @@ class Customer extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('Customer_Active', 1);
+        return $query->where('Cst_Active', 1);
     }
 
     public static function rules($id = null)

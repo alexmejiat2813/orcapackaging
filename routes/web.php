@@ -35,8 +35,9 @@ use App\Http\Controllers\Settings\Modules\Production\Requis\RequisController;
 use App\Http\Controllers\Inventory\InkFormuleController;
 use App\Http\Controllers\Inventory\InkFormuleComponentController;
 use App\Http\Controllers\Inventory\ProductImageController;  
-use App\Http\Controllers\Product\ProductController; 
+use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Product\ProductTypeController;
+use App\Http\Controllers\Crm\CustomerController;
 
 use App\Http\Middleware\CheckSoumissionID;
 use App\Routes\Helpers\AutoSettingsRouter;
@@ -94,6 +95,12 @@ Route::middleware(['auth'])->group(function () {
     // Notes
     Route::post('/notes', [OrderNoteController::class, 'store'])->name('notes.store');
     Route::delete('/notes/{id}', [OrderNoteController::class, 'destroy'])->name('notes.destroy');
+
+    // CRM
+    Route::prefix('crm')->group(function () {
+        Route::get('/clients', [CustomerController::class, 'index'])->name('crm.clients');
+        Route::get('/clients/data', [CustomerController::class, 'data'])->name('crm.clients.data');
+    });
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
