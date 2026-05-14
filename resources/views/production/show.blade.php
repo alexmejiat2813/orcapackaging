@@ -56,7 +56,7 @@
                     </div>
                     <div class="row">
                         <div class="col-5 text-muted">Due Date</div>
-                        <div class="col-7">{{ $commande->Commande_Due_Date?->format('Y-m-d') ?? '-' }}</div>
+                        <div class="col-7">{{ $commande->Date_Demander?->format('Y-m-d') ?? '-' }}</div>
                     </div>
                 </div>
             </div>

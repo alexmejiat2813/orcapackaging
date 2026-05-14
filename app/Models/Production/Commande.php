@@ -3,7 +3,6 @@
 namespace App\Models\Production;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Settings\Modules\Production\ProductionStatus;
 use App\Models\HR\Users;
 use App\Models\Customer\Customer;
 
@@ -12,24 +11,44 @@ class Commande extends Model
     protected $connection = 'sqlsrv';
     protected $table = 'Commande';
     protected $primaryKey = 'Commande_Id';
-    public $timestamps = true;
+
+    const CREATED_AT = 'Creer_Date';
+    const UPDATED_AT = 'Modifier_Date';
 
     protected $fillable = [
-        'Commande_Number',
-        'Commande_Date',
-        'Commande_Due_Date',
         'Customer_Id',
-        'Production_Status_Id',
-        'Commande_Notes',
-        'Commande_Active',
-        'created_by',
-        'updated_by',
+        'Customer_Code',
+        'Customer_Name',
+        'InInvoiceNumber',
+        'Date_Commande',
+        'Date_Demander',
+        'Date_Expedition',
+        'Commande_Status_id',
+        'Status_Fabrication_Id',
+        'Note',
+        'Commentaire',
+        'Cancel',
+        'Complet',
+        'Transmit',
+        'isReady_Production',
+        'Rep_No',
+        'Rep_Name',
+        'Creer_Par',
+        'Modifier_Par',
+        'Po_Client',
     ];
 
     protected $casts = [
-        'Commande_Date'     => 'datetime',
-        'Commande_Due_Date' => 'datetime',
-        'Commande_Active'   => 'boolean',
+        'Date_Commande'      => 'datetime',
+        'Date_Demander'      => 'datetime',
+        'Date_Expedition'    => 'datetime',
+        'Creer_Date'         => 'datetime',
+        'Modifier_Date'      => 'datetime',
+        'Cancel'             => 'boolean',
+        'Complet'            => 'boolean',
+        'Transmit'           => 'boolean',
+        'isReady_Production' => 'boolean',
+        'Respecter_date'     => 'boolean',
     ];
 
     public function customer()
@@ -39,43 +58,36 @@ class Commande extends Model
 
     public function productionStatus()
     {
-        return $this->belongsTo(ProductionStatus::class, 'Production_Status_Id', 'Production_Status_Id');
+        return $this->belongsTo(ProductionStatus::class, 'Commande_Status_id', 'Production_Status_Id');
     }
 
     public function createdBy()
     {
-        return $this->belongsTo(Users::class, 'created_by', 'Users_ID');
+        return $this->belongsTo(Users::class, 'Creer_Par', 'Users_ID');
     }
 
     public function updatedBy()
     {
-        return $this->belongsTo(Users::class, 'updated_by', 'Users_ID');
+        return $this->belongsTo(Users::class, 'Modifier_Par', 'Users_ID');
     }
 
     public function scopeActive($query)
     {
-        return $query->where('Commande_Active', 1);
+        return $query->where('Cancel', 0)->where('Complet', 0);
+    }
+
+    public function scopeReady($query)
+    {
+        return $query->where('Cancel', 0)->where('Complet', 0)->where('isReady_Production', 1);
     }
 
     public function scopeByStatus($query, $statusId)
     {
-        return $query->where('Production_Status_Id', $statusId);
+        return $query->where('Commande_Status_id', $statusId);
     }
 
     public function scopeByCustomer($query, $customerId)
     {
         return $query->where('Customer_Id', $customerId);
-    }
-
-    public static function rules($id = null)
-    {
-        $unique = $id ? ",Commande_Id,{$id}" : '';
-        return [
-            'Commande_Number'      => "required|string|max:50|unique:sqlsrv.Commande,Commande_Number{$unique}",
-            'Commande_Date'        => 'required|date',
-            'Customer_Id'          => 'required|integer',
-            'Production_Status_Id' => 'nullable|integer',
-            'Commande_Active'      => 'boolean',
-        ];
     }
 }

@@ -47,7 +47,7 @@ class CommandeService
     public function getByStatus(int $statusId)
     {
         return Commande::with(['customer', 'productionStatus'])
-            ->where('Production_Status_Id', $statusId)
+            ->where('Commande_Status_id', $statusId)
             ->where('Cancel', 0)
             ->orderByDesc('Commande_Id')
             ->get();

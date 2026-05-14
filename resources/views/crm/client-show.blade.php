@@ -166,6 +166,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Facture</th>
+                        <th>Statut</th>
                         <th>Date requise</th>
                         <th class="text-center">Complété</th>
                         <th class="text-center">Annulé</th>
@@ -177,7 +178,8 @@
                     <tr>
                         <td>{{ $order->Commande_Id }}</td>
                         <td>{{ $order->InInvoiceNumber ?? '-' }}</td>
-                        <td>{{ $order->Commande_Due_Date ? \Carbon\Carbon::parse($order->Commande_Due_Date)->format('Y-m-d') : '-' }}</td>
+                        <td>{{ $order->Production_Status_Description ?? '-' }}</td>
+                        <td>{{ $order->Date_Demander ? \Carbon\Carbon::parse($order->Date_Demander)->format('Y-m-d') : '-' }}</td>
                         <td class="text-center">
                             @if($order->Complet)
                                 <span class="badge bg-success">Oui</span>

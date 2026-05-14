@@ -19,10 +19,11 @@ class CustomerController extends Controller
 
         $orders = DB::connection('sqlsrv')
             ->table('ThomasOrca.dbo.Commande as c')
+            ->leftJoin('ThomasOrca.dbo.Production_Status as ps', 'ps.Production_Status_Id', '=', 'c.Commande_Status_id')
             ->where('c.Customer_Id', $id)
             ->orderByDesc('c.Commande_Id')
             ->take(20)
-            ->select('c.Commande_Id', 'c.InInvoiceNumber', 'c.Commande_Due_Date', 'c.Complet', 'c.Cancel')
+            ->select('c.Commande_Id', 'c.InInvoiceNumber', 'c.Date_Demander', 'c.Complet', 'c.Cancel', 'ps.Production_Status_Description')
             ->get();
 
         return view('crm.client-show', compact('customer', 'orders'));
