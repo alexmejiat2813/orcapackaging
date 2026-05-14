@@ -12,7 +12,6 @@ class Receiving extends Model
 {
     protected $connection = 'sqlsrv';
     protected $table = 'Receiving';
-    protected $connection = 'sqlsrv';
     protected $primaryKey = 'Receiving_ID';
     public $timestamps = false;
 

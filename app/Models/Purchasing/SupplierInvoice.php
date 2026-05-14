@@ -10,7 +10,6 @@ class SupplierInvoice extends Model
 {
     protected $connection = 'sqlsrv';
     protected $table = 'Supplier_Invoice';
-    protected $connection = 'sqlsrv';
     protected $primaryKey = 'Supplier_Invoice_Id';
     public $timestamps = false;
 
