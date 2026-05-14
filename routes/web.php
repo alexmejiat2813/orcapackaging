@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Login\LoginController;
+use App\Http\Controllers\OrderNoteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HR\TimeInputController;
 
@@ -89,6 +90,10 @@ Route::middleware(['auth'])->prefix('purchasing/suppliers')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
+
+    // Notes
+    Route::post('/notes', [OrderNoteController::class, 'store'])->name('notes.store');
+    Route::delete('/notes/{id}', [OrderNoteController::class, 'destroy'])->name('notes.destroy');
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');

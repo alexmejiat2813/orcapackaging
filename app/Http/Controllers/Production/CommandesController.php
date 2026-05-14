@@ -11,6 +11,7 @@ use App\Models\Production\CommandeSchedule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Production\CommandeService;
+use App\Models\OrderNote;
 
 class CommandesController extends Controller
 {
@@ -344,7 +345,13 @@ public function show(int $id)
         ->select('cr.Commande_Receipe_Id', 'cr.Equipment_Id', 'e.Equipment_Description', 'cr.Value as Hours')
         ->get();
 
-    return view('production.show', compact('commande', 'lots', 'recipe'));
+    $notes = OrderNote::with('user')
+        ->where('notable_type', 'commande')
+        ->where('notable_id', $id)
+        ->orderByDesc('created_at')
+        ->get();
+
+    return view('production.show', compact('commande', 'lots', 'recipe', 'notes'));
 }
 
 public function showModalImage(Request $request) {

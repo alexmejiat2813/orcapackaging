@@ -10,7 +10,20 @@
   </div>
 
   @auth
-  <div class="d-flex align-items-center ms-auto dropdown pe-4">
+  {{-- Notification Bell --}}
+  <div class="ms-auto me-3 position-relative">
+    @php $unread = Auth::user()->unreadNotifications()->count(); @endphp
+    <a href="#" class="text-dark position-relative" data-bs-toggle="tooltip" title="Notifications">
+      <i class="bi bi-bell fs-5"></i>
+      @if($unread > 0)
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.6rem">
+          {{ $unread > 9 ? '9+' : $unread }}
+        </span>
+      @endif
+    </a>
+  </div>
+
+  <div class="d-flex align-items-center dropdown pe-4">
     <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       <i class="bi bi-person-circle me-1"></i>{{ Auth::user()->Users_Name }}
     </a>

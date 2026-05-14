@@ -138,5 +138,7 @@
         </div>
         @endif
     </div>
+    <x-order-notes type="commande" :id="$commande->Commande_Id" :notes="$notes" />
+
 </div>
 @endsection

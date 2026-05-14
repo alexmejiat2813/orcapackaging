@@ -8,6 +8,7 @@ use App\Models\Purchasing\PODetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Services\Purchasing\PurchasingService;
+use App\Models\OrderNote;
 
 class POController extends Controller
 {
@@ -71,7 +72,13 @@ class POController extends Controller
 
         $receivings = (new PurchasingService())->getReceivingsForPO($id);
 
-        return view('purchasing.show', compact('po', 'details', 'receivings'));
+        $notes = OrderNote::with('user')
+            ->where('notable_type', 'po')
+            ->where('notable_id', $id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('purchasing.show', compact('po', 'details', 'receivings', 'notes'));
     }
 
     public function data()

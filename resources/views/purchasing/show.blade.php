@@ -140,5 +140,7 @@
         </div>
         @endif
     </div>
+    <x-order-notes type="po" :id="$po->PO_ID" :notes="$notes" />
+
 </div>
 @endsection
