@@ -4,14 +4,24 @@ namespace App\Models\Purchasing;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Purchasing\Receiving;
-use App\Models\Purchasing\invoiceDetails;
-use App\Models\Purchasing\product;
+use App\Models\Purchasing\SupplierInvoiceDetail;
+use App\Models\Purchasing\SupplierInvoice;
+use App\Models\Product\Product;
 
 class ReceivingDetail extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Receiving_Detail';
     protected $primaryKey = 'Receiving_Detail_ID';
     public $timestamps = false;
+
+    protected $fillable = [
+        'Receiving_ID',
+        'Product_ID',
+        'Quantity',
+        'Unit_Price',
+        'Line_Total',
+    ];
 
     public function receiving()
     {
@@ -25,7 +35,7 @@ class ReceivingDetail extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'Product_ID');
+        return $this->belongsTo(Product::class, 'Product_ID', 'Product_ID');
     }
 
     public function invoices()
@@ -33,11 +43,10 @@ class ReceivingDetail extends Model
         return $this->hasManyThrough(
             SupplierInvoice::class,
             SupplierInvoiceDetail::class,
-            'Receiving_Detail_ID',           // Foreign key en SupplierInvoiceDetail
-            'Supplier_Invoice_Id',    // Foreign key en SupplierInvoice
-            'Receiving_Detail_ID',           // Local key en Receiving
-            'Supplier_Invoice_Id'     // Local key en SupplierInvoiceDetail
+            'Receiving_Detail_ID',
+            'Supplier_Invoice_Id',
+            'Receiving_Detail_ID',
+            'Supplier_Invoice_Id'
         );
     }
-
 }

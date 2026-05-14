@@ -10,6 +10,7 @@ use App\Models\Supplier\Supplier;
 
 class AssetLink extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Asset_Link';
     protected $primaryKey = 'Asset_Link_ID';
     public $timestamps = false;

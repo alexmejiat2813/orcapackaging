@@ -3,9 +3,11 @@
 namespace App\Models\Settings\Modules\Production\Requis;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Settings\Modules\Production\Requis\Requis;
 
 class RequisEstimation extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Requis_Estimation';
     protected $primaryKey = 'Requis_Estimation_Id';
     public $timestamps = false;
@@ -13,7 +15,7 @@ class RequisEstimation extends Model
     protected $fillable = [
         'Requis_Id',
         'Estimation_Value',
-        'Estimation_Type'
+        'Estimation_Type',
     ];
 
     public function requis()

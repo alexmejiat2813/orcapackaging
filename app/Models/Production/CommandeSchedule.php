@@ -6,7 +6,10 @@ use Illuminate\Support\Facades\DB;
 
 class CommandeSchedule extends Model
 {
-    protected $table = 'CommandeSchedule'; // Nombre de la tabla en la base de datos
+    protected $connection = 'sqlsrv';
+    protected $table = 'CommandeSchedule';
+    protected $primaryKey = 'Schedule_Id';
+    public $timestamps = false;
 
 public static function getScheduleWithReceipe()
     {

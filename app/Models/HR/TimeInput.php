@@ -11,20 +11,9 @@ class TimeInput extends Model
      *
      * @var string
      */
+    protected $connection = 'sqlsrv';
     protected $table = 'TimeInput';
-
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
     protected $primaryKey = 'TimeInput_ID';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
 
     /**

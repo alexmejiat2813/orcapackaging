@@ -10,6 +10,7 @@ use App\Models\Purchasing\SupplierInvoice;
 
 class Receiving extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Receiving';
     protected $primaryKey = 'Receiving_ID';
     public $timestamps = false;

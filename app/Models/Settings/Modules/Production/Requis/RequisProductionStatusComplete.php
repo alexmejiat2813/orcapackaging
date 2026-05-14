@@ -9,6 +9,7 @@ use App\Models\Settings\Modules\Production\Requis\Requis;
 
 class RequisProductionStatusComplete extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Requis_Production_status_complete';
     protected $primaryKey = 'Requis_Production_Status_Complete_Id';
     public $timestamps = false;

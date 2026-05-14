@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CommandeQuotationReceipe extends Model
 {
     // Esta clase usa una vista en lugar de una tabla
+    protected $connection = 'sqlsrv';
     protected $table = 'View_Commande_Quotation_Recipe';
 
     protected $primaryKey = 'Quotation_Receipe_Id'; // Asegúrate de que exista y sea único en la vista
