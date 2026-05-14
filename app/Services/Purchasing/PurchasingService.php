@@ -15,8 +15,9 @@ class PurchasingService
     public function getOpenPOs()
     {
         return PO::with(['supplier', 'details'])
-            ->where('PO_Status', '!=', 'Closed')
-            ->orderByDesc('PO_Id')
+            ->where('PO_Completed', 0)
+            ->where('PO_Cancel', 0)
+            ->orderByDesc('PO_ID')
             ->get();
     }
 
@@ -63,9 +64,9 @@ class PurchasingService
         $inv = DB::connection('sqlsrv')->table('ThomasOrca.dbo.Supplier_Invoice');
 
         return [
-            'open_pos'            => (clone $pos)->where('PO_Status', '!=', 'Closed')->count(),
-            'total_pos'           => (clone $pos)->count(),
-            'pending_invoices'    => (clone $inv)->where('Invoice_Paid', 0)->count(),
+            'open_pos'         => (clone $pos)->where('PO_Completed', 0)->where('PO_Cancel', 0)->count(),
+            'total_pos'        => (clone $pos)->count(),
+            'pending_invoices' => (clone $inv)->where('Invoice_Paid', 0)->count(),
         ];
     }
 }
