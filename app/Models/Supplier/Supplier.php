@@ -9,9 +9,10 @@ use App\Models\Asset\AssetLink;
 
 class Supplier extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Supplier';
     protected $primaryKey = 'Supplier_ID';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'Supplier_Name',
