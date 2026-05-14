@@ -131,7 +131,6 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('sales')->group(function () {
-        Route::get('/draft', [SalesOrderController::class, 'index'])->name('sales.draft');
         Route::get('/validation', [SalesValidationOrderController::class, 'index'])->name('sales.validation');
         // Route::get('/quotations', [QuotationController::class, 'index']);
         // Route::get('/invoices', [InvoiceController::class, 'index']);

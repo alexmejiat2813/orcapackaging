@@ -85,13 +85,7 @@
         <i class="bi bi-people"></i><span>CRM</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="crm-menu" class="nav-content collapse {{ Request::is('crm/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-        <li><a href="{{ url('/crm/clients') }}" class="{{ Request::is('crm/clients') ? 'active' : '' }}"><i class="bi bi-circle"></i>Clients</a></li>
-        <li><a href="{{ url('/crm/contacts') }}" class="{{ Request::is('crm/contacts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contacts</a></li>
-        <li><a href="{{ url('/crm/activities') }}" class="{{ Request::is('crm/activities') ? 'active' : '' }}"><i class="bi bi-circle"></i>Activities</a></li>
-        <li><a href="{{ url('/crm/opportunities') }}" class="{{ Request::is('crm/opportunities') ? 'active' : '' }}"><i class="bi bi-circle"></i>Opportunities</a></li>
-        <li><a href="{{ url('/crm/leads') }}" class="{{ Request::is('crm/leads') ? 'active' : '' }}"><i class="bi bi-circle"></i>Leads</a></li>
-        <li><a href="{{ url('/crm/campaigns') }}" class="{{ Request::is('crm/campaigns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Campaigns</a></li>
-        <li><a href="{{ url('/crm/segments') }}" class="{{ Request::is('crm/segments') ? 'active' : '' }}"><i class="bi bi-circle"></i>Segmentation</a></li>
+        <li><a href="{{ url('/crm/clients') }}" class="{{ Request::is('crm/clients*') ? 'active' : '' }}"><i class="bi bi-circle"></i>Clients</a></li>
       </ul>
     </li>
    </x-permission-users>
@@ -103,15 +97,10 @@
             <i class="bi bi-cart-check"></i><span>Sales</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul id="sales-menu" class="nav-content collapse {{ Request::is('sales/*') ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
-            <li><a href="{{ url('/sales/estimates') }}" class="{{ Request::is('sales/estimates') ? 'active' : '' }}"><i class="bi bi-circle"></i>Estimates</a></li>
+            <li><a href="{{ url('/sales/estimates') }}" class="{{ Request::is('sales/estimates*') ? 'active' : '' }}"><i class="bi bi-circle"></i>Estimates</a></li>
             <li><a href="{{ url('/sales/quotations') }}" class="{{ Request::is('sales/quotations') ? 'active' : '' }}"><i class="bi bi-circle"></i>Quotations</a></li>
-            <li><a href="{{ url('/sales/draft') }}" class="{{ Request::is('sales/draft') ? 'active' : '' }}"><i class="bi bi-circle"></i>Draft Orders</a></li>
             <li><a href="{{ url('/sales/validation') }}" class="{{ Request::is('sales/validation') ? 'active' : '' }}"><i class="bi bi-circle"></i>Order Validation</a></li>
             <li><a href="{{ url('/sales/invoices') }}" class="{{ Request::is('sales/invoices') ? 'active' : '' }}"><i class="bi bi-circle"></i>Invoices</a></li>
-            <li><a href="{{ url('/sales/returns') }}" class="{{ Request::is('sales/returns') ? 'active' : '' }}"><i class="bi bi-circle"></i>Returns</a></li>
-            <li><a href="{{ url('/sales/contracts') }}" class="{{ Request::is('sales/contracts') ? 'active' : '' }}"><i class="bi bi-circle"></i>Contracts</a></li>
-            <li><a href="{{ url('/sales/goals') }}" class="{{ Request::is('sales/goals') ? 'active' : '' }}"><i class="bi bi-circle"></i>Sales Goals</a></li>
-            <li><a href="{{ url('/sales/reports') }}" class="{{ Request::is('sales/reports') ? 'active' : '' }}"><i class="bi bi-circle"></i>Reports</a></li>
           </ul>
         </li>
     </x-permission-users>
