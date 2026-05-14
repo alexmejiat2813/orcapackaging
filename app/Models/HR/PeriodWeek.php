@@ -11,30 +11,14 @@ class PeriodWeek extends Model
      *
      * @var string
      */
+    protected $connection = 'sqlsrv';
     protected $table = 'Period_Week';
-
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
     protected $primaryKey = 'Period_Week_Id';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * The attributes that should be cast to date objects.
-     *
-     * @var array<int, string>
-     */
-    protected $dates = [
-        'Period_Week_StartDate',
-        'Period_Week_EndDate',
+    protected $casts = [
+        'Period_Week_StartDate' => 'datetime',
+        'Period_Week_EndDate'   => 'datetime',
     ];
 }
 

@@ -8,10 +8,17 @@ use App\Models\Purchasing\SupplierInvoiceDetail;
 
 class SupplierInvoice extends Model
 {
-    protected $table = 'Supplier_Invoice';
     protected $connection = 'sqlsrv';
+    protected $table = 'Supplier_Invoice';
     protected $primaryKey = 'Supplier_Invoice_Id';
     public $timestamps = false;
+
+    protected $fillable = [
+        'Receiving_ID',
+        'Supplier_Invoice_Number',
+        'Supplier_Invoice_Date',
+        'Supplier_Invoice_Total',
+    ];
 
     public function receiving()
     {

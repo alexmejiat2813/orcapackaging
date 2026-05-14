@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommandeReceipe extends Model
 {
-    protected $table = 'Commande_Receipe'; // <<--- Esta es la tabla real
+    protected $connection = 'sqlsrv';
+    protected $table = 'Commande_Receipe';
     protected $primaryKey = 'Commande_Receipe_Id';
     public $incrementing = true;
     public $timestamps = false;

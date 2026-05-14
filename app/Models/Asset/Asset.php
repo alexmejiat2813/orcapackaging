@@ -9,6 +9,7 @@ use App\Models\Asset\AssetLink;
 
 class Asset extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Asset';
     protected $primaryKey = 'Asset_ID';
     public $timestamps = false;

@@ -8,6 +8,7 @@ use App\Models\Asset\Asset;
 
 class AssetType extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Asset_Type';
     protected $primaryKey = 'Asset_Type_ID';
     public $timestamps = false;

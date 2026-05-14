@@ -140,17 +140,16 @@ class InkFormuleController extends Controller
 
         DB::transaction(function () use ($request, $id) {
             $formula = InkFormule::findOrFail($id);
-            $formula->update($request->only(['formula_name', 'product_id', 'total_quantity']));
+            $formula->update($request->only(['final_color', 'total_kg']));
 
-            // Delete old components
-            InkFormuleComponent::where('ink_formula_id', $formula->id)->delete();
+            InkFormuleDetail::where('ink_formule_id', $formula->id)->delete();
 
-            // Insert new ones
             foreach ($request->components as $component) {
-                InkFormuleComponent::create([
-                    'ink_formula_id' => $formula->id,
-                    'product_id' => $component['product_id'],
-                    'percentage' => $component['percentage']
+                InkFormuleDetail::create([
+                    'ink_formule_id' => $formula->id,
+                    'product_id'     => $component['product_id'],
+                    'amount_kg'      => $component['kg'] ?? 0,
+                    'percentage'     => $component['percentage'],
                 ]);
             }
         });

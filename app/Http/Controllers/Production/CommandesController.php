@@ -271,7 +271,7 @@ public function syncSchedule(Request $request)
             $equipmentIds = DB::table('Commande_Receipe')
                 ->where('Commande_Id', $commandeId)
                 ->where('Actif', 1)
-                ->where('Equipment_Id', $Equipment_Id)
+                ->where('Equipment_Id', $lot['Equipment_Id'])
                 ->pluck('Equipment_Id')
                 ->unique();
 

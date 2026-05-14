@@ -10,6 +10,7 @@ use App\Models\Settings\Modules\Production\Requis\Requis;
 
 class RequisCondition extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Requis_Condition';
     protected $primaryKey = 'Requis_Condition_Id';
     public $timestamps = false;

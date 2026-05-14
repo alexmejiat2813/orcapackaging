@@ -11,20 +11,9 @@ class Fonction extends Model
      *
      * @var string
      */
+    protected $connection = 'sqlsrv';
     protected $table = 'Fonction';
-
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
     protected $primaryKey = 'Fonction_ID';
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
 
     /**

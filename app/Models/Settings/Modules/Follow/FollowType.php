@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models\Settings\Modules\Requis;
+namespace App\Models\Settings\Modules\Follow;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Settings\Modules\Production\Requis\RequisProductionStatusComplete;
 
 class FollowType extends Model
 {
+    protected $connection = 'sqlsrv';
     protected $table = 'Follow_Type';
     protected $primaryKey = 'Follow_Type_Id';
     public $timestamps = false;
